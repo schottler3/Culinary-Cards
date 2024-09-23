@@ -12,6 +12,7 @@ CSCI 5117, Fall 2024, [assignment description](https://canvas.umn.edu/courses/46
 
 * Adam Kvant, kvant003
 * Minh Tong, tong0154
+* Rock Zgutowicz, zguto005
 * ...
 
 
