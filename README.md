@@ -4,13 +4,14 @@ CSCI 5117, Fall 2024, [assignment description](https://canvas.umn.edu/courses/46
 
 ## App Info:
 
-* Team Name: TODO
-* App Name: TODO
+* Team Name: Peanut Butter Pickles
+* App Name: CuisineCards
 * App Link: <https://TODO.com/>
 
 ### Students
 
-* First Last, x500@umn.edu
+* Adam Kvant, kvant003
+* Minh Tong, tong0154
 * ...
 
 
