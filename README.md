@@ -60,7 +60,7 @@ In this space please either provide images (around 4) showing your prototypes, O
 
 <a href="https://github.com/csci5117f24/project-1-peanut-butter-pickles/blob/main/PeanutButterPicklesLo-FiMockup.pdf">PDF OF LO-FI MOCKUP FOUND HERE</a>
 
-The function of each page in the pdf is found on the yellow sticky note in a top corner, or printed as text at the top of the page.
+**The function of each page in the pdf is found on the yellow sticky note in a top corner, or printed as text at the top of the page.**
 
 
 ## External Dependencies
