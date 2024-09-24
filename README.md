@@ -44,9 +44,11 @@ There are a few tools for mock-ups. Paper prototypes (low-tech, but effective an
 
 In this space please either provide images (around 4) showing your prototypes, OR, a link to an online hosted mock-up tool like moqups.com
 
-**[Add images/photos that show your paper prototype (around 4)](https://stackoverflow.com/questions/10189356/how-to-add-screenshot-to-readmes-in-github-repository) along with a very brief caption:**
 
-![](https://media.giphy.com/media/26ufnwz3wDUli7GU0/giphy.gif)
+
+<a href="https://github.com/csci5117f24/project-1-peanut-butter-pickles/blob/main/PeanutButterPicklesLo-FiMockup.pdf">PDF OF LO-FI MOCKUP FOUND HERE</a>
+
+The function of each page in the pdf is found on the yellow sticky note in a top corner, or printed as text at the top of the page.
 
 
 ## External Dependencies
