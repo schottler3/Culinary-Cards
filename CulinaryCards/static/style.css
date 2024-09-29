@@ -1,0 +1,39 @@
+body {
+    display: flex;
+    background-color: #646464;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+form{
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+#hometop,
+#homebottom{
+    height: 40vh;
+}
+
+.logoC{
+    color: orangered;
+    font-weight: bold;
+}
+
+.logoBig{
+    font-size: 5em;
+    color: goldenrod;
+}
+
+#queryhome {
+    margin-top: .3em;
+    width: 75%;
+    margin-right: 0;
+}
+
+#queryhomesubmit{
+    margin-left: 0;
+    width: 10%;
+}

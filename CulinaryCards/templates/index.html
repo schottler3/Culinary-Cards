@@ -1,0 +1,32 @@
+{% extends "threeBoxTemplate.html" %}
+
+{% block extraHeadSpace %}
+{% endblock %}
+
+{% block top %}
+    <div id="hometop">
+
+    </div>
+{% endblock %}
+
+
+{% block middle %}
+    <div id="homesearch">
+      <form action="/search" method="POST" class="pure-form">
+        <div>
+            <label for="queryhome" class="logoBig"><span class="logoC">C</span>ullinary<span class="logoC">C</span>ards</label>
+            <input type="search" id="queryhome" name="queryhome" placeholder="Search 100s of Recipes..." required>
+            <input type="submit" id="queryhomesubmit" value="Search" class="pure-button">
+        </div>
+        <div>
+          
+        </div>
+      </form>
+    </div>
+{% endblock %}
+
+{% block bottom %}
+    <div id="homebottom">
+
+    </div>
+{% endblock %}
