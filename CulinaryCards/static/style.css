@@ -37,3 +37,12 @@ form{
     margin-left: 0;
     width: 10%;
 }
+
+.navbar {
+    background-color: rgb(236, 236, 255);
+    padding: 0 10px;
+}
+
+#categories {
+    background-color: antiquewhite;
+}
