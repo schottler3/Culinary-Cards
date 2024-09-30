@@ -3,9 +3,21 @@
 {% block extraHeadSpace %}
 {% endblock %}
 
-{% block top %}
-    <div id="hometop">
 
+{% block top %}
+    <div class="header">
+      <div class="home-menu pure-menu pure-menu-horizontal pure-menu-fixed navbar">
+          <a class="pure-menu-heading" href="">Culinary Cards</a>
+
+          <ul class="pure-menu-list">
+              <li class="pure-menu-item pure-menu-selected"><a href="#" class="pure-menu-link">Home</a></li>
+              <li class="pure-menu-item"><a href="#" class="pure-menu-link">Categories</a></li>
+              <li class="pure-menu-item"><a href="#" class="pure-menu-link">Profile</a></li>
+          </ul>
+      </div>
+    </div>
+
+    <div id="hometop">
     </div>
 {% endblock %}
 
@@ -14,7 +26,7 @@
     <div id="homesearch">
       <form action="/search" method="POST" class="pure-form">
         <div>
-            <label for="queryhome" class="logoBig"><span class="logoC">C</span>ullinary<span class="logoC">C</span>ards</label>
+            <label for="queryhome" class="logoBig"><span class="logoC">C</span>ulinary<span class="logoC">C</span>ards</label>
             <input type="search" id="queryhome" name="queryhome" placeholder="Search 100s of Recipes..." required>
             <input type="submit" id="queryhomesubmit" value="Search" class="pure-button">
         </div>
@@ -27,6 +39,8 @@
 
 {% block bottom %}
     <div id="homebottom">
-
     </div>
+
 {% endblock %}
+
+
