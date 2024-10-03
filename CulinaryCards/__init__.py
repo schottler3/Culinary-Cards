@@ -14,7 +14,7 @@ def index():
 @app.route("/search",methods=['POST'])
 def redirectToSearch():
     user_query = request.form["queryhome"]
-    api_url = f"https://api.edamam.com/search?q={user_query}&app_id={os.environ.get("EDAMAM_APP_ID")}&app_key={os.environ.get("EDAMAM_APP_KEY")}"
+    api_url = f"https://api.edamam.com/search?q={user_query}&app_id={os.environ.get('EDAMAM_APP_ID')}&app_key={os.environ.get('EDAMAM_APP_KEY')}"
     
     api_response = requests.get(api_url)
 
