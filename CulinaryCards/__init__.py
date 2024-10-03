@@ -13,3 +13,9 @@ def index():
 @app.route("/search",methods=['POST'])
 def redirectToSearch():
     return render_template("test.html")
+
+if __name__ == "__main__":
+    if os.getenv("FLASK_ENV") == "development":
+        app.run(debug=True)
+    else:
+        app.run()
