@@ -1,9 +1,8 @@
+* {
+}
+
 body {
-    display: flex;
-    background-color: #646464;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+    background-color: #ebebeb;
 }
 
 form{
@@ -15,6 +14,7 @@ form{
 #hometop,
 #homebottom{
     height: 40vh;
+    width: 100vw;
 }
 
 .logoC{
@@ -45,4 +45,58 @@ form{
 
 #categories {
     background-color: antiquewhite;
+}
+
+#bottom {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.card-container {
+    background-color: antiquewhite;
+}
+
+.card {
+    height: 40vw;
+    background-size: cover;
+    background-position: center;
+    text-align: center;
+    display: flex;
+    line-height: 40vw;
+    color: white;
+    font-size: 1.5em;
+    font-family: "Abril Fatface", serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.card:hover { 
+    /* greyscales the image on hover */
+    -webkit-filter: grayscale(100%); 
+    -moz-filter: grayscale(100%);
+    -o-filter: grayscale(100%);
+    -ms-filter: grayscale(100%);
+    filter: grayscale(100%); 
+    transition: all 0.3s ease-out;
+}
+
+#breakfast {
+    background-image: linear-gradient(
+        rgba(0, 0, 0, 0.2),
+        rgba(0, 0, 0, 0.2)
+      ), url("resources/breakfast.jpg");
+}
+#lunch {
+    background-image: linear-gradient(
+        rgba(0, 0, 0, 0.2),
+        rgba(0, 0, 0, 0.2)
+      ), url("resources/lunch.jpg");
+}
+
+#dinner {
+    background-image: linear-gradient(
+        rgba(0, 0, 0, 0.2),
+        rgba(0, 0, 0, 0.2)
+      ), url("resources/dinner.jpg");
 }
