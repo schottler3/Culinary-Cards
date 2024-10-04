@@ -41,11 +41,16 @@ form{
 .navbar {
     background-color: rgb(236, 236, 255);
     padding: 0 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
 }
 
 #categories {
     background-color: antiquewhite;
 }
+
 
 #bottom {
     display: flex;
@@ -100,3 +105,17 @@ form{
         rgba(0, 0, 0, 0.2)
       ), url("resources/dinner.jpg");
 }
+=======
+.options {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.accountAccess {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-left: auto;
+}
+
