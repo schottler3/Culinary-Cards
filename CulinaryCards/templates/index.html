@@ -14,7 +14,7 @@
               <li class="pure-menu-item"><a href="#" class="pure-menu-link">Categories</a></li>
           </ul>
           <ul class="pure-menu-list accountAccess">
-            {% if user in session %}
+            {% if session %}
               <li class="pure-menu-item"><a href="#" class="pure-menu-link">Profile</a></li>
               <li class="pure-menu-item"><a href="/logout" class="pure-menu-link">Log Out</a></li>
             {% else %}
