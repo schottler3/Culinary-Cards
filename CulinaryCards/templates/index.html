@@ -1,8 +1,7 @@
-{% extends "threeBoxTemplate.html" %}
+{% extends "boxTemplates.html" %}
 
 {% block extraHeadSpace %}
 {% endblock %}
-
 
 {% block top %}
     <div class="header">
@@ -28,7 +27,6 @@
     </div>
 {% endblock %}
 
-
 {% block middle %}
     <div id="homesearch">
       <form action="/search" method="POST" class="pure-form">
@@ -47,8 +45,11 @@
 {% block bottom %}
     <div id="homebottom">
     </div>
-    <div>
-      
+    <div class="pure-g card-container">
+      <a class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-4 pure-img card" id="breakfast">Breakfast</a>
+      <a class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-4 pure-img card" id="lunch"> Lunch </a>
+      <a class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-4 pure-img card" id="dinner"> Dinner </a>
+      <a class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-4 pure-img card" id="dessert"> Dessert </a>
     </div>
 {% endblock %}
 
