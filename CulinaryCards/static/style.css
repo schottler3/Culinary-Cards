@@ -6,6 +6,17 @@ body {
     flex-direction: column;
 }
 
+#header {
+    height: 20px;
+}
+
+#pfp {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 3px solid black;
+}
+
 form{
     justify-content: center;
     align-items: center;

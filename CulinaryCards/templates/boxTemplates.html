@@ -1,9 +1,14 @@
-{% extends "boilerplateTemplate.html" %}
+{% extends 'boilerplateTemplate.html' %}
 
 {% block everything %}
+    <div id="header">
+        {% block header %}
+            {% include 'header.html' %}
+        {% endblock %}
+    </div>
     <div id="top">
         {% block top %}
-    
+
         {% endblock %}
     </div>
     <div id="middle">
