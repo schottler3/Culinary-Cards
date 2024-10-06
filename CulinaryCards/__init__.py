@@ -4,6 +4,7 @@ import requests
 from datetime import *
 from flask import Flask
 from flask import *
+import dbinteractions as db
 
 app = Flask(__name__)
 
@@ -14,7 +15,8 @@ def index():
 @app.route("/search",methods=['POST'])
 def redirectToSearch():
     user_query = request.form["queryhome"]
-    
+
+    # Will continue working on this after dbinterations
     
     # api_url = f"https://api.edamam.com/search?q={user_query}&app_id={os.environ.get('EDAMAM_APP_ID')}&app_key={os.environ.get('EDAMAM_APP_KEY')}"
     
