@@ -11,7 +11,7 @@ create table users (
 );
 
 create table recipe (
-    recipe_id serial primary key,
+    recipeid serial primary key,
     title varchar(255),
     description varchar(255),
     ingredients text[] not null,
@@ -28,7 +28,7 @@ create table recipe (
 -- Used to search db with full text search
 create materialized view recipe_search as
 select 
-    recipe_id,
+    recipeid,
     title,
     description,
     ingredients,
@@ -44,11 +44,11 @@ refresh materialized view recipe_search;
 create table recipe_like (
     likeid serial primary key,
     like_time timestamp default now(),
-    recipe_id int,
+    recipeid int,
     userid int,
     constraint fk_recipe
-        foreign key (recipe_id)
-        references recipe (recipe_id)
+        foreign key (recipeid)
+        references recipe (recipeid)
         on delete cascade,
     constraint fk_user
         foreign key (userid)
@@ -59,11 +59,12 @@ create table recipe_like (
 create table recipe_comment (
     commentid serial primary key,
     comment_time timestamp default now(),
-    recipe_id int,
+    comment_content varchar(255),
+    recipeid int,
     userid int,
     constraint fk_recipe
-        foreign key (recipe_id)
-        references recipe (recipe_id)
+        foreign key (recipeid)
+        references recipe (recipeid)
         on delete cascade,
     constraint fk_user
         foreign key (userid)

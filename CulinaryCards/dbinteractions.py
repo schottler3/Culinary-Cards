@@ -74,6 +74,19 @@ def getLikeCountForUser(userid):
         cursor.close()
         connection.close()
 
+def updateUser(username,email,fname,lname,bio,userid):
+    connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
+    cursor = connection.cursor()
+    str = "update users set username = %s, user_email = %s, fname = %s, lname = %s, bio = %s where userid = %s"
+    try:
+        cursor.execute(str,(username,email,fname,lname,bio,userid))
+        connection.commit()
+    except:
+        print("Failed to update user")
+    finally:
+        cursor.close()
+        connection.close()
+
 ####################################################################################
 
 # recipe related functions
@@ -127,7 +140,7 @@ def updateRecipeInDB(dict):
     connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
     cursor = connection.cursor()
     title_desc = dict["title"] + dict["description"]
-    str = "update recipe set title = %s, description = %s, ingredients = %s, instructions = %s title_desc = to_tsvector(%s) where recipe_id = %s"
+    str = "update recipe set title = %s, description = %s, ingredients = %s, instructions = %s title_desc = to_tsvector(%s) where recipeid = %s"
     try:
         cursor.execute(str,(dict["title"],dict["description"],dict["ingredients"],dict["instructions"],title_desc),dict["recipeid"])
         connection.commit()
@@ -145,7 +158,7 @@ def deleteRecipeInDB(recipeid):
     if recipeid is None:
         return False
     try:
-        str = "delete from recipe where recipe_id = %s"
+        str = "delete from recipe where recipeid = %s"
         cursor.execute(str, recipeid)
         connection.commit()
         cursor.execute("refresh materialized view recipe_search")
@@ -162,7 +175,7 @@ def getRecipeLikes(recipeid):
     if recipeid is None:
         return -1
     try:
-        str = "select count(*) as likes from recipe_like where recipe_id = %s"
+        str = "select count(*) as likes from recipe_like where recipeid = %s"
         cursor.execute(str, recipeid)
         result = cursor.fetchone()
         if result["likes"] >= 0:
@@ -174,3 +187,95 @@ def getRecipeLikes(recipeid):
     finally:
         cursor.close()
         connection.close()
+
+def getRecipeComments(recipeid):
+    connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
+    cursor = connection.cursor()
+    if recipeid is None:
+        return -1
+    try:
+        str = "select count(*) as comments from recipe_comment where recipeid = %s"
+        cursor.execute(str, recipeid)
+        result = cursor.fetchone()
+        if result["comments"] >= 0:
+            return result[0]
+        else:
+            return -1
+    except:
+        print("Failed to get recipe comment count")
+    finally:
+        cursor.close()
+        connection.close()
+
+####################################################################################
+#recipe_like funcitons
+
+def addRecipeLike(recipeid,userid):
+    connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
+    cursor = connection.cursor()
+    str = "insert into recipe_like (recipeid, userid) values(%s, %s)"
+    try:
+        cursor.execute(str,(recipeid,userid))
+        connection.commit()
+    except:
+        print("Failed to add new recipe like")
+    finally:
+        cursor.close()
+        connection.close()
+
+def deleteRecipeLike(likeid):
+    connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
+    cursor = connection.cursor()
+    try:
+        str = "delete from recipe_like where likeid = %s"
+        cursor.execute(str, likeid)
+        connection.commit()
+    except:
+        print("Failed to delete recipe like")
+    finally:
+        cursor.close()
+        connection.close()
+
+####################################################################################
+# recipe_comment functions
+
+def addRecipeComment(userid,recipeid,comment_content):
+    connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
+    cursor = connection.cursor()
+    str = "insert into recipe_comment (recipeid, userid,comment_content) values(%s, %s,%s)"
+    try:
+        cursor.execute(str,(recipeid,userid,comment_content))
+        connection.commit()
+    except:
+        print("Failed to add new recipe comment")
+    finally:
+        cursor.close()
+        connection.close()
+
+def deleteRecipeContent(commentid):
+    connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
+    cursor = connection.cursor()
+    try:
+        str = "delete from recipe_comment where commentid = %s"
+        cursor.execute(str, commentid)
+        connection.commit()
+    except:
+        print("Failed to delete recipe comment")
+    finally:
+        cursor.close()
+        connection.close()
+
+def updateRecipeComment(comment_content,commentid):
+    connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
+    cursor = connection.cursor()
+    str = "update recipe_like set comment_content = %s where commentid = %s"
+    try:
+        cursor.execute(str,(comment_content,commentid))
+        connection.commit()
+    except:
+        print("Failed to update recipe comment")
+    finally:
+        cursor.close()
+        connection.close()
+
+####################################################################################
