@@ -1,6 +1,6 @@
 import psycopg2
 import os
-
+import datetime
 ####################################################################################
 # users related functions
 
@@ -40,14 +40,14 @@ def getUserInfoByUserID(userID):
         cursor.close()
         connection.close()
 
-def deleteUserByUsername(username):
+def deleteUserByUserID(userid):
     connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
     cursor = connection.cursor()
-    if username is None:
+    if userid is None:
         return False
     try:
-        str = "delete from users where username = %s"
-        cursor.execute(str, username)
+        str = "delete from users where userid = %s"
+        cursor.execute(str, userid)
         connection.commit()
     except:
         print("Failed to delete user")
@@ -87,6 +87,51 @@ def updateUser(username,email,fname,lname,bio,userid):
         cursor.close()
         connection.close()
 
+# Returns list of tuples in form: (recipeid,title,description,ingredients,instructions,created_on,user_id)
+def getAllLikedRecipesForUser(userid):
+    connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
+    cursor = connection.cursor()
+    if userid is None:
+        return []
+    try:
+        str = """select recipe.recipeid, recipe.title, recipe.description, recipe.ingredients, recipe.instructions, recipe.created_on,recipe.userid
+        from recipe_like join recipe on recipe_like.recipeid = recipe.recipeid
+        where recipe_like.userid = %s"""
+        cursor.execute(str, (userid,))
+        result = cursor.fetchall()
+        if result:
+            return result
+        else:
+            return []
+    except:
+        print("Failed to get liked recipes")
+        return []
+    finally:
+        cursor.close()
+        connection.close()
+
+# Returns list of tuples in form: (recipeid,title,description,ingredients,instructions,created_on,user_id,title_desc)
+def getAllRecipesUser(userid):
+    connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
+    cursor = connection.cursor()
+    if userid is None:
+        return []
+    try:
+        str = "select * from recipe where userid = %s"
+        cursor.execute(str, userid)
+        result = cursor.fetchall()
+        if result:
+            return result
+        else:
+            return []
+    except:
+        print("Failed to get recipes for specific user")
+    finally:
+        cursor.close()
+        connection.close()
+
+
+
 ####################################################################################
 
 # recipe related functions
@@ -99,8 +144,8 @@ def searchRecipeByKeywords(keywords):
     keywords = " & ".join(keywords)
     keywords += ":*"
     try:
-        str = "select * from recipe_search where title_desc @@ to_tsquery(%s)"
-        cursor.execute(str, keywords)
+        str = "select * from recipe_search where title_desc_ingredients_username @@ to_tsquery(%s)"
+        cursor.execute(str, (keywords,))
         result = cursor.fetchall()
         resultlst = []
         if result != None:
@@ -121,11 +166,18 @@ def searchRecipeByKeywords(keywords):
 def addRecipeToDB(dict):
     connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
     cursor = connection.cursor()
-    str = "insert into recipe (title,description,ingredients,instructions,userid,title_desc) values (%s,%s,%s,%s,%s,to_tsvector(%s))"
-    title_desc = dict["title"] + dict["description"]
-
+    str = "insert into recipe (title,description,ingredients,ingredients_nomeasure,instructions,userid,title_desc_ingredients_username) values (%s,%s,%s,%s,%s,%s,to_tsvector(%s))"
+    title_desc_ingredients_username = dict["title"] + " " + dict["description"]
+    ingredients_nomeasure = ""
+    for ingredient in dict["ingredients"]:
+        ingredients = ingredient.split(" ")
+        title_desc_ingredients_username += " " + ingredients[0]
+        ingredients_nomeasure += ingredients[0] + " "
     try:
-        cursor.execute(str,(dict["title"],dict["description"],dict["ingredients"],dict["instructions"],dict["userid"],title_desc))
+        cursor.execute("select username from users where userid = %s", dict["userid"])
+        username = cursor.fetchone()[0]
+        title_desc_ingredients_username += " " + username
+        cursor.execute(str,(dict["title"],dict["description"],dict["ingredients"],ingredients_nomeasure,dict["instructions"],dict["userid"],title_desc_ingredients_username))
         connection.commit()
         cursor.execute("refresh materialized view recipe_search")
         connection.commit()
@@ -139,10 +191,22 @@ def addRecipeToDB(dict):
 def updateRecipeInDB(dict):
     connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
     cursor = connection.cursor()
-    title_desc = dict["title"] + dict["description"]
-    str = "update recipe set title = %s, description = %s, ingredients = %s, instructions = %s title_desc = to_tsvector(%s) where recipeid = %s"
+    title_desc_ingredients_username = dict["title"] + " " + dict["description"]
+    ingredients_nomeasure = ""
+    for ingredient in dict["ingredients"]:
+        ingredients = ingredient.split(" ")
+        title_desc_ingredients_username += " " + ingredients[0]
+        ingredients_nomeasure += ingredients[0] + " "
+    # str was messing with str method :(
+    qstr = "update recipe set title = %s, description = %s, ingredients = %s, ingredients_nomeasure = %s,instructions = %s, title_desc_ingredients_username = to_tsvector(%s) where recipeid = %s"
     try:
-        cursor.execute(str,(dict["title"],dict["description"],dict["ingredients"],dict["instructions"],title_desc),dict["recipeid"])
+        cursor.execute("select userid from recipe where recipeid = %s",dict["recipeid"])
+        userid = cursor.fetchone()[0]
+        userid = str(userid)
+        cursor.execute("select username from users where userid = %s",userid)
+        username = cursor.fetchone()[0]
+        title_desc_ingredients_username += " " + username
+        cursor.execute(qstr,(dict["title"],dict["description"],dict["ingredients"], ingredients_nomeasure,dict["instructions"],title_desc_ingredients_username,dict["recipeid"]))
         connection.commit()
         cursor.execute("refresh materialized view recipe_search")
         connection.commit()
@@ -178,7 +242,7 @@ def getRecipeLikes(recipeid):
         str = "select count(*) as likes from recipe_like where recipeid = %s"
         cursor.execute(str, recipeid)
         result = cursor.fetchone()
-        if result["likes"] >= 0:
+        if result[0] >= 0:
             return result[0]
         else:
             return -1
@@ -188,7 +252,7 @@ def getRecipeLikes(recipeid):
         cursor.close()
         connection.close()
 
-def getRecipeComments(recipeid):
+def getRecipeCommentCount(recipeid):
     connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
     cursor = connection.cursor()
     if recipeid is None:
@@ -197,12 +261,37 @@ def getRecipeComments(recipeid):
         str = "select count(*) as comments from recipe_comment where recipeid = %s"
         cursor.execute(str, recipeid)
         result = cursor.fetchone()
-        if result["comments"] >= 0:
+        if result[0] >= 0:
             return result[0]
         else:
             return -1
     except:
         print("Failed to get recipe comment count")
+    finally:
+        cursor.close()
+        connection.close()
+
+# Returns list of tuples in form: (commentid,comment_time,comment_content,username,userid)
+def getAllCommentsForRecipe(recipeid):
+    connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
+    cursor = connection.cursor()
+    if recipeid is None:
+        return []
+    try:
+        str = """select recipe_comment.commentid, recipe_comment.comment_time, recipe_comment.comment_content, users.username, users.userid
+        from recipe_comment
+        join users on recipe_comment.userid = users.userid 
+        where recipe_comment.recipeid = %s
+        order by recipe_comment.comment_time desc"""
+        cursor.execute(str, (recipeid,))
+        result = cursor.fetchall()
+        if result:
+            return result
+        else:
+            return []
+    except:
+        print("Failed to get all comments for specific recipe")
+        return []
     finally:
         cursor.close()
         connection.close()

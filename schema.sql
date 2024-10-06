@@ -15,10 +15,11 @@ create table recipe (
     title varchar(255),
     description varchar(255),
     ingredients text[] not null,
+    ingredients_nomeasure text not null,
     instructions text[] not null,
     created_on timestamp default now(),
     userid int,
-    title_desc tsvector,
+    title_desc_ingredients_username tsvector,
     constraint fk_user
         foreign key (userid)
         references users (userid)
@@ -27,15 +28,17 @@ create table recipe (
 
 -- Used to search db with full text search
 create materialized view recipe_search as
-select 
-    recipeid,
-    title,
-    description,
-    ingredients,
-    instructions,
-    to_tsvector('english', title || ' ' || description) as title_desc,
-from 
-    recipe;
+    select 
+    recipe.recipeid,
+    recipe.title,
+    recipe.description,
+    recipe.ingredients,
+    recipe.ingredients_nomeasure,
+    recipe.instructions,
+    to_tsvector('english', recipe.title || ' ' || recipe.description || ' ' || recipe.ingredients_nomeasure || ' ' || users.username) as title_desc_ingredients_username
+    from 
+    recipe
+    join users on recipe.userid = users.userid;
 
 -- Materialized view needs update every insert into recipe
 refresh materialized view recipe_search;
@@ -74,4 +77,4 @@ create table recipe_comment (
 
 
 
-create index idx_title_desc on recipe using gin(title_desc);
+create index title_desc_ingredients_username_index on recipe using gin(title_desc_ingredients_username);
