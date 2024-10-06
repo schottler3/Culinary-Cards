@@ -6,7 +6,7 @@ let setRecipes = function() {
     let numRecipes = 10;
 
     let createRecipeTile = document.createElement('div');
-    createRecipeTile.setAttribute('class', 'createRecipeTile');
+    createRecipeTile.setAttribute('class', 'pure-u-1 pure-u-sm-1-3 pure-u-md-1-4 pure-u-lg-1-5 pure-u-xl-1-6 createRecipeTile ');
     createRecipeTile.innerHTML = '+';
     createRecipeTile.addEventListener('click', function() {
         window.location.href = '/createRecipe';
@@ -15,7 +15,7 @@ let setRecipes = function() {
 
     for (let i = 0; i < numRecipes; i++) {
         let recipe = document.createElement('div');
-        recipe.setAttribute('class', 'profileRecipe');
+        recipe.setAttribute('class', 'pure-u-1 pure-u-sm-1-3 pure-u-md-1-4 pure-u-lg-1-5 pure-u-xl-1-6 profileRecipe');
         profileRecipesContainer.appendChild(recipe);
     }
 }

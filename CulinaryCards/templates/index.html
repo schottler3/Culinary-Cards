@@ -3,30 +3,6 @@
 {% block extraHeadSpace %}
 {% endblock %}
 
-{% block top %}
-    <div class="header">
-      <div class="home-menu pure-menu pure-menu-horizontal pure-menu-fixed navbar">
-          <a class="pure-menu-heading" href="">Culinary Cards</a>
-
-          <ul class="pure-menu-list options">
-              <li class="pure-menu-item pure-menu-selected"><a href="#" class="pure-menu-link">Home</a></li>
-              <li class="pure-menu-item"><a href="#" class="pure-menu-link">Categories</a></li>
-          </ul>
-          <ul class="pure-menu-list accountAccess">
-            {% if session %}
-              <li class="pure-menu-item"><a href="#" class="pure-menu-link">Profile</a></li>
-              <li class="pure-menu-item"><a href="/logout" class="pure-menu-link">Log Out</a></li>
-            {% else %}
-              <li class="pure-menu-item"><a href="/login" class="pure-menu-link">Log In</a></li>
-            {% endif %}
-          </ul>
-      </div>
-    </div>
-
-    <div id="hometop">
-    </div>
-{% endblock %}
-
 {% block middle %}
     <div id="homesearch">
       <form action="/search" method="POST" class="pure-form">
