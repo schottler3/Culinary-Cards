@@ -1,3 +1,7 @@
+:root {
+    --margins_sides: 15%;
+}
+
 body {
     margin-top: 100px;
     display: flex;
@@ -12,7 +16,6 @@ body {
     align-items: center; 
     text-align: center;
     width: 100%;
-    gap: 0;
 }
 
 .pfp {
@@ -20,8 +23,6 @@ body {
     height: 100px;
     border-radius: 50%;
     border: 3px solid black;
-    margin: 0;
-    padding: 0;
 }
 
 .username {
@@ -36,15 +37,11 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
-    margin: 0;
-    padding: 0;
 }
 
 .icon {
     width: 24px;
     height: 24px;
-    margin: 0;
-    padding: 0;
 }
 
 .numberOf {
@@ -54,31 +51,22 @@ body {
 }
 
 .profileRecipeMenu {
-    margin-top: 10%;
+    margin-left: var(--margins_sides);
+    margin-right: var(--margins_sides);
+    margin-top: 5%;
     display: flex;
-    width: 100vh;
-    gap: 0;
+    align-items: center;
+    background-color: rgb(255, 230, 204);
 }
 
 .profileMenu {
     display: flex;
-    width: auto;
-    background-color: rgb(255, 230, 204);
-    gap: 0;
-}
-
-#profileRecipesContainer {
-    margin-top: 20px;
-    margin-bottom: 10%;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(20%, 10fr));
-    gap: 8px;
 }
 
 #sortContainer {
     display: flex;
-    align-items: center;
-    margin-left: auto;
+    justify-content: flex-end;
+    margin-right: 8px;
 }
 
 #sortContainer label {
@@ -89,7 +77,13 @@ body {
     display: flex;
     justify-content: flex-end;
     gap: 8px;
-    margin-left: auto;
+}
+
+#profileRecipesContainer {
+    margin-top: 8px;
+    justify-content: center;
+    margin-left: var(--margins_sides);
+    margin-right: var(--margins_sides);
 }
 
 .profileRecipe {
@@ -113,4 +107,8 @@ body {
 
 .createRecipeTile:hover {
     background-color: rgb(179, 255, 240);
+}
+
+.pure-g {
+    gap: 8px;
 }

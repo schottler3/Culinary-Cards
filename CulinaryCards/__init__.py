@@ -35,7 +35,11 @@ def index():
 
 @app.route("/profile")
 def profile():
-    return render_template("profile.html")
+    if 'user' in session:
+        user = session['user']
+        return render_template('profile.html', user=user)
+    else:
+        return redirect('/login')
 
 @app.route("/createRecipe")
 def createRecipe():
