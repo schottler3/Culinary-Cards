@@ -170,7 +170,7 @@ def addRecipeToDB(dict):
     title_desc_ingredients_username = dict["title"] + " " + dict["description"]
     ingredients_nomeasure = ""
     for ingredient in dict["ingredients"]:
-        ingredients = ingredient.split(" ")
+        ingredients = ingredient.split(",")
         title_desc_ingredients_username += " " + ingredients[0]
         ingredients_nomeasure += ingredients[0] + " "
     try:
@@ -194,7 +194,7 @@ def updateRecipeInDB(dict):
     title_desc_ingredients_username = dict["title"] + " " + dict["description"]
     ingredients_nomeasure = ""
     for ingredient in dict["ingredients"]:
-        ingredients = ingredient.split(" ")
+        ingredients = ingredient.split(",")
         title_desc_ingredients_username += " " + ingredients[0]
         ingredients_nomeasure += ingredients[0] + " "
     # str was messing with str method :(
