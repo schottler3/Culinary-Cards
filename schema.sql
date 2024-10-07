@@ -1,5 +1,3 @@
-create extension if not exists pg_trgm;
-
 create table users (
     userid serial primary key,
     username varchar(50) unique not null,
