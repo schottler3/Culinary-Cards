@@ -35,7 +35,7 @@ def addUserToDBAuthOnly(auth):
         cursor.execute(qstr,("user" + str(maxid),auth,""))
         connection.commit()
     except:
-        print("Failed to commit new user to users")
+        print("Failed to commit new user to users with auth")
     finally:
         cursor.close()
         connection.close()
