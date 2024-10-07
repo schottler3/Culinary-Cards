@@ -9,6 +9,7 @@ gunicorn = "*"
 flask = "*"
 requests = "*"
 authlib = "*"
+python-dotenv = "*"
 
 [dev-packages]
 

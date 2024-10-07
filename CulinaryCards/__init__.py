@@ -6,10 +6,10 @@ from urllib.parse import quote_plus, urlencode
 
 from datetime import *
 
-from flask import Flask, redirect, render_template, session, url_for
+from flask import Flask, redirect, render_template, session, url_for,request
 from dotenv import find_dotenv, load_dotenv
 from authlib.integrations.flask_client import OAuth
-
+import dbinteractions as db
 ENV_FILE = find_dotenv()
 if ENV_FILE:
     load_dotenv(ENV_FILE)
