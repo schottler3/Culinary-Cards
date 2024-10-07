@@ -1,3 +1,6 @@
+var username;
+var bio;
+var pfp;
 
 let setRecipes = function() {
     let profileRecipesContainer = document.getElementById('profileRecipesContainer');
@@ -18,6 +21,70 @@ let setRecipes = function() {
         recipe.setAttribute('class', 'pure-u-1 pure-u-sm-1-3 pure-u-md-1-4 pure-u-lg-1-5 pure-u-xl-1-6 profileRecipe');
         profileRecipesContainer.appendChild(recipe);
     }
+}
+
+let toggleEdit = function() {
+    let editProfileContainer = document.getElementById('editProfileContainer');
+    if(editProfileContainer.style.display === 'block') {
+        pfpToggle();
+    } else {
+        editProfileContainer.style.display = 'block';
+        let preview = document.getElementById('pfpPreview');
+        preview.setAttribute('src', pfp.getAttribute('src'));
+    }
+}
+
+let pfpToggle = function() {
+    let pfpSelect = document.getElementById('pfpSelect');
+    let pfpGrayBackground = document.getElementById('pfpGrayBackground');
+    if(pfpGrayBackground.style.display === 'block') {
+        pfpGrayBackground.style.display = 'none';
+        pfpSelect.style.display = 'none';
+    } else {
+        pfpGrayBackground.style.display = 'block';
+        pfpSelect.style.display = 'grid';
+    }
+}
+
+function setPfp(input) {
+    const file = input.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(stream) {
+            const pfpPreview = document.getElementById('pfpPreview');
+            pfpPreview.src = stream.target.result;
+        }
+        reader.readAsDataURL(file);
+    } 
+}
+
+//This will change once we have a way to set the user's profile
+let setProfile = function() {
+    user = sessionStorage.getItem('user');
+
+    pfp = document.getElementById('pfp');
+    pfp.setAttribute('src', '../static/test.png');
+
+    username = document.getElementById('username');
+    username.innerHTML = 'schottler3';
+
+    bio = document.getElementById('bio');
+    bio.innerHTML = 'I like to cook and bake!';
+
+    let numRecipes = document.getElementById('numberOfRecipes');
+    numRecipes.innerHTML = '0';
+
+    let numLikes = document.getElementById('numberOfLikes');
+    numLikes.innerHTML = '0';
+}
+
+let submitPfp = function() {
+    const pfpPreview = document.getElementById('pfpPreview');
+    const imageSrc = pfpPreview.src;
+
+    pfpToggle();
+
+    // This will change once we have a way to submit the user's profile picture
 }
 
 let sortRecipes = function() {
@@ -42,17 +109,7 @@ let changeToSaved = function() {
 }
 
 window.onload = function() {
-    let pfp = document.getElementById('pfp');
-    pfp.setAttribute('src', '../static/test.png');
-
-    let username = document.getElementById('username');
-    username.innerHTML = 'schottler3';
-
-    let numRecipes = document.getElementById('numberOfRecipes');
-    numRecipes.innerHTML = '0';
-
-    let numLikes = document.getElementById('numberOfLikes');
-    numLikes.innerHTML = '0';
+    setProfile();
 
     document.getElementById('sortProfileRecipes').addEventListener('change', sortRecipes);
 
