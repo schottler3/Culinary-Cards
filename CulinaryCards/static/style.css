@@ -9,11 +9,12 @@ body {
     height: 20px;
 }
 
-#pfp {
-    width: 100px;
-    height: 100px;
+.pfp {
+    width: 10vh;
+    height: 10vh;
     border-radius: 50%;
     border: 3px solid black;
+    display: none;
 }
 
 form{
@@ -116,7 +117,7 @@ form{
         rgba(0, 0, 0, 0.2)
       ), url("resources/dinner.jpg");
 }
-=======
+
 .options {
     display: flex;
     justify-content: flex-start;
@@ -128,5 +129,27 @@ form{
     justify-content: flex-end;
     align-items: center;
     margin-left: auto;
+}
+
+.pure-button.cancel {
+    background-color: red;
+    color: white;
+    border: none;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.pure-button.submit {
+    background-color: green;
+    color: white;
+    border: none;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
 }
 
