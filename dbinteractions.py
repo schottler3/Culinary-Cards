@@ -4,6 +4,43 @@ import datetime
 ####################################################################################
 # users related functions
 
+# Returns -1 if user is not in system
+def getUserIDFromAuth(auth):
+    connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
+    cursor = connection.cursor()
+    if auth is None:
+        return -1
+    try:
+        str = "select userID from users where authenticationid = %ss"
+        cursor.execute(str, auth)
+        result = cursor.fetchone()
+        if result != None:
+            return result[0]
+        return -1 
+    except:
+        print("Failed to select user")
+        return -1
+    finally:
+        cursor.close()
+        connection.close()
+    
+def addUserToDBAuthOnly(auth):
+    connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
+    cursor = connection.cursor()
+    # str was messing with str method :(
+    qstr = "insert into users (username,authenticationid,bio) values (%s,%s,%s)"
+    try:
+        cursor.execute("select max(userid) from users")
+        maxid = cursor.fetchone()[0]
+        cursor.execute(qstr,("user" + str(maxid),auth,""))
+        connection.commit()
+    except:
+        print("Failed to commit new user to users")
+    finally:
+        cursor.close()
+        connection.close()
+
+
 # dict has these keys: username, email, authid, fname,lname, bio
 def addUserToDB(dict):
     connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
