@@ -99,7 +99,7 @@ def redirectToSearch():
     # print(api_json)
 
     # return render_template("test.html")
-    return render_template("test.html")
+    return render_template("test.html",results=results)
     
 
 @app.route("/login")
