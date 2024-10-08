@@ -1,6 +1,8 @@
 import os
 import requests
 import json
+#https://stackoverflow.com/questions/5590170/what-is-the-standard-method-for-generating-a-nonce-in-python
+import uuid
 from os import environ as env
 from urllib.parse import quote_plus, urlencode
 
@@ -33,14 +35,6 @@ oauth.register(
 def index():
     return render_template("index.html")
 
-@app.route("/profile")
-def profile():
-    if 'user' in session:
-        user = session['user']
-        return render_template('profile.html', user=user)
-    else:
-        return redirect('/login')
-
 @app.route("/createRecipe")
 def createRecipe():
     return render_template("createRecipe.html")
@@ -48,32 +42,97 @@ def createRecipe():
 @app.route("/search",methods=['POST'])
 def redirectToSearch():
     user_query = request.form["queryhome"]
-
     results = db.searchRecipeByKeywords(user_query)
-    testdictuser = {
-        "username" : "Adam",
-        "email" : "adamkvant@gmail.com",
-        "authid" : "ijfoqwdjiojwoidjq",
-        "fname" : "Adam",
-        "lname" : "Kvant",
-        "bio" : "Hello World"
-    }
+    return render_template("test.html",results=results)
+    
 
-    testdictrecipe = {
-        "title" : "Chicken Alfredo",
-        "description" : "The superior pasta",
-        "ingredients" : ["Chicken","Alfredo"],
-        "instructions" : ["Add love"],
-        "userid" : "1"
-    }
+@app.route("/login")
+def login():
+    nonce = uuid.uuid4().hex
+    session["nonce"] = nonce
+    return oauth.auth0.authorize_redirect(
+        redirect_uri=url_for("callback", _external=True)
+    )
 
-    testdictrecipeupdate = {
-        "title" : "Chicken Alfredo2",
-        "description" : "The bestest pasta",
-        "ingredients" : ["Chicken","Alfredo Sauce","Pesto"],
-        "instructions" : ["Add pasta","Add chicken"],
-        "recipeid" : "1"
-    }
+@app.route("/callback", methods=["GET", "POST"])
+def callback():
+    AuthToken = oauth.auth0.authorize_access_token()
+    token = oauth.auth0.parse_id_token(AuthToken,session["nonce"])
+    userId = db.getUserIDFromAuth(token)
+    if  userId != -1:
+        session["user"] = userId
+        session["token"] = token
+    else:
+        db.addUserToDBAuthOnly(token)
+        userId = db.getUserIDFromAuth(token)
+        session["user"] = userId
+        session["token"] = token
+    return redirect("/")
+
+@app.route("/profile")
+def profile():
+    if 'user' in session:
+        user = session['user']
+        if('token' in session):
+            userid = db.getUserIDFromAuth(session['token']) 
+            if userid != -1:
+                user = db.getUserInfoByUserID(session['user'])
+                return render_template('profile.html', user=user)
+            else:
+                return redirect('/login')
+        return render_template('profile.html', user=user)
+    else:
+        return redirect('/login')
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect(
+        "https://" + env.get("AUTH0_DOMAIN")
+        + "/v2/logout?"
+        + urlencode(
+            {
+                "returnTo": url_for("index", _external=True),
+                "client_id": env.get("AUTH0_CLIENT_ID"),
+            },
+            quote_via=quote_plus,
+        )
+    )
+
+if __name__ == "__main__":
+    if os.getenv("FLASK_ENV") == "development":
+        app.config['TEMPLATES_AUTO_RELOAD'] = True
+        app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
+        app.run(debug=True)
+    else:
+        app.run()
+
+#######################################################
+#Adam's test stuff
+# testdictuser = {
+    #     "username" : "Adam",
+    #     "email" : "adamkvant@gmail.com",
+    #     "authid" : "ijfoqwdjiojwoidjq",
+    #     "fname" : "Adam",
+    #     "lname" : "Kvant",
+    #     "bio" : "Hello World"
+    # }
+
+    # testdictrecipe = {
+    #     "title" : "Chicken Alfredo",
+    #     "description" : "The superior pasta",
+    #     "ingredients" : ["Chicken","Alfredo"],
+    #     "instructions" : ["Add love"],
+    #     "userid" : "1"
+    # }
+
+    # testdictrecipeupdate = {
+    #     "title" : "Chicken Alfredo2",
+    #     "description" : "The bestest pasta",
+    #     "ingredients" : ["Chicken","Alfredo Sauce","Pesto"],
+    #     "instructions" : ["Add pasta","Add chicken"],
+    #     "recipeid" : "1"
+    # }
 
     #db.addUserToDB(testdictuser)
     # db.updateUser("Adam2","kvant003@umn.edu","Kvant","Adam","World Hello","2")
@@ -99,40 +158,3 @@ def redirectToSearch():
     # print(api_json)
 
     # return render_template("test.html")
-    return render_template("test.html",results=results)
-    
-
-@app.route("/login")
-def login():
-    return oauth.auth0.authorize_redirect(
-        redirect_uri=url_for("callback", _external=True)
-    )
-
-@app.route("/callback", methods=["GET", "POST"])
-def callback():
-    token = oauth.auth0.authorize_access_token()
-    session["user"] = token
-    return redirect("/")
-
-@app.route("/logout")
-def logout():
-    session.clear()
-    return redirect(
-        "https://" + env.get("AUTH0_DOMAIN")
-        + "/v2/logout?"
-        + urlencode(
-            {
-                "returnTo": url_for("index", _external=True),
-                "client_id": env.get("AUTH0_CLIENT_ID"),
-            },
-            quote_via=quote_plus,
-        )
-    )
-
-if __name__ == "__main__":
-    if os.getenv("FLASK_ENV") == "development":
-        app.config['TEMPLATES_AUTO_RELOAD'] = True
-        app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
-        app.run(debug=True)
-    else:
-        app.run()
