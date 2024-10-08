@@ -1,7 +1,6 @@
 import os
 import requests
 import json
-#https://stackoverflow.com/questions/5590170/what-is-the-standard-method-for-generating-a-nonce-in-python
 import uuid
 from os import environ as env
 from urllib.parse import quote_plus, urlencode
@@ -48,16 +47,17 @@ def redirectToSearch():
 
 @app.route("/login")
 def login():
-    nonce = uuid.uuid4().hex
-    session["nonce"] = nonce
+    
+    session["nonce"] = str(uuid.uuid4().hex)
     return oauth.auth0.authorize_redirect(
-        redirect_uri=url_for("callback", _external=True)
+        redirect_uri=url_for("callback", _external=True),nonce = session["nonce"]
     )
 
 @app.route("/callback", methods=["GET", "POST"])
 def callback():
     AuthToken = oauth.auth0.authorize_access_token()
-    token = oauth.auth0.parse_id_token(AuthToken,session["nonce"])
+    token = oauth.auth0.parse_id_token(AuthToken, nonce = session["nonce"])
+    token = token.get("sub")
     userId = db.getUserIDFromAuth(token)
     if  userId != -1:
         session["user"] = userId
@@ -77,11 +77,15 @@ def profile():
             userid = db.getUserIDFromAuth(session['token']) 
             if userid != -1:
                 user = db.getUserInfoByUserID(session['user'])
+                print(1)
                 return render_template('profile.html', user=user)
             else:
+                print(2)
                 return redirect('/login')
+        print(3)
         return render_template('profile.html', user=user)
     else:
+        print(4)
         return redirect('/login')
 
 @app.route("/logout")

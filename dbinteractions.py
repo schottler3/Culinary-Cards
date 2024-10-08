@@ -11,14 +11,14 @@ def getUserIDFromAuth(auth):
     if auth is None:
         return -1
     try:
-        str = "select userID from users where authenticationid = %ss"
-        cursor.execute(str, auth)
+        qstr = "select userID from users where authenticationid = %s"
+        cursor.execute(qstr,(auth,))
         result = cursor.fetchone()
         if result != None:
             return result[0]
         return -1 
     except:
-        print("Failed to select user")
+        print(f"Failed to select user {auth}")
         return -1
     finally:
         cursor.close()
@@ -32,7 +32,7 @@ def addUserToDBAuthOnly(auth):
     try:
         cursor.execute("select max(userid) from users")
         maxid = cursor.fetchone()[0]
-        cursor.execute(qstr,("user" + str(maxid),auth,""))
+        cursor.execute(qstr,("user" + str(maxid+1),auth,""))
         connection.commit()
     except:
         print("Failed to commit new user to users with auth")
@@ -61,8 +61,8 @@ def getUserInfoByUserID(userID):
     if userID is None:
         return {}
     try:
-        str = "select * from users where userid = %s"
-        cursor.execute(str, userID)
+        qstr = "select * from users where userid = %s"
+        cursor.execute(qstr, (str(userID),))
         result = cursor.fetchone()
         if result != None:
             resultdict = {}
