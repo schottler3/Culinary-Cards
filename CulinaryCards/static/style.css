@@ -1,6 +1,3 @@
-* {
-}
-
 body {
     background-color: #ebebeb;
 }
@@ -22,7 +19,11 @@ form{
     text-align: center;
 }
 
-#hometop,
+#hometop {
+    height: 30vh;
+    width: 100vw;
+}
+
 #homebottom{
     height: 40vh;
     width: 100vw;
@@ -34,19 +35,37 @@ form{
 }
 
 .logoBig{
-    font-size: 5em;
     color: goldenrod;
 }
 
+.query-container{
+    display: flex;
+    justify-content: center;
+}
+
 #queryhome {
-    margin-top: .3em;
-    width: 75%;
+    width: 40%;
     margin-right: 0;
+    margin-bottom: 0;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 0px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 0px;
 }
 
 #queryhomesubmit{
     margin-left: 0;
-    width: 10%;
+    width: 70px;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 10px;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 10px;
+    border: none;
+    background-color: #ababab;
+}
+
+#queryhomesubmit:hover {
+    background-color: #8f8f8f;
 }
 
 .navbar {
@@ -101,21 +120,39 @@ form{
     background-image: linear-gradient(
         rgba(0, 0, 0, 0.2),
         rgba(0, 0, 0, 0.2)
-      ), url("resources/breakfast.jpg");
+    ), url("resources/breakfast.jpg");
 }
 #lunch {
     background-image: linear-gradient(
         rgba(0, 0, 0, 0.2),
         rgba(0, 0, 0, 0.2)
-      ), url("resources/lunch.jpg");
+    ), url("resources/lunch.jpg");
 }
 
 #dinner {
     background-image: linear-gradient(
         rgba(0, 0, 0, 0.2),
         rgba(0, 0, 0, 0.2)
-      ), url("resources/dinner.jpg");
+    ), url("resources/dinner.jpg");
 }
+
+#dessert {
+    background-image: linear-gradient(
+        rgba(0, 0, 0, 0.2),
+        rgba(0, 0, 0, 0.2)
+    ), url("resources/dessert.jpg");
+}
+
+#footer {
+    height: 40px;
+    display: flex;
+    /* justify-content: center; */
+    align-items: center;
+    width: 100vw;
+    padding-left: 1vw;
+    background-color: #d6d6d6;
+}
+
 =======
 .options {
     display: flex;
@@ -130,3 +167,38 @@ form{
     margin-left: auto;
 }
 
+
+/* Small only */
+@media screen and (max-width: 39.9375em) {
+    .logoBig{
+        font-size: 2em;
+    }
+}
+
+/* Medium only */
+@media screen and (min-width: 40em) and (max-width: 63.9375em) {
+    .logoBig{
+        font-size: 2.5em;
+    }
+}
+
+/* Medium and up */
+@media screen and (min-width: 40em) {
+    .logoBig{
+        font-size: 3em;
+    }
+}
+
+/* Large only */
+@media screen and (min-width: 64em) and (max-width: 74.9375em) {
+    .logoBig{
+        font-size: 4em;
+    }
+}
+
+/* Large and up */
+@media screen and (min-width: 64em) {
+    .logoBig{
+        font-size: 5em;
+    }
+}

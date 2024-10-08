@@ -4,15 +4,20 @@
 {% endblock %}
 
 {% block top %}
+  <div class="pure-u" id="hometop"></div>
 {% endblock %}
 
 {% block middle %}
-    <div id="homesearch">
-      <form action="/search" method="POST" class="pure-form">
-        <div>
-            <label for="queryhome" class="logoBig"><span class="logoC">C</span>ulinary<span class="logoC">C</span>ards</label>
-            <input type="search" id="queryhome" name="queryhome" placeholder="Search 100s of Recipes..." required>
-            <input type="submit" id="queryhomesubmit" value="Search" class="pure-button">
+    <div class="pure-g pure-u-1" id="homesearch">
+      <form action="/search" method="POST" class="pure-g pure-u-1 pure-form">
+        <div class="pure-g pure-u-1">
+            <label for="queryhome" class="pure-u-1 logoBig">
+              <span class="logoC">C</span>ulinary<span class="logoC">C</span>ards
+            </label>
+            <div class="pure-g query-container">
+              <input class="pure-u-2-3" type="search" id="queryhome" name="queryhome" placeholder="Search 100s of Recipes..." required>
+              <input class="pure-u-1-3" type="submit" id="queryhomesubmit" value="Search" class="pure-button">
+            </div>
         </div>
         <div>
           
@@ -22,14 +27,16 @@
 {% endblock %}
 
 {% block bottom %}
-    <div id="homebottom">
-    </div>
+    <div class="pure-u" id="homebottom"></div>
     <div class="pure-g card-container">
       <a class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-4 pure-img card" id="breakfast">Breakfast</a>
       <a class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-4 pure-img card" id="lunch"> Lunch </a>
       <a class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-4 pure-img card" id="dinner"> Dinner </a>
       <a class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-4 pure-img card" id="dessert"> Dessert </a>
     </div>
-{% endblock %}
 
+    <div class="pure-u-1" id="footer">
+      Project by: Adam Kvant, Minh Tong, Rock Zgutowicz, Lucas Schottler
+    </div>
+{% endblock %}
 
