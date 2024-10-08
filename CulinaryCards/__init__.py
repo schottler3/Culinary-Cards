@@ -4,10 +4,12 @@ import json
 import uuid
 from os import environ as env
 from urllib.parse import quote_plus, urlencode
+from functools import wraps
 
 from datetime import *
 
-from flask import Flask, redirect, render_template, session, url_for,request
+from flask import Flask, redirect, render_template, session, url_for,request, json
+
 from dotenv import find_dotenv, load_dotenv
 from authlib.integrations.flask_client import OAuth
 import dbinteractions as db
@@ -29,6 +31,16 @@ oauth.register(
     },
     server_metadata_url=f'https://{env.get("AUTH0_DOMAIN")}/.well-known/openid-configuration'
 )
+
+def requires_auth(f):
+  @wraps(f)
+  def decorated(*args, **kwargs):
+    if 'user' not in session and 'token' not in session:
+      # Redirect to Login page here
+      return redirect('/login')
+    return f(*args, **kwargs) #do the normal behavior -- return as it does.
+
+  return decorated
 
 @app.route("/")
 def index():
@@ -77,8 +89,12 @@ def profile():
             userid = db.getUserIDFromAuth(session['token']) 
             if userid != -1:
                 user = db.getUserInfoByUserID(session['user'])
+                userlikes = db.getLikeCountForUser(session['user'])
+                recipes = db.getAllRecipesUser(session['user'])
+                recipecount = len(recipes)
+                print(user)
                 print(1)
-                return render_template('profile.html', user=user)
+                return render_template('profile.html', user=user,userlikes = userlikes,recipes = recipes,recipecount = recipecount)
             else:
                 print(2)
                 return redirect('/login')
@@ -102,6 +118,16 @@ def logout():
             quote_via=quote_plus,
         )
     )
+
+@requires_auth
+@app.route("/api/editprofile",methods=['PUT'])
+def submitEditProfile():
+    edits = request.get_json()
+    if db.updateUser(edits["username"],"","","",edits["bio"],session["user"]):
+        return json.jsonify({"status": "success", "message": "Profile updated"}), 200
+    else:
+        return json.jsonify({"status": "failure", "message": "Failed profile update"}), 400
+
 
 if __name__ == "__main__":
     if os.getenv("FLASK_ENV") == "development":

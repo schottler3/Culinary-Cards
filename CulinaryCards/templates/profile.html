@@ -30,15 +30,15 @@
                 <img id="pfp" alt="Profile Picture" class="pfp" onload="showImage(this)">
                 <img id="editProfile" src="https://cdn-icons-png.flaticon.com/512/1250/1250925.png" alt="Edit Profile" class="editPfp" onclick="toggleEdit(this)">
             </div>
-            <h1 id="username" class="username"></h1>
-            <h5 id="bio" class="bio"></h5>
+            <h1 id="username" class="username">{{user["username"]}}</h1>
+            <h5 id="bio" class="bio">{{user["bio"]}}</h5>
             <div class="numberOfCluster">
                 <img src="https://cdn-icons-png.flaticon.com/512/1999/1999896.png" class="icon" alt="Spatula Icon">            
-                <h2 id="numberOfRecipes" class="numberOf"></h2>
+                <h2 id="numberOfRecipes" class="numberOf">{{recipecount}}</h2>
             </div>
             <div class="numberOfCluster">
                 <img src="https://cdn-icons-png.flaticon.com/512/833/833472.png" class="icon" alt="Heart Icon">
-                <h2 id="numberOfLikes" class="numberOf"></h2>
+                <h2 id="numberOfLikes" class="numberOf">{{userlikes}}</h2>
             </div>
         </div>
         <div class="pure-u-1-4" id="editProfileContainer">

@@ -60,6 +60,7 @@ def getUserInfoByUserID(userID):
     cursor = connection.cursor()
     if userID is None:
         return {}
+    print(userID)
     try:
         qstr = "select * from users where userid = %s"
         cursor.execute(qstr, (str(userID),))
@@ -99,7 +100,7 @@ def getLikeCountForUser(userid):
         return -1
     try:
         str = "select count(*) as likes from recipe_like where userid = %s"
-        cursor.execute(str, userid)
+        cursor.execute(str, (userid,))
         result = cursor.fetchone()
         if result[0] >= 0:
             return result[0]
@@ -118,8 +119,10 @@ def updateUser(username,email,fname,lname,bio,userid):
     try:
         cursor.execute(str,(username,email,fname,lname,bio,userid))
         connection.commit()
+        return True
     except:
         print("Failed to update user")
+        return False
     finally:
         cursor.close()
         connection.close()
@@ -155,7 +158,7 @@ def getAllRecipesUser(userid):
         return []
     try:
         str = "select * from recipe where userid = %s"
-        cursor.execute(str, userid)
+        cursor.execute(str, (userid,))
         result = cursor.fetchall()
         if result:
             return result

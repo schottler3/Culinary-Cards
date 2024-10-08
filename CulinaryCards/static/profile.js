@@ -57,7 +57,7 @@ function checkUsername() {
     }
 }
 
-function submitEdit(event) {
+async function submitEdit(event) {
     let newUsername = document.getElementById('editUsername').value;
     let newBio = document.getElementById('editBio').value;
 
@@ -76,8 +76,19 @@ function submitEdit(event) {
 
     // This will change once we have a way to submit the user's new profile information
 
-    setProfile();
-    toggleEdit(event.target);
+    let changes = {username : newUsername, bio : newBio}
+
+    setProfileResponse = await fetch("/api/editprofile",{method : "PUT", headers : {"Content-Type" : "application/json"}, body: JSON.stringify(changes)});
+    console.log(setProfileResponse.ok)
+    if(setProfileResponse.ok){
+        //setProfile();
+        username = document.getElementById('username');
+        username.value = newUsername
+        bio = document.getElementById('bio');
+        bio.value = newBio
+        toggleEdit(event.target);
+    }
+    
 }
 
 function pfpToggle() {
@@ -123,16 +134,16 @@ function setProfile() {
     pfp.setAttribute('src', '../static/test.png');
 
     username = document.getElementById('username');
-    username.innerHTML = 'schottler3';
+    //username.innerHTML = 'schottler3';
 
     bio = document.getElementById('bio');
-    bio.innerHTML = 'I like to cook and bake!';
+    //bio.innerHTML = 'I like to cook and bake!';
 
     let numRecipes = document.getElementById('numberOfRecipes');
-    numRecipes.innerHTML = '0';
+    //numRecipes.innerHTML = '0';
 
     let numLikes = document.getElementById('numberOfLikes');
-    numLikes.innerHTML = '0';
+    //numLikes.innerHTML = '0';
 }
 
 function submitPfp() {
