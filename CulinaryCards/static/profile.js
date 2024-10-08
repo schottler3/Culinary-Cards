@@ -83,9 +83,9 @@ async function submitEdit(event) {
     if(setProfileResponse.ok){
         //setProfile();
         username = document.getElementById('username');
-        username.value = newUsername
+        username.innerText = newUsername
         bio = document.getElementById('bio');
-        bio.value = newBio
+        bio.innerText = newBio
         toggleEdit(event.target);
     }
     
