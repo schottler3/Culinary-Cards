@@ -1,9 +1,53 @@
-body {
-    background-color: #ebebeb;
+* {
+    font-family: "Bentham", serif;
+    color: #393535;
+    box-sizing: border-box;
+}
+
+.bentham-regular { /* Bentham CSS Class */
+    font-family: "Bentham", serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+html, body {
+    background-color: #edede9;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+.paper {
+    background-color: #fff;
+    background-image:
+    linear-gradient(90deg, transparent 79px, #abced4 79px, #abced4 81px, transparent 81px),
+    linear-gradient(#eee .1em, transparent .1em);
+    background-size: 100% 1.2em;
+}
+
+.title {
+    font-family: "Abril Fatface", serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+#hero-container {
+    background-image: url("../static/resources/bookshelf.jpg");
+    height: 50vh;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2em;
+    font-weight: bold;
+    color: white;
 }
 
 #header {
-    height: 20px;
+    height: 0px;
 }
 
 #pfp {
@@ -25,17 +69,31 @@ form{
 }
 
 #homebottom{
-    height: 40vh;
+    padding-top: 40vh;
+    padding-bottom: 5vh;
+    height: 5vh;
     width: 100vw;
+    display: flex;
+    align-items: bottom;
+    justify-content: center;
+}
+
+#arrow {
+    width: auto; /* Or a fixed value like 200px */
+    height: 2vw; /* Change to width value for a perfect square */
+    aspect-ratio: 1; /* This ensures the height is equal to the width */
+    object-fit: cover; /* Ensures the image covers the square without distortion */
+    border-radius: 15px;
+
 }
 
 .logoC{
-    color: orangered;
+    color: rgb(227, 120, 81);
     font-weight: bold;
 }
 
 .logoBig{
-    color: goldenrod;
+    color: #393535;
 }
 
 .query-container{
@@ -61,20 +119,25 @@ form{
     border-bottom-left-radius: 0px;
     border-bottom-right-radius: 10px;
     border: none;
-    background-color: #ababab;
+    background-color: #d6ccc2;
 }
 
 #queryhomesubmit:hover {
-    background-color: #8f8f8f;
+    background-color: #bfa99c;
 }
 
 .navbar {
-    background-color: rgb(236, 236, 255);
+    background-color: #d6ccc2;
     padding: 0 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 100%;
+}
+
+#logo-img {
+    height: 30px;
+    width: auto;
 }
 
 #categories {
@@ -143,14 +206,18 @@ form{
     ), url("resources/dessert.jpg");
 }
 
+#above-cards {
+    height: 40vh;
+}
+
 #footer {
     height: 40px;
+    width: 100%;
     display: flex;
     /* justify-content: center; */
     align-items: center;
-    width: 100vw;
     padding-left: 1vw;
-    background-color: #d6d6d6;
+    background-color: #d6ccc2;
 }
 
 
@@ -188,6 +255,62 @@ form{
     font-size: 16px;
     cursor: pointer;
 }
+
+/* Recipes of the day section */
+#recipe-day-container {
+    display: flex;
+    justify-content: center;
+    padding: 10vh 0vh;
+}
+
+#recipe-day-info-section {
+    height: 40vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+}
+
+#recipe-day-info {
+    padding-left: 1vw;
+}
+
+#recipe-day-section-title {
+    text-align: center;
+    font-weight: bold;
+    padding-bottom: 6vh;
+    font-size: 2.75em;
+}
+
+#recipe-day-title {
+    font-size: 2.25em;
+}
+
+#recipe-day-author {
+    font-size: 1.0em;
+    padding-bottom: 2vh;
+}
+
+#recipe-day-description {
+    font-size: 1.0em;
+    padding-bottom: 2vh;
+}
+
+#recipe-day-img{
+    padding-right: 1vw;
+    height: 100%;
+    display: flex;
+    justify-content: right;
+    flex-direction: row;
+}
+
+#img-of-recipe {
+    width: auto; /* Or a fixed value like 200px */
+    height: 100%; /* Change to width value for a perfect square */
+    aspect-ratio: 1; /* This ensures the height is equal to the width */
+    object-fit: cover; /* Ensures the image covers the square without distortion */
+    border-radius: 15px;
+}
+/* End Section */
 
 /* Small only */
 @media screen and (max-width: 39.9375em) {
