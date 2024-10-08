@@ -4,30 +4,45 @@
 {% endblock %}
 
 {% block top %}
-  <div class="pure-u" id="hometop"></div>
+  <div class="pure-u paper" id="hometop"></div>
 {% endblock %}
 
 {% block middle %}
-    <div class="pure-g pure-u-1" id="homesearch">
-      <form action="/search" method="POST" class="pure-g pure-u-1 pure-form">
-        <div class="pure-g pure-u-1">
-            <label for="queryhome" class="pure-u-1 logoBig">
-              <span class="logoC">C</span>ulinary<span class="logoC">C</span>ards
-            </label>
-            <div class="pure-g query-container">
-              <input class="pure-u-2-3" type="search" id="queryhome" name="queryhome" placeholder="Search 100s of Recipes..." required>
-              <input class="pure-u-1-3" type="submit" id="queryhomesubmit" value="Search" class="pure-button">
-            </div>
+  <div class="pure-g pure-u-1 paper" id="homesearch">
+    <form action="/search" method="POST" class="pure-g pure-u-1 pure-form">
+      <div class="pure-g pure-u-1">
+        <label for="queryhome" class="pure-u-1 logoBig title">
+          <span class="logoC title">C</span>ulinary<span class="logoC title">C</span>ards
+        </label>
+        <div class="pure-g query-container">
+          <input class="pure-u-2-3" type="search" id="queryhome" name="queryhome" placeholder="Search 100s of Recipes..." required>
+          <input class="pure-u-1-3" type="submit" id="queryhomesubmit" value="Search" class="pure-button">
         </div>
-        <div>
-          
-        </div>
-      </form>
-    </div>
+      </div>
+    </form>
+  </div>
 {% endblock %}
 
 {% block bottom %}
-    <div class="pure-u" id="homebottom"></div>
+    <div class="pure-u-1 paper" id="homebottom"><img class="pure-img" id="arrow" src="../static/resources/arrow.png"></div>
+
+    <div id="hero-container"> Search. Cook. Save. </div>
+
+    <div class="pure-g pure-u-1" id="recipe-day-container">
+      <div class="pure-u-1 title" id="recipe-day-section-title">Recipe of the Day</div>
+      <div class="pure-g pure-u-1" id="recipe-day-info-section">
+        <div class="pure-u-1-4" id="recipe-day-img"><img class="pure-img" id="img-of-recipe" src="../static/resources/breakfast.jpg"></div>
+        <div class="pure-g pure-u-1-4" id="recipe-day-info">
+          <div class="pure-u-1" id="recipe-day-title">Peanut Butter Pickles</div>
+          <div class="pure-u-1" id="recipe-day-author">Written by: Peanut B. Pickler</div>
+          <div class="pure-u-1" id="recipe-day-description">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quae unde ducimus nostrum omnis perferendis voluptate doloribus repudiandae tempora dignissimos laudantium neque minus iusto, quo delectus maiores nulla magnam. Quia, molestias!</div>
+          <div class="pure-u-1" id="recipe-day-ingredients">Ingredients: Lorem ipsum dolor sit amet consectetur</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- <div class="pure-u-1" id="above-cards"></div> -->
+
     <div class="pure-g card-container">
       <a class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-4 pure-img card" id="breakfast">Breakfast</a>
       <a class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-4 pure-img card" id="lunch"> Lunch </a>
