@@ -121,6 +121,16 @@ def logout():
     )
 
 @requires_auth
+@app.route("/api/deleterecipe",methods=['DELETE'])
+def deleteRecipeAPI():
+    request = request.get_json()
+    #TODO Need to verify that user owns the recipe before deleting
+    if db.deleteRecipe(request["recipeid"]):
+        return json.jsonify({"status": "success", "message": "Recipe Deleted"}), 200
+    else:
+        return json.jsonify({"status": "failure", "message": "Recipe failed to DELETE"}), 400
+
+@requires_auth
 @app.route("/api/editprofile",methods=['PUT'])
 def submitEditProfile():
     edits = request.get_json()
@@ -136,6 +146,28 @@ def getUsernames():
         return json.jsonify({"status": "success", "message": "True"}), 200
     else:
         return json.jsonify({"status": "failure", "message": "False"}), 400
+
+@app.route("/api/getuserpostsbylikes",methods=['PUT'])
+def getUserPostsSortByLikes():
+    userid = request.get_json()
+    #userid should be in the userid["userid"] location
+    results = db.getAllRecipesUserLikesDesc(userid["userid"])
+    lst =[]
+    for recipe in results:
+        lst.append({
+            "recipeid" : recipe[0],
+            "title" : recipe[1],
+            "description" : recipe[2],
+            "ingredients" : recipe[3],
+            "instructions" : recipe[4],
+            "createdon" : recipe[5],
+            "likecount" : recipe[6],
+        })
+
+    if len(results) != 0:
+        return json.jsonify({"status": "success", "message": "Succeeded to sort user profile by likes", "results" : lst}), 200
+    else:
+        return json.jsonify({"status": "failure", "message": "Failed to sort user profile by likes"}), 400
 
 if __name__ == "__main__":
     if os.getenv("FLASK_ENV") == "development":
