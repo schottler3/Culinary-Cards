@@ -5,7 +5,7 @@ import datetime
 # users related functions
 
 
-# Returns -1 if user is not in system
+# Returns Boolean if user is not in system
 def getUserInstanceFromUsername(username):
     connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
     cursor = connection.cursor()
