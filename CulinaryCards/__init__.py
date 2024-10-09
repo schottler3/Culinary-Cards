@@ -123,6 +123,7 @@ def logout():
 @app.route("/api/deleterecipe",methods=['DELETE'])
 def deleteRecipeAPI():
     request = request.get_json()
+    #TODO Need to verify that user owns the recipe before deleting
     if db.deleteRecipe(request["recipeid"]):
         return json.jsonify({"status": "success", "message": "Recipe Deleted"}), 200
     else:
