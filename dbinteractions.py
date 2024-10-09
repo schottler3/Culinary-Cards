@@ -4,6 +4,28 @@ import datetime
 ####################################################################################
 # users related functions
 
+
+# Returns -1 if user is not in system
+def getUserInstanceFromUsername(username):
+    connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
+    cursor = connection.cursor()
+    if username is None:
+        return False
+    try:
+        qstr = "select * from users where username = %s"
+        cursor.execute(qstr,(username,))
+        result = cursor.fetchone()
+        if result is not None:
+            return True
+        return False
+    except:
+        print(f"Failed to select user")
+        return False
+    finally:
+        cursor.close()
+        connection.close()
+
+
 # Returns -1 if user is not in system
 def getUserIDFromAuth(auth):
     connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
@@ -18,7 +40,7 @@ def getUserIDFromAuth(auth):
             return result[0]
         return -1 
     except:
-        print(f"Failed to select user {auth}")
+        print(f"Failed to select user")
         return -1
     finally:
         cursor.close()
