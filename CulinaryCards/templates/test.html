@@ -1,6 +1,14 @@
 {% extends "boilerplateTemplate.html" %}
 
 {% block everything %}
-<p>Endpoint reached!</p>
-<p>{{results}}<p>
+{% for item in results %} {# Making a div for every submission to list their name and thoughts #}
+<div class="pure-g pure-u-1">
+  <div class="pure-u-1"> 
+    {{ item[0] }}
+      has
+    "{{ item[1] }}"
+      calories
+  </div>
+</div>
+{% endfor %}
 {% endblock %}

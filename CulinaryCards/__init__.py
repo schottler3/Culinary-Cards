@@ -15,9 +15,8 @@ from flask import Flask, redirect, render_template, session, url_for,request, js
 from dotenv import find_dotenv, load_dotenv
 from authlib.integrations.flask_client import OAuth
 import dbinteractions as db
+import apirequests as apireq
 import recipeOfTheDay as rotd
-
-
 
 ENV_FILE = find_dotenv()
 if ENV_FILE:
@@ -66,9 +65,18 @@ def createRecipe():
 
 @app.route("/search",methods=['POST'])
 def redirectToSearch():
+    sendData = []
     user_query = request.form["queryhome"]
     results = db.searchRecipeByKeywords(user_query)
-    return render_template("test.html",results=results)
+    if len(results) < 1:
+        results = apireq.recipe_search(user_query)
+    for item in results:
+        recipe = item['recipe']
+        label = recipe.get('label')
+        calories = recipe.get('calories')
+        sendData.append([label, calories])
+    print(f"results is: {sendData}")
+    return render_template("index.html",results=sendData)
     
 
 @app.route("/login")
