@@ -172,14 +172,20 @@ def getAllLikedRecipesForUser(userid):
         cursor.close()
         connection.close()
 
-# Returns list of tuples in form: (recipeid,title,description,ingredients,instructions,created_on,user_id,title_desc)
+# Returns list of tuples in form: (recipeid,title,description,ingredients,instructions,created_on,likecount)
 def getAllRecipesUser(userid):
     connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
     cursor = connection.cursor()
     if userid is None:
         return []
     try:
-        str = "select * from recipe where userid = %s"
+        str = """
+            select recipe.recipeid, recipe.title, recipe.description, recipe.ingredients,
+            recipe.instructions, recipe.created_on,count(recipe_like.likeid) as postlikes
+            from recipe
+            left join recipe_like on recipe.recipeid = recipe_like.recipeid
+            where recipe.userid = %s
+            group by recipe.recipeid"""
         cursor.execute(str, (userid,))
         result = cursor.fetchall()
         if result:
@@ -192,7 +198,35 @@ def getAllRecipesUser(userid):
         cursor.close()
         connection.close()
 
+# Returns list of tuples in form: (recipeid,title,description,ingredients,instructions,created_on,likecount)
+def getAllRecipesUserLikesDesc(userid):
+    connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
+    cursor = connection.cursor()
+    if userid is None:
+        return []
+    try:
+        str = """
+            select recipe.recipeid, recipe.title, recipe.description, recipe.ingredients, 
+            recipe.instructions, recipe.created_on,count(recipe_like.likeid) as postlikes
+            from recipe
+            left join recipe_like on recipe.recipeid = recipe_like.recipeid
+            where recipe.userid = %s
+            group by recipe.recipeid
+            order by postlikes desc
+            """
+        cursor.execute(str, (userid,))
+        result = cursor.fetchall()
+        if result:
+            return result
+        else:
+            return []
+    except:
+        print("Failed to get recipes for specific user")
+    finally:
+        cursor.close()
+        connection.close()
 
+ 
 
 ####################################################################################
 
