@@ -6,11 +6,34 @@
 {% endblock %}
 
 {% block middle %}
+    <div class="pure-u-1 paper" id="createRecipeTop"></div>
+    <a class="pure-button" id="backProfile" href="/profile">Back to Profile</a>
 
     <div class="createRecipeContainer">
-        <h1>Create a Recipe</h1>
-        <form action="/createRecipe" method="POST" class="pure-form pure-form-stacked">
-            
+        <form class="pure-form pure-form-stacked" id="createRecipeOne">
+            <h1 class="step">Enter The Recipe's Title</h1>
+            <input type="text" id="recipeTitle" placeholder="Enter a Title" required>
+
+            <textarea id="recipeDescription" placeholder="Enter a Description" required></textarea>
+
+            <div class="pure-menu pure-menu-horizontal pure-menu-scrollable" id="selectedCategories">
+                <ul class="pure-menu-list"></ul>
+            </div>
+
+            <div id="dropdown-container">
+                <button type="button" class="pure-button" onclick="toggleDropdown()">Select Categories</button>
+                <div id="dropdown" class="dropdown">
+                    <input type="text" placeholder="Search" id="search" onkeyup="filterFunction()">
+                </div>
+            </div>
+
+            <a class="pure-button" onclick="submitTitle()">Submit Title</a>
+        </form>
+        <form class="pure-form pure-form-stacked" id="createRecipeTwo" style="display: none;">
+            <h1 class="step">Enter The Recipe's Ingredients</h1>
+            <div id="ingredientContainer">
+
+            </div>
         </form>
     </div>
 

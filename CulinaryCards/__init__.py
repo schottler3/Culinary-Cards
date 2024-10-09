@@ -91,6 +91,7 @@ def profile():
                 user = db.getUserInfoByUserID(session['user'])
                 userlikes = db.getLikeCountForUser(session['user'])
                 recipes = db.getAllRecipesUser(session['user'])
+                #recipes = [(1,2,3,4,5,6,7,8), (1,2,3,4,5,6,7,8)]
                 recipecount = len(recipes)
                 print(user)
                 print(1)
@@ -138,6 +139,14 @@ def submitEditProfile():
     else:
         return json.jsonify({"status": "failure", "message": "Failed profile update"}), 400
     
+@app.route("/api/isUser",methods=['PUT'])
+def getUsernames():
+    username = request.args.get("username")
+    if db.getUserInstanceFromUsername(username):
+        return json.jsonify({"status": "success", "message": "True"}), 200
+    else:
+        return json.jsonify({"status": "failure", "message": "False"}), 400
+
 @app.route("/api/getuserpostsbylikes",methods=['PUT'])
 def getUserPostsSortByLikes():
     userid = request.get_json()

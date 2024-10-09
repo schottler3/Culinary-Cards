@@ -3,4 +3,66 @@ body {
     justify-content: center;
     align-items: center;
     background-color: white;
+    height: 100vh;
+}
+
+#backProfile {
+    margin-top: 2vh; 
+    margin-left: 2vw;
+}
+
+.createRecipeContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f5f5f5;
+}
+
+.step {
+    font-size: 3.5vmax;
+}
+
+#recipeTitle {
+    width: 40vmax;
+    height: 3vmax;
+    border-radius: 15px;
+}
+
+#createRecipeOne {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2vh;
+}
+
+#recipeTitle::placeholder {
+    font-size: 1.5vmax;
+    text-align: center;
+}
+
+#recipeDescription {
+    width: 36vmax;
+    height: 5vmax;
+}
+
+#selectedCategories {
+    width: 36vmax;
+}
+
+.dropdown {
+    display: none;
+    flex-direction: column;
+}
+
+.option {
+    display: flex;
+    padding: 1vh;
+    justify-content: center;
+    align-items: center;
+    background-color: #d6ccc2;
+}
+
+.option:hover {
+    background-color: #bfa99c;
+    cursor: pointer;    
 }

@@ -47,12 +47,12 @@ html, body {
 }
 
 #header {
-    height: 0px;
+    height: 2vh;
 }
 
-#pfp {
-    width: 100px;
-    height: 100px;
+.pfp {
+    width: 10vh;
+    height: auto;
     border-radius: 50%;
     border: 3px solid black;
 }
