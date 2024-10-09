@@ -116,6 +116,7 @@ def updateUser(username,email,fname,lname,bio,userid):
     connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
     cursor = connection.cursor()
     str = "update users set username = %s, user_email = %s, fname = %s, lname = %s, bio = %s where userid = %s"
+    
     try:
         cursor.execute(str,(username,email,fname,lname,bio,userid))
         connection.commit()
@@ -126,6 +127,7 @@ def updateUser(username,email,fname,lname,bio,userid):
     finally:
         cursor.close()
         connection.close()
+
 
 # Returns list of tuples in form: (recipeid,title,description,ingredients,instructions,created_on,user_id)
 def getAllLikedRecipesForUser(userid):
@@ -203,6 +205,7 @@ def searchRecipeByKeywords(keywords):
         connection.close()
 
 # dict has keys: title,description, ingredients, instructions, userid
+# ingredients & instructions are lists of strings
 def addRecipeToDB(dict):
     connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
     cursor = connection.cursor()

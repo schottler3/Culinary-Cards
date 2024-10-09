@@ -1,27 +1,7 @@
 var username;
 var bio;
 var pfp;
-
-function setRecipes() {
-    let profileRecipesContainer = document.getElementById('profileRecipesContainer');
-    
-    // This will change once we have a way to get the user's recipes from db
-    let numRecipes = 10;
-
-    let createRecipeTile = document.createElement('div');
-    createRecipeTile.setAttribute('class', 'pure-u-1 pure-u-sm-1-3 pure-u-md-1-4 pure-u-lg-1-5 pure-u-xl-1-6 createRecipeTile ');
-    createRecipeTile.innerHTML = '+';
-    createRecipeTile.addEventListener('click', function() {
-        window.location.href = '/createRecipe';
-    });
-    profileRecipesContainer.appendChild(createRecipeTile);
-
-    for (let i = 0; i < numRecipes; i++) {
-        let recipe = document.createElement('div');
-        recipe.setAttribute('class', 'pure-u-1 pure-u-sm-1-3 pure-u-md-1-4 pure-u-lg-1-5 pure-u-xl-1-6 profileRecipe');
-        profileRecipesContainer.appendChild(recipe);
-    }
-}
+var recipes;
 
 function toggleEdit(location) {
     let editProfileContainer = document.getElementById('editProfileContainer');
@@ -43,23 +23,19 @@ function toggleEdit(location) {
     }
 }
 
-function checkUsername() {
+async function submitEdit(event) {
     let newUsername = document.getElementById('editUsername').value;
-    let usernameError = document.getElementById('usernameError');
+    let newBio = document.getElementById('editBio').value;
 
-    //This will need a sql call to check if the username is already taken
-    let existingUsernames = ['schottler3', 'testUser', 'user123'];
-    if(newUsername.length > 20 || existingUsernames.includes(newUsername)) {
+    let isUser = await fetch("/api/isUser",{method : "PUT", headers : {"Content-Type" : "application/json"}, body: JSON.stringify(newUsername)});
+
+    if(newUsername.length > 20 || newUsername.length < 3 || isUser.ok) {
         usernameError.style.display = 'block';
+        return;
     }
     else {
         usernameError.style.display = 'none';
     }
-}
-
-async function submitEdit(event) {
-    let newUsername = document.getElementById('editUsername').value;
-    let newBio = document.getElementById('editBio').value;
 
     if(newUsername.length < 3) {
         alert('Username must be at least 3 characters long');
