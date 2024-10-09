@@ -123,7 +123,7 @@ def logout():
 @app.route("/api/editprofile",methods=['PUT'])
 def submitEditProfile():
     edits = request.get_json()
-    if db.updateUser(edits["username"],"","","",edits["bio"],session["user"]):
+    if db.updateUser(edits["username"],None,"","",edits["bio"],session["user"]):
         return json.jsonify({"status": "success", "message": "Profile updated"}), 200
     else:
         return json.jsonify({"status": "failure", "message": "Failed profile update"}), 400
