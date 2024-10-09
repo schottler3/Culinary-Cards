@@ -127,7 +127,28 @@ def submitEditProfile():
         return json.jsonify({"status": "success", "message": "Profile updated"}), 200
     else:
         return json.jsonify({"status": "failure", "message": "Failed profile update"}), 400
+    
+@app.route("/api/getuserpostsbylikes",methods=['PUT'])
+def getUserPostsSortByLikes():
+    userid = request.get_json()
+    #userid should be in the userid["userid"] location
+    results = db.getAllRecipesUserLikesDesc(userid["userid"])
+    lst =[]
+    for recipe in results:
+        lst.append({
+            "recipeid" : recipe[0],
+            "title" : recipe[1],
+            "description" : recipe[2],
+            "ingredients" : recipe[3],
+            "instructions" : recipe[4],
+            "createdon" : recipe[5],
+            "likecount" : recipe[6],
+        })
 
+    if len(results) != 0:
+        return json.jsonify({"status": "success", "message": "Succeeded to sort user profile by likes", "results" : lst}), 200
+    else:
+        return json.jsonify({"status": "failure", "message": "Failed to sort user profile by likes"}), 400
 
 if __name__ == "__main__":
     if os.getenv("FLASK_ENV") == "development":
