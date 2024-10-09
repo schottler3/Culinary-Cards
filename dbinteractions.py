@@ -319,7 +319,7 @@ def deleteRecipeInDB(recipeid):
         return False
     try:
         str = "delete from recipe where recipeid = %s"
-        cursor.execute(str, recipeid)
+        cursor.execute(str, (recipeid,))
         connection.commit()
         cursor.execute("refresh materialized view recipe_search")
         connection.commit()

@@ -120,6 +120,15 @@ def logout():
     )
 
 @requires_auth
+@app.route("/api/deleterecipe",methods=['DELETE'])
+def deleteRecipeAPI():
+    request = request.get_json()
+    if db.deleteRecipe(request["recipeid"]):
+        return json.jsonify({"status": "success", "message": "Recipe Deleted"}), 200
+    else:
+        return json.jsonify({"status": "failure", "message": "Recipe failed to DELETE"}), 400
+
+@requires_auth
 @app.route("/api/editprofile",methods=['PUT'])
 def submitEditProfile():
     edits = request.get_json()
