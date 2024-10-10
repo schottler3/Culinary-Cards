@@ -239,7 +239,12 @@ def searchRecipeByKeywords(keywords):
     keywords = " & ".join(keywords)
     keywords += ":*"
     try:
-        str = "select * from recipe_search where title_desc_ingredients_username @@ to_tsquery(%s)"
+        str = """
+            select recipeid, title, description, ingredients, instructions, username
+            from recipe_search
+            join users on recipe_search.recipeid = users.userid
+            where title_desc_ingredients_username @@ to_tsquery(%s)
+            """
         cursor.execute(str, (keywords,))
         result = cursor.fetchall()
         resultlst = []
