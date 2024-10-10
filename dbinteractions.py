@@ -103,8 +103,8 @@ def deleteUserByUserID(userid):
     if userid is None:
         return False
     try:
-        str = "delete from users where userid = %s"
-        cursor.execute(str, userid)
+        qstr = "delete from users where userid = %s"
+        cursor.execute(qstr, (str(userid),))
         connection.commit()
     except:
         print("Failed to delete user")
@@ -240,10 +240,12 @@ def searchRecipeByKeywords(keywords):
     keywords += ":*"
     try:
         str = """
-            select recipeid, title, description, ingredients, instructions, username
+            select recipe_search.recipeid,recipe_search.title,recipe_search.description,recipe_search.ingredients, 
+            recipe_search.instructions,users.username
             from recipe_search
-            join users on recipe_search.recipeid = users.userid
-            where title_desc_ingredients_username @@ to_tsquery(%s)
+            join recipe on recipe_search.recipeid = recipe.recipeid
+            join users on recipe.userid = users.userid
+            where recipe_search.title_desc_ingredients_username @@ to_tsquery(%s);
             """
         cursor.execute(str, (keywords,))
         result = cursor.fetchall()
@@ -275,7 +277,7 @@ def addRecipeToDB(dict):
         title_desc_ingredients_username += " " + ingredients[0]
         ingredients_nomeasure += ingredients[0] + " "
     try:
-        cursor.execute("select username from users where userid = %s", dict["userid"])
+        cursor.execute("select username from users where userid = %s", (dict["userid"],))
         username = cursor.fetchone()[0]
         title_desc_ingredients_username += " " + username
         cursor.execute(str,(dict["title"],dict["description"],dict["ingredients"],ingredients_nomeasure,dict["instructions"],dict["userid"],title_desc_ingredients_username))
@@ -301,10 +303,10 @@ def updateRecipeInDB(dict):
     # str was messing with str method :(
     qstr = "update recipe set title = %s, description = %s, ingredients = %s, ingredients_nomeasure = %s,instructions = %s, title_desc_ingredients_username = to_tsvector(%s) where recipeid = %s"
     try:
-        cursor.execute("select userid from recipe where recipeid = %s",dict["recipeid"])
+        cursor.execute("select userid from recipe where recipeid = %s",(dict["recipeid"],))
         userid = cursor.fetchone()[0]
         userid = str(userid)
-        cursor.execute("select username from users where userid = %s",userid)
+        cursor.execute("select username from users where userid = %s",(userid,))
         username = cursor.fetchone()[0]
         title_desc_ingredients_username += " " + username
         cursor.execute(qstr,(dict["title"],dict["description"],dict["ingredients"], ingredients_nomeasure,dict["instructions"],title_desc_ingredients_username,dict["recipeid"]))
@@ -340,8 +342,8 @@ def getRecipeLikes(recipeid):
     if recipeid is None:
         return -1
     try:
-        str = "select count(*) as likes from recipe_like where recipeid = %s"
-        cursor.execute(str, recipeid)
+        qstr = "select count(*) as likes from recipe_like where recipeid = %s"
+        cursor.execute(qstr, (str(recipeid),))
         result = cursor.fetchone()
         if result[0] >= 0:
             return result[0]
@@ -359,8 +361,8 @@ def getRecipeCommentCount(recipeid):
     if recipeid is None:
         return -1
     try:
-        str = "select count(*) as comments from recipe_comment where recipeid = %s"
-        cursor.execute(str, recipeid)
+        qstr = "select count(*) as comments from recipe_comment where recipeid = %s"
+        cursor.execute(qstr, (str(recipeid),))
         result = cursor.fetchone()
         if result[0] >= 0:
             return result[0]
@@ -417,8 +419,8 @@ def deleteRecipeLike(likeid):
     connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
     cursor = connection.cursor()
     try:
-        str = "delete from recipe_like where likeid = %s"
-        cursor.execute(str, likeid)
+        qstr = "delete from recipe_like where likeid = %s"
+        cursor.execute(qstr, (str(likeid),))
         connection.commit()
     except:
         print("Failed to delete recipe like")
@@ -446,8 +448,8 @@ def deleteRecipeContent(commentid):
     connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
     cursor = connection.cursor()
     try:
-        str = "delete from recipe_comment where commentid = %s"
-        cursor.execute(str, commentid)
+        qstr = "delete from recipe_comment where commentid = %s"
+        cursor.execute(qstr, (str(commentid),))
         connection.commit()
     except:
         print("Failed to delete recipe comment")
