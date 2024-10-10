@@ -44,7 +44,8 @@ def requires_auth(f):
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    recipeofdaydict = {}
+    return render_template("index.html",recipeofday = recipeofdaydict)
 
 @app.route("/createRecipe")
 def createRecipe():
