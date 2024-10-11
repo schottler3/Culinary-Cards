@@ -2,6 +2,8 @@ import os
 import requests
 import json
 import uuid
+import schedule
+import random
 from os import environ as env
 from urllib.parse import quote_plus, urlencode
 from functools import wraps
@@ -13,6 +15,10 @@ from flask import Flask, redirect, render_template, session, url_for,request, js
 from dotenv import find_dotenv, load_dotenv
 from authlib.integrations.flask_client import OAuth
 import dbinteractions as db
+
+
+
+
 ENV_FILE = find_dotenv()
 if ENV_FILE:
     load_dotenv(ENV_FILE)
@@ -32,6 +38,36 @@ oauth.register(
     server_metadata_url=f'https://{env.get("AUTH0_DOMAIN")}/.well-known/openid-configuration'
 )
 
+usedRecipes = []
+recipeOfTheDay = ()
+def getRecipeOfDay():
+    global recipeOfTheDay, usedRecipes
+    all_recipes = db.getAllRecipes()
+    all_recipeslen = len(all_recipes)
+    randindex = random.randint(0,all_recipeslen-1)
+    if len(usedRecipes) >= all_recipeslen-3:
+        usedRecipes = []
+    while all_recipes[randindex][0] in usedRecipes:
+        print(all_recipes[randindex])
+        randindex = random.randint(0,all_recipeslen-1)
+    usedRecipes.append(all_recipes[randindex][0])
+    recipeOfTheDay = all_recipes[randindex]
+    ingredientstr = ""
+    for ingredient in recipeOfTheDay[3]:
+        ingredientstr += ingredient.split(",")[0] + ", "
+    ingredientstr = ingredientstr[:-2:]
+    recipeOfTheDay = list(recipeOfTheDay)
+    recipeOfTheDay[3] = ingredientstr
+    recipeOfTheDay = tuple(recipeOfTheDay)
+        
+
+
+# https://stackoverflow.com/questions/63449414/is-there-a-way-that-i-can-make-a-python-command-get-sent-at-exactly-midnight
+# schedule.every().day().at("00:00").do(getRecipeOfDay)
+# initial call
+getRecipeOfDay()
+print(recipeOfTheDay)
+
 def requires_auth(f):
   @wraps(f)
   def decorated(*args, **kwargs):
@@ -44,8 +80,8 @@ def requires_auth(f):
 
 @app.route("/")
 def index():
-    recipeofdaydict = {}
-    return render_template("index.html",recipeofday = recipeofdaydict)
+    global recipeOfTheDay
+    return render_template("index.html",recipeofday = recipeOfTheDay)
 
 @app.route("/createRecipe")
 def createRecipe():
@@ -169,6 +205,8 @@ def getUserPostsSortByLikes():
         return json.jsonify({"status": "success", "message": "Succeeded to sort user profile by likes", "results" : lst}), 200
     else:
         return json.jsonify({"status": "failure", "message": "Failed to sort user profile by likes"}), 400
+
+
 
 if __name__ == "__main__":
     if os.getenv("FLASK_ENV") == "development":
