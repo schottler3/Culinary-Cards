@@ -15,7 +15,7 @@ from flask import Flask, redirect, render_template, session, url_for,request, js
 from dotenv import find_dotenv, load_dotenv
 from authlib.integrations.flask_client import OAuth
 import dbinteractions as db
-
+import recipeOfTheDay as rotd
 
 
 
@@ -37,36 +37,14 @@ oauth.register(
     },
     server_metadata_url=f'https://{env.get("AUTH0_DOMAIN")}/.well-known/openid-configuration'
 )
-
-usedRecipes = []
-recipeOfTheDay = ()
-def getRecipeOfDay():
-    global recipeOfTheDay, usedRecipes
-    all_recipes = db.getAllRecipes()
-    all_recipeslen = len(all_recipes)
-    randindex = random.randint(0,all_recipeslen-1)
-    if len(usedRecipes) >= all_recipeslen-3:
-        usedRecipes = []
-    while all_recipes[randindex][0] in usedRecipes:
-        print(all_recipes[randindex])
-        randindex = random.randint(0,all_recipeslen-1)
-    usedRecipes.append(all_recipes[randindex][0])
-    recipeOfTheDay = all_recipes[randindex]
-    ingredientstr = ""
-    for ingredient in recipeOfTheDay[3]:
-        ingredientstr += ingredient.split(",")[0] + ", "
-    ingredientstr = ingredientstr[:-2:]
-    recipeOfTheDay = list(recipeOfTheDay)
-    recipeOfTheDay[3] = ingredientstr
-    recipeOfTheDay = tuple(recipeOfTheDay)
         
 
 
 # https://stackoverflow.com/questions/63449414/is-there-a-way-that-i-can-make-a-python-command-get-sent-at-exactly-midnight
 # schedule.every().day().at("00:00").do(getRecipeOfDay)
+
 # initial call
-getRecipeOfDay()
-print(recipeOfTheDay)
+rotd.setRecipeOfTheDay()
 
 def requires_auth(f):
   @wraps(f)
@@ -80,8 +58,7 @@ def requires_auth(f):
 
 @app.route("/")
 def index():
-    global recipeOfTheDay
-    return render_template("index.html",recipeofday = recipeOfTheDay)
+    return render_template("index.html",recipeofday = rotd.getRecipeOfTheDay())
 
 @app.route("/createRecipe")
 def createRecipe():
