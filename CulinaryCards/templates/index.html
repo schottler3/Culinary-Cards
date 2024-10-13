@@ -21,30 +21,9 @@
       </div>
     </form>
   </div>
-  {% for item in results %} {# Making a div for every submission to list their name and thoughts #}
-  <div class="pure-g pure-u-1">
-    <div class="pure-u-1"> 
-      {{ item[0] }}
-        has
-      {{ item[1] }}
-        calories
-    </div>
-  </div>
-  {% endfor %}
+  {% block searchResults %}
+  {% endblock %}
 {% endblock %}
-
-<!-- {% block results %} -->
-  <!-- {% for item in results %} {# Making a div for every submission to list their name and thoughts #}
-  <div class="pure-g pure-u-1">
-    <div class="pure-u-1"> 
-      {{ item[0] }}
-        has
-      {{ item[1] }}
-        calories
-    </div>
-  </div>
-  {% endfor %} -->
-<!-- {% endblock %} -->
 
 {% block bottom %}
     <div class="pure-u-1 paper" id="homebottom"><img class="pure-img" id="arrow" src="../static/resources/arrow.png"></div>

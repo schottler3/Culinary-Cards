@@ -1,0 +1,24 @@
+{% extends "index.html" %}
+
+{% block searchResults %}
+<div id="results-div">
+  <div class="pure-g" id="results-grid">
+  {% for recipe in results %} {# Making a div for every submission to list their name and thoughts #}
+    <div class="pure-u-1-5" id="recipe-image">
+      image here
+    </div>
+    <div class="pure-u-4-5" id="recipe-result"> 
+      <div class="pure-u-1" id="recipe-label">
+        {{ recipe.title }}
+      </div>
+      <div class="pure-u-1" id="recipe-author">
+        author here
+      </div>
+      <div class="pure-u-1" id="recipe-description">
+        {{ recipe.description }}
+      </div>
+    </div>
+  {% endfor %}
+  </div>
+</div>
+{% endblock %}

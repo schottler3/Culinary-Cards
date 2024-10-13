@@ -312,6 +312,44 @@ form{
 }
 /* End Section */
 
+/* Recipe Result Section */
+#results-div {
+    display: flex;
+    justify-content: center;
+    margin: 1em;
+}
+
+#results-grid {
+    display: flex;
+    justify-content: center;
+    /* align-items: center;  */
+    margin: 1em;
+    width: 60%;
+}
+
+#recipe-result {
+    background-color: lightcoral;
+    margin-bottom: 1em;
+    /* margin: 1em;
+    width: 70%; */
+    height: 20em;
+}
+
+#recipe-image {
+    background-color: lightblue;
+    margin-bottom: 1em;
+}
+
+#recipe-label {
+    background-color: lightgreen;
+    height: 20%;
+}
+
+#recipe-author {
+    background-color: lightyellow;
+    height: 20%
+}
+
 /* Small only */
 @media screen and (max-width: 39.9375em) {
     .logoBig{

@@ -56,16 +56,16 @@ def redirectToSearch():
     sendData = []
     user_query = request.form["queryhome"]
     results = db.searchRecipeByKeywords(user_query)
-    if len(results) < 1:
-        results = apireq.recipe_search(user_query)
+    # if len(results) < 1:
+    #     results = apireq.recipe_search(user_query)
+    # for item in results:
+    #     recipe = item['recipe']
+    #     label = recipe.get('label')
+    #     calories = recipe.get('calories')
+    #     sendData.append([label, calories])
     for item in results:
-        recipe = item['recipe']
-        label = recipe.get('label')
-        calories = recipe.get('calories')
-        sendData.append([label, calories])
-    print(f"results is: {sendData}")
-    return render_template("index.html",results=sendData)
-    
+        print(f"item: {item}")
+    return render_template("searchResults.html",results=results)
 
 @app.route("/login")
 def login():
@@ -207,7 +207,7 @@ if __name__ == "__main__":
 
     #db.addUserToDB(testdictuser)
     # db.updateUser("Adam2","kvant003@umn.edu","Kvant","Adam","World Hello","2")
-    #db.addRecipeToDB(testdictrecipe)
+    db.addRecipeToDB(testdictrecipe)
     # db.deleteRecipeInDB("1")
     # db.updateRecipeInDB(testdictrecipeupdate)
     # db.addRecipeLike("2","2")
