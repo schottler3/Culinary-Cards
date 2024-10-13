@@ -16,6 +16,7 @@ from dotenv import find_dotenv, load_dotenv
 from authlib.integrations.flask_client import OAuth
 import dbinteractions as db
 import apirequests as apireq
+import apirequests as apireq
 import recipeOfTheDay as rotd
 
 ENV_FILE = find_dotenv()
