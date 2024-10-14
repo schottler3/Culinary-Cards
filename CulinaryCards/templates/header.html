@@ -2,7 +2,23 @@
 {%endblock%}
 
 <div class="header">
-  <div class="home-menu pure-menu pure-menu-horizontal pure-menu-fixed navbar">
+  <a href="/" class="Logo">CC</a>
+  <input class="menu-btn" type="checkbox" id="menu-btn" /> <!-- Button for Hamburger -->
+  <label class="menu-icon" for="menu-btn"><span class="nav-icon"></span></label>
+  <ul class="menu">
+    {% if session %}
+      <li><a href="/">Categories</a></li>
+      <li><a href="/profile">Profile</a></li>
+      <li><a href="/logout">Log Out</a></li>
+    {% else %}
+      <li><a href="/">Categories</a></li>
+      <li><a href="/login">Login</a></li>
+    {% endif %}
+    
+  </ul>
+
+
+  <!-- <div class="home-menu pure-menu pure-menu-horizontal pure-menu-fixed navbar">
       <a class="pure-menu-heading" href="/"><img id="logo-img" src="../static/resources/logo.png"></a>
 
       <ul class="pure-menu-list options">
@@ -17,8 +33,8 @@
           <li class="pure-menu-item"><a href="/login" class="pure-menu-link">Log In</a></li>
         {% endif %}
       </ul>
-  </div>
+  </div> -->
 </div>
 
-<div id="hometop">
-</div>
+<!-- <div id="hometop">
+</div> -->
