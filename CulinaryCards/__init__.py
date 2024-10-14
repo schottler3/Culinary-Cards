@@ -183,8 +183,6 @@ def getUserPostsSortByLikes():
     else:
         return json.jsonify({"status": "failure", "message": "Failed to sort user profile by likes"}), 400
 
-
-
 if __name__ == "__main__":
     if os.getenv("FLASK_ENV") == "development":
         app.config['TEMPLATES_AUTO_RELOAD'] = True
