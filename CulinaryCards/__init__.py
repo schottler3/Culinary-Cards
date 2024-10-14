@@ -2,7 +2,7 @@ import os
 import requests
 import json
 import uuid
-import schedule
+# import schedule
 import random
 from os import environ as env
 from urllib.parse import quote_plus, urlencode
