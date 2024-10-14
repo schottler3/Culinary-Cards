@@ -424,36 +424,44 @@ form{
     display: flex;
     justify-content: center;
     margin: 1em;
+    /* width: 60%; */
 }
 
 #results-grid {
     display: flex;
     justify-content: center;
-    /* align-items: center;  */
     margin: 1em;
+    height: 40vh;
     width: 60%;
 }
 
 #recipe-result {
-    background-color: lightcoral;
+    padding-left: 1vw;
     margin-bottom: 1em;
-    /* margin: 1em;
-    width: 70%; */
-    height: 20em;
+    height: 10em;
 }
 
-#recipe-image {
-    background-color: lightblue;
-    margin-bottom: 1em;
+#result-image-container {
+    padding-right: 1vw;
+    height: 100%;
+    display: flex;
+    justify-content: right;
 }
 
-#recipe-label {
-    background-color: lightgreen;
-    height: 20%;
+#result-image {
+    width: auto;
+    aspect-ratio: 1; 
+    object-fit: cover;
+    border-radius: 15px;
 }
 
-#recipe-author {
-    background-color: lightyellow;
+#result-label {
+    font-size: 2.25em;
+    height: 25%;
+    /* overflow: clip; */
+}
+
+#result-author {
     height: 20%
 }
 

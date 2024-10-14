@@ -58,7 +58,7 @@ def requires_auth(f):
 
 @app.route("/")
 def index():
-    return render_template("index.html",recipeofday = rotd.getRecipeOfTheDay())
+    return render_template("index.html", recipeofday = rotd.getRecipeOfTheDay())
 
 @app.route("/createRecipe")
 def createRecipe():
@@ -78,7 +78,7 @@ def redirectToSearch():
     #     sendData.append([label, calories])
     for item in results:
         print(f"item: {item}")
-    return render_template("searchResults.html",results=results)
+    return render_template("searchResults.html",results=results, recipeofday = rotd.getRecipeOfTheDay())
 
 @app.route("/login")
 def login():
