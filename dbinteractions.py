@@ -150,6 +150,30 @@ def updateUser(username,email,fname,lname,bio,userid):
         cursor.close()
         connection.close()
 
+def updateUserWithPicture(username,email,fname,lname,bio,userid,imgfile):
+    connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
+    cursor = connection.cursor()
+    str = "update users set username = %s, user_email = %s, fname = %s, lname = %s, bio = %s where userid = %s"
+    img_str = "insert into profile_img (image_data,userid) values (%s,%s)"
+    img_str_update = "update profile_img set image_data = %s where userid = %s"
+    imgfileRAW = imgfile.read()
+    try:
+        cursor.execute(str,(username,email,fname,lname,bio,userid))
+        cursor.execute("select * from profile_img where userid = %s")
+        does_user_exist = cursor.fetchall()
+        if not does_user_exist:
+            cursor.execute(img_str,(Binary(imgfileRAW),userid))
+        else:
+            cursor.execute(img_str_update,Binary(imgfileRAW),userid)
+        connection.commit()
+        return True
+    except:
+        print("Failed to update user")
+        return False
+    finally:
+        cursor.close()
+        connection.close()
+
 
 # Returns list of tuples in form: (recipeid,title,description,ingredients,instructions,created_on,user_id)
 def getAllLikedRecipesForUser(userid):
