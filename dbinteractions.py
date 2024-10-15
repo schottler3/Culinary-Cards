@@ -1,5 +1,8 @@
 import psycopg2
 import os
+from werkzeug.utils import secure_filename
+from flask import request
+from psycopg2 import Binary
 ####################################################################################
 # users related functions
 # Returns Boolean if user is not in system
@@ -285,13 +288,15 @@ def addRecipeToDB(dict):
         cursor.execute("refresh materialized view recipe_search")
         connection.commit()
     except:
-        print("Failed to commit new recipe")
+        print("Failed to add new recipe")
     finally:
         cursor.close()
         connection.close()
 
 # dict has keys: title,description, ingredients, instructions, userid
 # ingredients & instructions are lists of strings
+# imgfile is a file object of the image.
+# This is NOT the LINK input for Minh's API
 def addRecipeToDBWithImage(dict,imgfile):
     connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
     cursor = connection.cursor()
@@ -308,10 +313,18 @@ def addRecipeToDBWithImage(dict,imgfile):
         username = cursor.fetchone()[0]
         title_desc_ingredients_username += " " + username
         cursor.execute(str,(dict["title"],dict["description"],dict["ingredients"],ingredients_nomeasure,dict["instructions"],dict["userid"],title_desc_ingredients_username))
+        
+        # adding image to db
+        new_recipe_ID = cursor.fetchone()[0]
+
+        qstr_img = "insert into recipe_img (image_data, recipeid) values (%s,%s)"
+
+        cursor.execute(qstr_img, (Binary(imgfileRAW),new_recipe_ID))
+
         cursor.execute("refresh materialized view recipe_search")
         connection.commit()
     except:
-        print("Failed to commit new recipe")
+        print("Failed to add new recipe")
     finally:
         cursor.close()
         connection.close()
