@@ -3,6 +3,7 @@ import os
 from werkzeug.utils import secure_filename
 from flask import request
 from psycopg2 import Binary
+from unsplash import getImgUrl
 ####################################################################################
 # users related functions
 # Returns Boolean if user is not in system
@@ -344,6 +345,41 @@ def addRecipeToDBWithImage(dict,imgfile):
         qstr_img = "insert into recipe_img (image_data, recipeid) values (%s,%s)"
 
         cursor.execute(qstr_img, (Binary(imgfileRAW),new_recipe_ID))
+
+        cursor.execute("refresh materialized view recipe_search")
+        connection.commit()
+    except:
+        print("Failed to add new recipe")
+    finally:
+        cursor.close()
+        connection.close()
+
+# Unsplash API Function - Adds recipe but uses unsplash to find a photo for it when User doesn't upload one
+def addRecipeToDBWithImageURL(dict):
+    connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
+    cursor = connection.cursor()
+    str = "insert into recipe (title,description,ingredients,ingredients_nomeasure,instructions,userid,title_desc_ingredients_username) values (%s,%s,%s,%s,%s,%s,to_tsvector(%s))"
+    title_desc_ingredients_username = dict["title"] + " " + dict["description"]
+    ingredients_nomeasure = ""
+    for ingredient in dict["ingredients"]:
+        ingredients = ingredient.split(",")
+        title_desc_ingredients_username += " " + ingredients[0]
+        ingredients_nomeasure += ingredients[0] + " "
+    try:
+        cursor.execute("select username from users where userid = %s", (dict["userid"],))
+        username = cursor.fetchone()[0]
+        title_desc_ingredients_username += " " + username
+        cursor.execute(str,(dict["title"],dict["description"],dict["ingredients"],ingredients_nomeasure,dict["instructions"],dict["userid"],title_desc_ingredients_username))
+        
+        # adding image to db
+        new_recipe_ID = cursor.fetchone()[0] # How does this fetchone return a new_recipe_id?
+
+        qstr_img = "insert into recipe_img (image_link, recipeid) values (%s,%s)"
+        img_url = getImgUrl(dict["title"])
+        
+
+        cursor.execute(qstr_img, (img_url, new_recipe_ID))
+        print(img_url)
 
         cursor.execute("refresh materialized view recipe_search")
         connection.commit()
