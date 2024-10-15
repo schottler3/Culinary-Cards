@@ -143,6 +143,23 @@ def deleteRecipeAPI():
         return json.jsonify({"status": "success", "message": "Recipe Deleted"}), 200
     else:
         return json.jsonify({"status": "failure", "message": "Recipe failed to DELETE"}), 400
+    
+
+# Incomplete addRecipeAPI for when lucas finishes the form submit
+@requires_auth
+@app.route("/api/addrecipe",methods=['POST']) 
+def addRecipeAPI():
+    request = request.get_json()
+    #TODO Need to verify that user owns the recipe before deleting
+    recipeDict = {'title': request["title"], 'description': request["description"], 'ingredients': request["ingredients"], 'instructions': request["instructions"], 'userid': request["userid"]} 
+    imgfile = ""
+    if imgfile != "":
+        db.addRecipeToDBWithImage(recipeDict, imgfile)
+        return json.jsonify({"status": "success", "message": "Recipe Deleted"}), 200
+    elif imgfile == "":
+        db.addRecipeToDBWithImageURL(recipeDict)
+    else:
+        return json.jsonify({"status": "failure", "message": "Recipe failed to DELETE"}), 400
 
 @requires_auth
 @app.route("/api/editprofile",methods=['PUT'])
@@ -191,6 +208,20 @@ if __name__ == "__main__":
     else:
         app.run()
 
+
+@app.route("/api/testimgadd",methods=['GET']) #use this to test out adding recipes and imgs
+def testimgadd():
+    testdictrecipe = {
+        "title" : "Tuna Melt",
+        "description" : "The superior pasta",
+        "ingredients" : ["Chicken","Alfredo"],
+        "instructions" : ["Add love"],
+        "userid" : "2"
+    }
+
+    db.addRecipeToDBWithImageURL(testdictrecipe)
+    return "Noice"
+
 #######################################################
 #Adam's test stuff
 # testdictuser = {
@@ -220,7 +251,9 @@ if __name__ == "__main__":
 
     #db.addUserToDB(testdictuser)
     # db.updateUser("Adam2","kvant003@umn.edu","Kvant","Adam","World Hello","2")
-    #db.addRecipeToDB(testdictrecipe)
+    # db.addRecipeToDB(testdictrecipe)
+    # db.addRecipeToDBWithImageURL(testdictrecipe)
+    # print('wow')
     # db.deleteRecipeInDB("1")
     # db.updateRecipeInDB(testdictrecipeupdate)
     # db.addRecipeLike("2","2")
