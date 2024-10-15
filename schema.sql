@@ -10,7 +10,8 @@ create table users (
 
 create table profile_img (
     imageid serial primary key,
-    image_data bytea not null,
+    image_data bytea,
+    image_link varchar(500),
     userid int,
     constraint fk_user
         foreign key (userid)
@@ -36,7 +37,8 @@ create table recipe (
 
 create table recipe_img (
     imageid serial primary key,
-    image_data bytea not null,
+    image_data bytea,
+    image_link varchar(500),
     recipeid int,
     constraint fk_recipe
         foreign key (recipeid)

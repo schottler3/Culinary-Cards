@@ -295,6 +295,7 @@ def addRecipeToDB(dict):
 def addRecipeToDBWithImage(dict,imgfile):
     connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
     cursor = connection.cursor()
+    imgfileRAW = imgfile.read()
     str = "insert into recipe (title,description,ingredients,ingredients_nomeasure,instructions,userid,title_desc_ingredients_username) values (%s,%s,%s,%s,%s,%s,to_tsvector(%s))"
     title_desc_ingredients_username = dict["title"] + " " + dict["description"]
     ingredients_nomeasure = ""
