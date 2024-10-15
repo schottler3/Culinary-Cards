@@ -290,6 +290,31 @@ def addRecipeToDB(dict):
         cursor.close()
         connection.close()
 
+# dict has keys: title,description, ingredients, instructions, userid
+# ingredients & instructions are lists of strings
+def addRecipeToDBWithImage(dict,imgfile):
+    connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
+    cursor = connection.cursor()
+    str = "insert into recipe (title,description,ingredients,ingredients_nomeasure,instructions,userid,title_desc_ingredients_username) values (%s,%s,%s,%s,%s,%s,to_tsvector(%s))"
+    title_desc_ingredients_username = dict["title"] + " " + dict["description"]
+    ingredients_nomeasure = ""
+    for ingredient in dict["ingredients"]:
+        ingredients = ingredient.split(",")
+        title_desc_ingredients_username += " " + ingredients[0]
+        ingredients_nomeasure += ingredients[0] + " "
+    try:
+        cursor.execute("select username from users where userid = %s", (dict["userid"],))
+        username = cursor.fetchone()[0]
+        title_desc_ingredients_username += " " + username
+        cursor.execute(str,(dict["title"],dict["description"],dict["ingredients"],ingredients_nomeasure,dict["instructions"],dict["userid"],title_desc_ingredients_username))
+        cursor.execute("refresh materialized view recipe_search")
+        connection.commit()
+    except:
+        print("Failed to commit new recipe")
+    finally:
+        cursor.close()
+        connection.close()
+
 # dict has keys: title,description, ingredients, instructions,recipeid
 def updateRecipeInDB(dict):
     connection = psycopg2.connect(os.environ.get("DATABASE_URL"))

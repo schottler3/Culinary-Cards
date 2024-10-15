@@ -8,6 +8,16 @@ create table users (
     bio varchar(300)
 );
 
+create table profile_img (
+    imageid serial primary key,
+    image_data bytea not null,
+    userid int,
+    constraint fk_user
+        foreign key (userid)
+        references users (userid)
+        on delete cascade
+);
+
 create table recipe (
     recipeid serial primary key,
     title varchar(255),
@@ -23,6 +33,17 @@ create table recipe (
         references users (userid)
         on delete cascade
 );
+
+create table recipe_img (
+    imageid serial primary key,
+    image_data bytea not null,
+    recipeid int,
+    constraint fk_recipe
+        foreign key (recipeid)
+        references recipe (recipeid)
+        on delete cascade
+);
+
 
 -- Used to search db with full text search
 create materialized view recipe_search as
@@ -40,6 +61,22 @@ create materialized view recipe_search as
 
 -- Materialized view needs update every insert into recipe
 refresh materialized view recipe_search;
+
+
+create table recipe_saved(
+    savedid serial primary key,
+    savedtime timestamp default now(),
+    recipeid int,
+    userid int,
+    constraint fk_recipe
+        foreign key (recipeid)
+        references recipe (recipeid)
+        on delete cascade,
+    constraint fk_user
+        foreign key (userid)
+        references users (userid)
+        on delete cascade
+);
 
 
 create table recipe_like (
