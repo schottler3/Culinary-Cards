@@ -424,7 +424,6 @@ form{
     display: flex;
     justify-content: center;
     margin: 1em;
-    /* width: 60%; */
 }
 
 #results-grid {
@@ -463,6 +462,15 @@ form{
 
 #result-author {
     height: 20%
+}
+
+#testingme {
+    display: flex;
+    justify-content: center;
+    height: 40vh;
+    width: 60%;
+    margin: 1em;
+    margin-bottom: 1em;
 }
 
 /* Small only */

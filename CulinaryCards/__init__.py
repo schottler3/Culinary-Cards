@@ -69,8 +69,8 @@ def redirectToSearch():
     sendData = []
     user_query = request.form["queryhome"]
     results = db.searchRecipeByKeywords(user_query)
-    # if len(results) < 1:
-    #     results = apireq.recipe_search(user_query)
+    if len(results) < 1:
+        results = apireq.recipe_search(user_query)
     # for item in results:
     #     recipe = item['recipe']
     #     label = recipe.get('label')
@@ -127,6 +127,10 @@ def profile():
     else:
         print(4)
         return redirect('/login')
+    
+@app.route('/recipe/<id>')
+def recipe(id):
+    return 'Hello. The id is {id}'
 
 @app.route("/logout")
 def logout():
