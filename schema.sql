@@ -58,7 +58,7 @@ create materialized view recipe_search as
     recipe.ingredients_nomeasure,
     recipe.instructions,
     recipe.categories,
-    to_tsvector('english', recipe.title || ' ' || recipe.description || ' ' || recipe.ingredients_nomeasure || ' ' || users.username || ' ' || recipe.categories) as recipe_vector
+    to_tsvector('english', recipe.title || ' ' || recipe.description || ' ' || recipe.ingredients_nomeasure || ' ' || users.username || ' ' || array_to_string(recipe.categories, ' ')) as recipe_vector
     from 
     recipe
     join users on recipe.userid = users.userid;
