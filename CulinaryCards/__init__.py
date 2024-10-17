@@ -44,7 +44,7 @@ oauth.register(
 # schedule.every().day().at("00:00").do(getRecipeOfDay)
 
 # initial call
-#rotd.setRecipeOfTheDay()
+rotd.setRecipeOfTheDay()
 
 def requires_auth(f):
   @wraps(f)
