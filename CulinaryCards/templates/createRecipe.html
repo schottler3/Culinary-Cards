@@ -6,37 +6,131 @@
 {% endblock %}
 
 {% block middle %}
-    <div id="createRecipe">
-        <div class="pure-u-1 paper" id="createRecipeTop"></div>
-        <a class="pure-button" id="backProfile" href="/profile">Back to Profile</a>
+    <a class="pure-button" id="backProfile" href="/profile">Back to Profile</a>
 
-        <div class="createRecipeContainer">
-            <form class="pure-form pure-form-stacked" id="createRecipeOne">
-                <h1 class="step">Enter The Recipe's Title</h1>
-                <input type="text" id="recipeTitle" placeholder="Enter a Title" required>
+    <div class="grayBackground" id="grayBackground"></div>
 
-                <textarea id="recipeDescription" placeholder="Enter a Description" required></textarea>
+    <div class="createRecipeContainer">
+        
+        <form class="pure-form pure-form-stacked" id="createRecipeOne">
+            <h1 class="step">Enter The Recipe's Title</h1>
+            <input type="text" id="recipeTitle" placeholder="Enter a Title" required>
 
-                <div class="pure-menu pure-menu-horizontal pure-menu-scrollable" id="selectedCategories">
-                    <ul class="pure-menu-list"></ul>
+            <textarea id="recipeDescription" placeholder="Enter a Description" required></textarea>
+
+            <div class="pure-menu pure-menu-horizontal pure-menu-scrollable" id="selectedCategories">
+                <ul class="pure-menu-list"></ul>
+            </div>
+
+            <div id="dropdown-container">
+                <button type="button" class="pure-button" id="selectCategories" onclick="toggleDropdown()">Select Categories</button>
+                <div id="dropdown" class="dropdown">
+                    <input type="text" placeholder="Search" id="search" onkeyup="filterFunction()">
                 </div>
+            </div>
+        </form>
 
-                <div id="dropdown-container">
-                    <button type="button" class="pure-button" onclick="toggleDropdown()">Select Categories</button>
-                    <div id="dropdown" class="dropdown">
-                        <input type="text" placeholder="Search" id="search" onkeyup="filterFunction()">
+        <div class="pure-g popUp" id="showUnits">
+            <h1 class="pure-u-1" id="unitsTitle">Select Your Units</h1>
+            <div class="pure-u-1" id="unitOptions">
+                <button type="button" class="pure-button" onclick="setUnitsMetric()">Metric</button>
+                <button type="button" class="pure-button" onclick="setUnitsImperial()">Imperial</button>
+            </div>
+        </div>
+
+        <form class="pure-form pure-form-stacked" id="createRecipeTwo">
+            <h1 class="step">Enter The Recipe's Ingredients</h1>
+            <div id="pure-g ingredientContainer">
+                <div class="pure-g addIngredient">
+                    <div class="pure-u-1 ingredient" id="baseIngredient">
+                        <div class="pure-u-1-2">
+                            <input type="text" id="ingredientName" class="pure-u-23-24" placeholder="Ingredient Name" required>
+                        </div>
+                        <div class="pure-u-1-8">
+                            <input type="text" id="ingredientAmount" class="pure-u-23-24" pattern="^\d+$" placeholder="Amount" required>
+                        </div>
+                        <div class="pure-u-1-8">
+                            <input type="text" id="ingredientFraction" class="pure-u-23-24" pattern="^\d+/\d+$" placeholder="Fraction">
+                        </div>
+                        <div class="pure-u-1-8">
+                            <select class="pure-u-23-24" id="ingredientUnit">
+                                <option value="">Unit</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="button" class="pure-u-1-6 pure-button" onclick="addIngredient()"><div id="addText">Add</div></button>
+                    
+                    <h1 id="addedIngredientsTitle">Added Ingredients</h1>
+                    <div class="pure-u-1 ingredient" id="ingredients">
+
                     </div>
                 </div>
+            </div>
+        </form>
 
-                <a class="pure-button" onclick="submitTitle()">Submit Title</a>
-            </form>
-            <form class="pure-form pure-form-stacked" id="createRecipeTwo" style="display: none;">
-                <h1 class="step">Enter The Recipe's Ingredients</h1>
-                <div id="ingredientContainer">
-
+        <form class="pure-form pure-form-stacked" id="createRecipeThree">
+            <div id="editDeletePopup">
+                <div class="pure-menu" id="editInstructionOptions">
+                    <ul class="pure-menu-list">
+                        <li class="pure-menu-item" id="editInstruction" onclick="editInstruction()">Edit Instruction</li>
+                        <li class="pure-menu-item" id="deleteInstruction" onclick="deleteInstruction()">Delete Instruction</li>
+                    </ul>
                 </div>
-            </form>
+            </div>
+            <h1 class="step">Enter Your Directions</h1>
+            <div class="pure-g" id="ingredientsAndInstructions">
+                <div class="pure-u-1-4" id="ingredientsSection">
+                    <div id="availableTitle">Available Ingredients</div>
+                    <div class="pure-menu pure-menu-scrollable" id="ingredientScroll">
+                        <ul class="pure-menu-list" id="ingredientsList">
+
+                        </ul>
+                    </div>
+                </div>
+                <div class="pure-u-2-3" id="intructionsSection">
+                    <div class="pure-g" id="instructionsContainer">
+                        <div class="pure-u-11-24" id="instructionsGrid">
+                            <div class="pure-menu pure-menu-scrollable" id="instructions">
+                                <ul class="pure-menu-list" id="instructionList">
+
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="pure-u-11-24" id="instructionEntryGrid">
+                            <h2 id="editTitle">Editing Instruction</h2>
+                            <textarea id="instruction" placeholder="Enter Instruction" required></textarea>
+                            <button type="button" class="pure-button" id="saveInstruction" onclick="saveEditInstruction()">Save Instruction</button>
+                            <button type="button" class="pure-button" id="submitInstruction" onclick="addInstruction()">Add Instruction</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <div id="createRecipeFour">
+            <h1 class="step">Enter The Recipe's Photo!</h1>
+            <div class="pure-g" id="photoOptionsContainer">
+                <div class="pure-u-1-2 photoPreview" id="photoContainer">
+                    <input type="file" id="photoInput" accept="image/*" onchange="setPhoto()" style="display: none;">
+                    <label for="photoInput" id="photoLabel">
+                        <img id="imgSelect" src="https://cdn-icons-png.flaticon.com/512/44/44289.png" alt="Select Image">
+                        <h2 class="photoText">Select Image</h2>
+                    </label>
+                </div>
+                <div class="pure-u-1-2 photoPreview">
+                    <img src="https://cdn-icons-png.flaticon.com/512/44/44289.png" id="photoPreview">
+                    <h2 class="photoText">Use Generated</h2>
+                </div>
+            </div>
         </div>
+            
+    </div>
+    
+    <div id="submitStep" onclick="nextStep()">
+        <h4>Next Step</h4>
+        <img src="https://cdn-icons-png.flaticon.com/512/271/271226.png" id="submitInstructionsArrow">
     </div>
 
 {% endblock %}

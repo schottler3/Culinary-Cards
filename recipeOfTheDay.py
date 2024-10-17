@@ -1,26 +1,22 @@
 import dbinteractions as db
 import random
-usedRecipes = []
+from datetime import datetime
 recipeOfTheDay = ()
+#https://stackoverflow.com/questions/620305/convert-year-month-day-to-day-of-year-in-python
 def setRecipeOfTheDay():
-    global recipeOfTheDay, usedRecipes
+    global recipeOfTheDay
     all_recipes = db.getAllRecipes()
     all_recipeslen = len(all_recipes)
-    randindex = random.randint(0,all_recipeslen-1)
-    if len(usedRecipes) >= all_recipeslen-3:
-        usedRecipes = []
-    while all_recipes[randindex][0] in usedRecipes:
-        print(all_recipes[randindex])
-        randindex = random.randint(0,all_recipeslen-1)
-    usedRecipes.append(all_recipes[randindex][0])
-    recipeOfTheDay = all_recipes[randindex]
-    ingredientstr = ""
-    for ingredient in recipeOfTheDay[3]:
-        ingredientstr += ingredient.split(",")[0] + ", "
-    ingredientstr = ingredientstr[:-2:]
-    recipeOfTheDay = list(recipeOfTheDay)
-    recipeOfTheDay[3] = ingredientstr
-    recipeOfTheDay = tuple(recipeOfTheDay)
+    if all_recipeslen > 0:
+        randindex = datetime.now().timetuple().tm_mday % all_recipeslen
+        recipeOfTheDay = all_recipes[randindex]
+        ingredientstr = ""
+        for ingredient in recipeOfTheDay[3]:
+            ingredientstr += ingredient.split(",")[0] + ", "
+        ingredientstr = ingredientstr[:-2:]
+        recipeOfTheDay = list(recipeOfTheDay)
+        recipeOfTheDay[3] = ingredientstr
+        recipeOfTheDay = tuple(recipeOfTheDay)
 
 def getRecipeOfTheDay():
     return recipeOfTheDay

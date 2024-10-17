@@ -18,6 +18,9 @@ import dbinteractions as db
 import apirequests as apireq
 import apirequests as apireq
 import recipeOfTheDay as rotd
+import unsplash
+
+
 
 ENV_FILE = find_dotenv()
 if ENV_FILE:
@@ -156,6 +159,23 @@ def deleteRecipeAPI():
         return json.jsonify({"status": "success", "message": "Recipe Deleted"}), 200
     else:
         return json.jsonify({"status": "failure", "message": "Recipe failed to DELETE"}), 400
+    
+
+# Incomplete addRecipeAPI for when lucas finishes the form submit
+@requires_auth
+@app.route("/api/addrecipe",methods=['POST']) 
+def addRecipeAPI():
+    request = request.get_json()
+    #TODO Need to verify that user owns the recipe before deleting
+    recipeDict = {'title': request["title"], 'description': request["description"], 'ingredients': request["ingredients"], 'instructions': request["instructions"], 'userid': request["userid"]} 
+    imgfile = ""
+    if imgfile != "":
+        db.addRecipeToDBWithImage(recipeDict, imgfile)
+        return json.jsonify({"status": "success", "message": "Recipe Deleted"}), 200
+    elif imgfile == "":
+        db.addRecipeToDBWithImageURL(recipeDict)
+    else:
+        return json.jsonify({"status": "failure", "message": "Recipe failed to DELETE"}), 400
 
 @requires_auth
 @app.route("/api/editprofile",methods=['PUT'])
@@ -196,8 +216,6 @@ def getUserPostsSortByLikes():
     else:
         return json.jsonify({"status": "failure", "message": "Failed to sort user profile by likes"}), 400
 
-
-
 if __name__ == "__main__":
     if os.getenv("FLASK_ENV") == "development":
         app.config['TEMPLATES_AUTO_RELOAD'] = True
@@ -205,6 +223,26 @@ if __name__ == "__main__":
         app.run(debug=True)
     else:
         app.run()
+
+
+@app.route("/api/getRecipePreviewImage",methods=['GET'])
+def getRecipePreviewImage():
+    title = request.args.get("title")
+    imgurl = unsplash.getImgUrl(title)
+    return json.jsonify({"status": "success", "message": "Image URL retrieved", "imgurl": imgurl}), 200
+
+@app.route("/api/testimgadd",methods=['GET']) #use this to test out adding recipes and imgs
+def testimgadd():
+    testdictrecipe = {
+        "title" : "Tuna Melt",
+        "description" : "The superior pasta",
+        "ingredients" : ["Chicken","Alfredo"],
+        "instructions" : ["Add love"],
+        "userid" : "2"
+    }
+
+    db.addRecipeToDBWithImageURL(testdictrecipe)
+    return "Noice"
 
 #######################################################
 #Adam's test stuff
@@ -235,7 +273,9 @@ if __name__ == "__main__":
 
     #db.addUserToDB(testdictuser)
     # db.updateUser("Adam2","kvant003@umn.edu","Kvant","Adam","World Hello","2")
-    db.addRecipeToDB(testdictrecipe)
+     db.addRecipeToDB(testdictrecipe)
+    # db.addRecipeToDBWithImageURL(testdictrecipe)
+    # print('wow')
     # db.deleteRecipeInDB("1")
     # db.updateRecipeInDB(testdictrecipeupdate)
     # db.addRecipeLike("2","2")
