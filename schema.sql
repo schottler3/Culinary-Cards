@@ -49,6 +49,8 @@ create table recipe_img (
 
 
 -- Used to search db with full text search, and cache view of db for faster lookup
+-- https://www.postgresql.org/docs/9.1/functions-array.html
+-- https://www.postgresql.org/docs/current/rules-materializedviews.html
 create materialized view recipe_search as
     select 
     recipe.recipeid,
