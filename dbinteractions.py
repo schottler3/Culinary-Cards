@@ -55,6 +55,8 @@ def addUserToDBAuthOnly(auth):
     try:
         cursor.execute("select max(userid) from users")
         maxid = cursor.fetchone()[0]
+        if(maxid is None):
+            maxid = 0
         cursor.execute(qstr,("user" + str(maxid+1),auth,""))
         connection.commit()
     except:

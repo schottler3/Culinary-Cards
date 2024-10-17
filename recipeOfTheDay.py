@@ -6,6 +6,9 @@ def setRecipeOfTheDay():
     global recipeOfTheDay, usedRecipes
     all_recipes = db.getAllRecipes()
     all_recipeslen = len(all_recipes)
+    if(all_recipeslen == 0):
+        recipeOfTheDay = ("No recipes found", "No recipes found", "No recipes found", "No recipes found")
+        return
     randindex = random.randint(0,all_recipeslen-1)
     if len(usedRecipes) >= all_recipeslen-3:
         usedRecipes = []
