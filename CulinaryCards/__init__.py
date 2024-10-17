@@ -16,6 +16,7 @@ from dotenv import find_dotenv, load_dotenv
 from authlib.integrations.flask_client import OAuth
 import dbinteractions as db
 import recipeOfTheDay as rotd
+import unsplash
 
 
 
@@ -208,6 +209,12 @@ if __name__ == "__main__":
     else:
         app.run()
 
+
+@app.route("/api/getRecipePreviewImage",methods=['GET'])
+def getRecipePreviewImage():
+    title = request.args.get("title")
+    imgurl = unsplash.getImgUrl(title)
+    return json.jsonify({"status": "success", "message": "Image URL retrieved", "imgurl": imgurl}), 200
 
 @app.route("/api/testimgadd",methods=['GET']) #use this to test out adding recipes and imgs
 def testimgadd():
