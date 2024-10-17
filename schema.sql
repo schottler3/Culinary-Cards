@@ -11,7 +11,7 @@ create table users (
 create table profile_img (
     imageid serial primary key,
     image_data bytea,
-    image_link varchar(500),
+    image_link_sso varchar(500),
     userid int,
     constraint fk_user
         foreign key (userid)
@@ -28,7 +28,8 @@ create table recipe (
     instructions text[] not null,
     created_on timestamp default now(),
     userid int,
-    title_desc_ingredients_username tsvector,
+    categories text[] not null,
+    recipe_vector tsvector,
     constraint fk_user
         foreign key (userid)
         references users (userid)
@@ -47,7 +48,7 @@ create table recipe_img (
 );
 
 
--- Used to search db with full text search
+-- Used to search db with full text search, and cache view of db for faster lookup
 create materialized view recipe_search as
     select 
     recipe.recipeid,
@@ -56,7 +57,8 @@ create materialized view recipe_search as
     recipe.ingredients,
     recipe.ingredients_nomeasure,
     recipe.instructions,
-    to_tsvector('english', recipe.title || ' ' || recipe.description || ' ' || recipe.ingredients_nomeasure || ' ' || users.username) as title_desc_ingredients_username
+    recipe.categories,
+    to_tsvector('english', recipe.title || ' ' || recipe.description || ' ' || recipe.ingredients_nomeasure || ' ' || users.username || ' ' || recipe.categories) as recipe_vector
     from 
     recipe
     join users on recipe.userid = users.userid;
@@ -114,4 +116,4 @@ create table recipe_comment (
 
 
 
-create index title_desc_ingredients_username_index on recipe using gin(title_desc_ingredients_username);
+create index recipe_vector_index on recipe using gin(recipe_vector);

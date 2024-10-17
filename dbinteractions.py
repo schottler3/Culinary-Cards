@@ -273,7 +273,7 @@ def searchRecipeByKeywords(keywords):
             from recipe_search
             join recipe on recipe_search.recipeid = recipe.recipeid
             join users on recipe.userid = users.userid
-            where recipe_search.title_desc_ingredients_username @@ to_tsquery(%s);
+            where recipe_search.recipe_vector @@ to_tsquery(%s);
             """
         cursor.execute(str, (keywords,))
         result = cursor.fetchall()
@@ -297,18 +297,18 @@ def searchRecipeByKeywords(keywords):
 def addRecipeToDB(dict):
     connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
     cursor = connection.cursor()
-    str = "insert into recipe (title,description,ingredients,ingredients_nomeasure,instructions,userid,title_desc_ingredients_username) values (%s,%s,%s,%s,%s,%s,to_tsvector(%s))"
-    title_desc_ingredients_username = dict["title"] + " " + dict["description"]
+    str = "insert into recipe (title,description,ingredients,ingredients_nomeasure,instructions,userid,recipe_vector) values (%s,%s,%s,%s,%s,%s,to_tsvector(%s))"
+    recipe_vector = dict["title"] + " " + dict["description"]
     ingredients_nomeasure = ""
     for ingredient in dict["ingredients"]:
         ingredients = ingredient.split(",")
-        title_desc_ingredients_username += " " + ingredients[0]
+        recipe_vector += " " + ingredients[0]
         ingredients_nomeasure += ingredients[0] + " "
     try:
         cursor.execute("select username from users where userid = %s", (dict["userid"],))
         username = cursor.fetchone()[0]
-        title_desc_ingredients_username += " " + username
-        cursor.execute(str,(dict["title"],dict["description"],dict["ingredients"],ingredients_nomeasure,dict["instructions"],dict["userid"],title_desc_ingredients_username))
+        recipe_vector += " " + username
+        cursor.execute(str,(dict["title"],dict["description"],dict["ingredients"],ingredients_nomeasure,dict["instructions"],dict["userid"],recipe_vector))
         connection.commit()
         cursor.execute("refresh materialized view recipe_search")
         connection.commit()
@@ -326,18 +326,18 @@ def addRecipeToDBWithImage(dict,imgfile):
     connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
     cursor = connection.cursor()
     imgfileRAW = imgfile.read()
-    str = "insert into recipe (title,description,ingredients,ingredients_nomeasure,instructions,userid,title_desc_ingredients_username) values (%s,%s,%s,%s,%s,%s,to_tsvector(%s))"
-    title_desc_ingredients_username = dict["title"] + " " + dict["description"]
+    str = "insert into recipe (title,description,ingredients,ingredients_nomeasure,instructions,userid,recipe_vector) values (%s,%s,%s,%s,%s,%s,to_tsvector(%s))"
+    recipe_vector = dict["title"] + " " + dict["description"]
     ingredients_nomeasure = ""
     for ingredient in dict["ingredients"]:
         ingredients = ingredient.split(",")
-        title_desc_ingredients_username += " " + ingredients[0]
+        recipe_vector += " " + ingredients[0]
         ingredients_nomeasure += ingredients[0] + " "
     try:
         cursor.execute("select username from users where userid = %s", (dict["userid"],))
         username = cursor.fetchone()[0]
-        title_desc_ingredients_username += " " + username
-        cursor.execute(str,(dict["title"],dict["description"],dict["ingredients"],ingredients_nomeasure,dict["instructions"],dict["userid"],title_desc_ingredients_username))
+        recipe_vector += " " + username
+        cursor.execute(str,(dict["title"],dict["description"],dict["ingredients"],ingredients_nomeasure,dict["instructions"],dict["userid"],recipe_vector))
         
         # adding image to db
         new_recipe_ID = cursor.fetchone()[0]
@@ -358,18 +358,18 @@ def addRecipeToDBWithImage(dict,imgfile):
 def addRecipeToDBWithImageURL(dict):
     connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
     cursor = connection.cursor()
-    str = "insert into recipe (title,description,ingredients,ingredients_nomeasure,instructions,userid,title_desc_ingredients_username) values (%s,%s,%s,%s,%s,%s,to_tsvector(%s))"
-    title_desc_ingredients_username = dict["title"] + " " + dict["description"]
+    str = "insert into recipe (title,description,ingredients,ingredients_nomeasure,instructions,userid,recipe_vector) values (%s,%s,%s,%s,%s,%s,to_tsvector(%s))"
+    recipe_vector = dict["title"] + " " + dict["description"]
     ingredients_nomeasure = ""
     for ingredient in dict["ingredients"]:
         ingredients = ingredient.split(",")
-        title_desc_ingredients_username += " " + ingredients[0]
+        recipe_vector += " " + ingredients[0]
         ingredients_nomeasure += ingredients[0] + " "
     try:
         cursor.execute("select username from users where userid = %s", (dict["userid"],))
         username = cursor.fetchone()[0]
-        title_desc_ingredients_username += " " + username
-        cursor.execute(str,(dict["title"],dict["description"],dict["ingredients"],ingredients_nomeasure,dict["instructions"],dict["userid"],title_desc_ingredients_username))
+        recipe_vector += " " + username
+        cursor.execute(str,(dict["title"],dict["description"],dict["ingredients"],ingredients_nomeasure,dict["instructions"],dict["userid"],recipe_vector))
         
         # adding image to db
         new_recipe_ID = cursor.fetchone()[0] # How does this fetchone return a new_recipe_id?
@@ -393,22 +393,22 @@ def addRecipeToDBWithImageURL(dict):
 def updateRecipeInDB(dict):
     connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
     cursor = connection.cursor()
-    title_desc_ingredients_username = dict["title"] + " " + dict["description"]
+    recipe_vector = dict["title"] + " " + dict["description"]
     ingredients_nomeasure = ""
     for ingredient in dict["ingredients"]:
         ingredients = ingredient.split(",")
-        title_desc_ingredients_username += " " + ingredients[0]
+        recipe_vector += " " + ingredients[0]
         ingredients_nomeasure += ingredients[0] + " "
     # str was messing with str method :(
-    qstr = "update recipe set title = %s, description = %s, ingredients = %s, ingredients_nomeasure = %s,instructions = %s, title_desc_ingredients_username = to_tsvector(%s) where recipeid = %s"
+    qstr = "update recipe set title = %s, description = %s, ingredients = %s, ingredients_nomeasure = %s,instructions = %s, recipe_vector = to_tsvector(%s) where recipeid = %s"
     try:
         cursor.execute("select userid from recipe where recipeid = %s",(dict["recipeid"],))
         userid = cursor.fetchone()[0]
         userid = str(userid)
         cursor.execute("select username from users where userid = %s",(userid,))
         username = cursor.fetchone()[0]
-        title_desc_ingredients_username += " " + username
-        cursor.execute(qstr,(dict["title"],dict["description"],dict["ingredients"], ingredients_nomeasure,dict["instructions"],title_desc_ingredients_username,dict["recipeid"]))
+        recipe_vector += " " + username
+        cursor.execute(qstr,(dict["title"],dict["description"],dict["ingredients"], ingredients_nomeasure,dict["instructions"],recipe_vector,dict["recipeid"]))
         connection.commit()
         cursor.execute("refresh materialized view recipe_search")
         connection.commit()
