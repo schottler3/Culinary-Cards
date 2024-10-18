@@ -1,5 +1,3 @@
-
-
 #grayBackground {
     display: none;
     position: fixed;
@@ -38,7 +36,7 @@
 }
 
 #createRecipeOne {
-    display: none;
+    display: flex;
     flex-direction: column;
     align-items: center;
     gap: 2vh;
@@ -331,7 +329,7 @@
 }
 
 #createRecipeFour {
-    display: flex;
+    display: none;
     flex-direction: column;
     align-items: center;
     text-align: center;
@@ -341,14 +339,30 @@
 }
 
 #photoOptionsContainer {
-    gap: 2vh;
     width: 100%;
+    height: 16vmax;
+    display: flex;
+    gap: 1vh;
+    align-items: center;
+    justify-content: center;
 }
 
 .photoPreview {
-    width: 20%;
-    gap: 2vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 32vmax;
+    height: 100%;
+    gap: 1vh;
     border: 3px solid black;
+}
+
+.photoPreview img {
+    padding-top: 2vh;
+    padding-bottom: 2vh;
+    width: 50%;
+    height: 100%;
+    object-fit: contain;
 }
 
 .photoPreview:hover {
@@ -356,17 +370,6 @@
     border: 3px solid green;
 }
 
-#imgSelect {
-    width: 10vmax;
-    height: auto;
-}
-
 .photoText {
-    margin-top: 0;
     font-size: 2vmax;
-}
-
-#photoPreview {
-    width: 10vmax;
-    height: auto;
 }
