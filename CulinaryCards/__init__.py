@@ -105,7 +105,7 @@ def profile():
             if userid != -1:
                 user = db.getUserInfoByUserID(session['user'])
                 userlikes = db.getLikeCountForUser(session['user'])
-                recipes = db.getAllRecipesUser(session['user'])
+                recipes = db.getAllRecipesUserLikesDesc(session['user'])
                 #recipes = [(1,2,3,4,5,6,7,8), (1,2,3,4,5,6,7,8)]
                 recipecount = len(recipes)
                 print(user)
@@ -119,6 +119,19 @@ def profile():
     else:
         print(4)
         return redirect('/login')
+    
+
+# ROCKY HERE'S YOUR ENDPOINT FOR RECIPE VIEW
+# ROCKY HERE'S YOUR ENDPOINT FOR RECIPE VIEW
+# ROCKY HERE'S YOUR ENDPOINT FOR RECIPE VIEW
+# ROCKY HERE'S YOUR ENDPOINT FOR RECIPE VIEW
+# ROCKY HERE'S YOUR ENDPOINT FOR RECIPE VIEW
+# ROCKY HERE'S YOUR ENDPOINT FOR RECIPE VIEW
+# ROCKY HERE'S YOUR ENDPOINT FOR RECIPE VIEW
+@app.route("/recipe/<int:recipeid>", methods=["GET"])
+def viewRecipePage(recipeid):
+    result = db.getRecipeByID(recipeid)
+    return render_template("test.html",results=result)
 
 @app.route("/logout")
 def logout():

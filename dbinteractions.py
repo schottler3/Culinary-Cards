@@ -502,6 +502,25 @@ def getAllRecipes():
         cursor.close()
         connection.close()
 
+def getRecipeByID(recipeid):
+    connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
+    cursor = connection.cursor()
+    try:
+        qstr = """select recipe.recipeid,recipe.title,recipe.description,recipe.ingredients,recipe.instructions,recipe.created_on,users.username,recipe.categories
+        from recipe join users on recipe.recipeid = %s"""
+        cursor.execute(qstr,(recipeid,))
+        result = cursor.fetchall()
+        if result is not None:
+            return result
+        else:
+            return []
+    except:
+        print("Failed to get all recipes")
+        return []
+    finally:
+        cursor.close()
+        connection.close()
+
 def getRecipeLikes(recipeid):
     connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
     cursor = connection.cursor()
