@@ -94,8 +94,11 @@ function setPfp(input) {
     });
 }
 
-function uploadImage(image){
-    //send the image to the backend sql
+async function uploadImage(image){
+
+    let binary = new FormData()
+    binary.append("newpfp",image)
+    let response = await fetch("/api/editprofilepicture",{method : "PUT", body: binary})
 }
 
 function showImage(img) {
@@ -107,7 +110,7 @@ function setProfile() {
     user = sessionStorage.getItem('user');
 
     pfp = document.getElementById('pfp');
-    pfp.setAttribute('src', '../static/test.png');
+    pfp.setAttribute('src', '/api/getprofilepicture');
 
     username = document.getElementById('username');
     //username.innerHTML = 'schottler3';
