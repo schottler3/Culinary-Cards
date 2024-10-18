@@ -25,11 +25,14 @@ function nextStep() {
             break;
         case 2:
             submitIngredients();
-            populateIngredients();
             currentStep++;
             break;
         case 3:
             submitInstructions();
+            currentStep++;
+            break;
+        case 4:
+            submitRecipe();
             currentStep++;
             break;
     }
@@ -257,7 +260,7 @@ function addIngredient() {
 
     //Add a remove button to the ingredient
     let removeButton = document.createElement('img');
-    removeButton.src = '/static/remove.png';
+    removeButton.src = '/static/resources/remove.png';
     removeButton.setAttribute('class', 'pure-u-1-3 pure-u-md-1-4 removeButton');
     removeButton.setAttribute('id', `removeButton${ID}`);
     removeButton.addEventListener('click', function(event) {
@@ -679,11 +682,102 @@ function showPreviewPhoto(){
         });
 }
 
-function setPhoto(){
-    let photoInput = document.getElementById('photoInput');
-    photo = photoInput.files[0];
-    let photoPreview = document.getElementById('photoPreview');
-    photoPreview.src = URL.createObjectURL(photo);
+let selected = '';
+
+function setSelected(div) {
+    let upload = document.getElementById('upload');
+    let generated = document.getElementById('generated');
+
+    if(upload === div) {
+        upload.style.backgroundColor = '#cffacf';
+        generated.style.backgroundColor = 'white';
+        selected = 'upload';
+    }
+    else {
+        upload.style.backgroundColor = 'white';
+        generated.style.backgroundColor = '#cffacf';
+        selected = 'generated';
+    }
+}
+
+submitRecipe = async () => {
+    let input = document.getElementById('photoInput');
+    if(input.files.length === 0 || selected === 'generated') {
+        alert('using generated image');
+    }
+    else{
+        photo = input.files[0];
+    }
+
+    let finalIngredients = [];
+    ingredients.forEach(ingredient => {
+        finalIngredients.push((`${ingredient.amount} ${ingredient.fraction} ${ingredient.unit} ${ingredient.name}`).replace(/\s\s+/g, ' '));
+    });
+
+    let finalInstructions = [];
+    instructions.forEach(instruction => {
+        finalInstructions.push(instruction.instruction);
+    });
+
+    let url = '';
+    if(selected === 'generated'){
+        url = document.getElementById('photoPreview').src;
+    }
+
+    let recipeData = {
+        title: title,
+        description: description,
+        categories: selectedCategories,
+        ingredients: finalIngredients,
+        instructions: finalInstructions,
+        photoUrl: url
+    };
+
+    try {
+        let response = await fetch('/api/addrecipe', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(recipeData),
+        });
+
+        if (!response.ok) {
+            let errorText = await response.text();
+            console.error('Error response:', errorText);
+            alert('Failed to create recipe: ' + errorText);
+            return;
+        }
+
+        let data = await response.json();
+
+        if (data.status === 'success') {
+            //window.location.href = `/recipe/${data.recipeID}`;
+            if(selected === 'upload'){
+                let imageForm = new FormData();
+                imageForm.append('image', photo);
+                imageForm.append('recipeid', data.recipeID);
+                let imageResponse = await fetch('/api/setRecipeImage', {
+                    method: 'POST',
+                    body: imageForm,
+                });
+                if (!imageResponse.ok) {
+                    let errorText = await imageResponse.text();
+                    console.error('Error response:', errorText);
+                    alert('Failed to upload recipe image: ' + errorText);
+                    return;
+                }
+
+            }
+            alert('Recipe created successfully');
+        } else {
+            alert('Failed to create recipe: ' + data.message);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred while creating the recipe');
+    }
 }
 
 //Loads categories and popup exit functions

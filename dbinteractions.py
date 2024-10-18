@@ -357,10 +357,10 @@ def addRecipeToDBWithImage(dict,imgfile):
         connection.close()
 
 # Unsplash API Function - Adds recipe but uses unsplash to find a photo for it when User doesn't upload one
-def addRecipeToDBWithImageURL(dict):
+def addRecipeToDBWithImageURL(dict, img_url):
     connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
     cursor = connection.cursor()
-    str = "insert into recipe (title,description,ingredients,ingredients_nomeasure,instructions,userid,recipe_vector) values (%s,%s,%s,%s,%s,%s,to_tsvector(%s))"
+    str = "insert into recipe (title,description,ingredients,ingredients_nomeasure,instructions,userid,categories,recipe_vector) values (%s,%s,%s,%s,%s,%s,%s,to_tsvector(%s)) RETURNING recipeid"
     recipe_vector = dict["title"] + " " + dict["description"]
     ingredients_nomeasure = ""
     for ingredient in dict["ingredients"]:
@@ -368,28 +368,52 @@ def addRecipeToDBWithImageURL(dict):
         recipe_vector += " " + ingredients[0]
         ingredients_nomeasure += ingredients[0] + " "
     try:
+        print("lol1")
         cursor.execute("select username from users where userid = %s", (dict["userid"],))
+        print("lol2")
         username = cursor.fetchone()[0]
         recipe_vector += " " + username
-        cursor.execute(str,(dict["title"],dict["description"],dict["ingredients"],ingredients_nomeasure,dict["instructions"],dict["userid"],recipe_vector))
+
+        cursor.execute(str,(dict["title"],dict["description"],dict["ingredients"],ingredients_nomeasure,dict["instructions"],dict["userid"],dict["categories"],recipe_vector))
         
         # adding image to db
         new_recipe_ID = cursor.fetchone()[0] # How does this fetchone return a new_recipe_id?
+        print(new_recipe_ID)
 
         qstr_img = "insert into recipe_img (image_link, recipeid) values (%s,%s)"
-        img_url = getImgUrl(dict["title"])
-        
 
-        cursor.execute(qstr_img, (img_url, new_recipe_ID))
         print(img_url)
+        cursor.execute(qstr_img, (img_url, new_recipe_ID))
 
         cursor.execute("refresh materialized view recipe_search")
         connection.commit()
-    except:
-        print("Failed to add new recipe")
+    except Exception as e:
+        print(f"Failed to add new recipe {e}")
+        return False
     finally:
         cursor.close()
         connection.close()
+        return True
+
+def setRecipeImage(recipeid, imgfile):
+    if recipeid is None or imgfile is None:
+        print("Recipe ID or image file is missing")
+        return False
+
+    connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
+    cursor = connection.cursor()
+    imgfileRAW = imgfile.read()
+    try:
+        qstr = "insert into recipe_img (image_data,recipeid) values (%s,%s)"
+        cursor.execute(qstr, (Binary(imgfileRAW), recipeid))
+        connection.commit()
+    except Exception as e:
+        print(f"Failed to add image to recipe {e}")
+        return False
+    finally:
+        cursor.close()
+        connection.close()
+        return True
 
 # dict has keys: title,description, ingredients, instructions,recipeid
 def updateRecipeInDB(dict):

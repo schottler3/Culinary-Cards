@@ -112,14 +112,12 @@
         <div id="createRecipeFour">
             <h1 class="step">Enter The Recipe's Photo!</h1>
             <div class="pure-g" id="photoOptionsContainer">
-                <div class="pure-u-1-2 photoPreview" id="photoContainer">
-                    <input type="file" id="photoInput" accept="image/*" onchange="setPhoto()" style="display: none;">
-                    <label for="photoInput" id="photoLabel">
-                        <img id="imgSelect" src="https://cdn-icons-png.flaticon.com/512/44/44289.png" alt="Select Image">
-                        <h2 class="photoText">Select Image</h2>
-                    </label>
-                </div>
-                <div class="pure-u-1-2 photoPreview">
+                <input type="file" id="photoInput" accept="image/*" onchange="setPhoto()" style="display: none;">
+                <label class="pure-u-1-2 photoPreview" for="photoInput" id="upload" onclick="setSelected(this)">
+                    <img id="imgSelect" src="https://cdn-icons-png.flaticon.com/512/44/44289.png" alt="Select Image">
+                    <h2 class="photoText">Select Image</h2>
+                </label>
+                <div class="pure-u-1-2 photoPreview" onclick="setSelected(this)" id="generated">
                     <img src="https://cdn-icons-png.flaticon.com/512/44/44289.png" id="photoPreview">
                     <h2 class="photoText">Use Generated</h2>
                 </div>

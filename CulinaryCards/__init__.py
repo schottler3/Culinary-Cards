@@ -150,17 +150,48 @@ def deleteRecipeAPI():
 @requires_auth
 @app.route("/api/addrecipe",methods=['POST']) 
 def addRecipeAPI():
-    request = request.get_json()
-    #TODO Need to verify that user owns the recipe before deleting
-    recipeDict = {'title': request["title"], 'description': request["description"], 'ingredients': request["ingredients"], 'instructions': request["instructions"], 'userid': request["userid"]} 
-    imgfile = ""
-    if imgfile != "":
-        db.addRecipeToDBWithImage(recipeDict, imgfile)
-        return json.jsonify({"status": "success", "message": "Recipe Deleted"}), 200
-    elif imgfile == "":
-        db.addRecipeToDBWithImageURL(recipeDict)
+    data = request.get_json()
+    title = data.get('title')
+    categories = data.get('categories')
+    description = data.get('description')
+    ingredients = data.get('ingredients')
+    instructions = data.get('instructions')
+    photoUrl = data.get('photoUrl')
+
+    if 'user' in session:
+        userid = session.get('user')
     else:
-        return json.jsonify({"status": "failure", "message": "Recipe failed to DELETE"}), 400
+        return json.jsonify({"status": "failure", "message": "User not logged in"}), 400
+
+    recipeDict = {
+        'title': title,
+        'description': description,
+        'categories': categories,
+        'ingredients': ingredients,
+        'instructions': instructions,
+        'userid': userid
+    }
+    if photoUrl == None:
+        recipeid = db.addRecipeToDB(recipeDict)
+        if recipeid:
+            return json.jsonify({"status": "success", "recipeID": recipeid}), 200
+        else:
+            return json.jsonify({"status": "failure", "message": "Recipe failed to ADD"}), 400
+    elif db.addRecipeToDBWithImageURL(recipeDict, photoUrl):
+        return json.jsonify({"status": "success", "message": "Recipe added"}), 200
+    else:
+        return json.jsonify({"status": "failure", "message": "Recipe failed to ADD"}), 400
+    
+@requires_auth
+@app.route("/api/setRecipeImage",methods=['POST'])
+def setRecipeImageAPI():
+    photo = request.files['image']
+    recipeid = request.form['recipeid']
+
+    if db.setRecipeImage(recipeid, photo):
+        return json.jsonify({"status": "success", "message": "Image added"}), 200
+    else:
+        return json.jsonify({"status": "failure", "message": "Image failed to ADD"}), 400
 
 @requires_auth
 @app.route("/api/editprofile",methods=['PUT'])
