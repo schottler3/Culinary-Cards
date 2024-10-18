@@ -1,0 +1,24 @@
+{% extends "boxTemplates.html" %}
+
+{% block top %}
+  <div class="pure-u paper" id="hometop"></div>
+{% endblock %}
+
+{% block middle %}
+  <div class="pure-g pure-u-1" id="results-grid">
+    <div class="pure-u-1-2" id="result-image-container">
+      <img class="pure-img" id="result-image" src="../static/resources/breakfast.jpg">
+    </div>
+    <div class="pure-g pure-u-1-2" id="recipe-result"> 
+      <div class="pure-u-1" id="result-label">
+        {{ recipe[1] }}
+      </div>
+      <div class="pure-u-1" id="result-author">
+        Author: {{ recipe[6] }}
+      </div>
+      <div class="pure-u-1" id="result-description">
+        {{ recipe[2] }}
+      </div>
+    </div>
+  </div>
+{% endblock %}
