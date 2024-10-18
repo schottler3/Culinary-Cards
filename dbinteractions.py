@@ -51,13 +51,15 @@ def addUserToDBAuthOnly(auth):
     connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
     cursor = connection.cursor()
     # str was messing with str method :(
-    qstr = "insert into users (username,authenticationid,bio) values (%s,%s,%s)"
+    qstr = "insert into users (username,authenticationid,bio) values (%s,%s,%s) returning userid"
     try:
         cursor.execute("select max(userid) from users")
         maxid = cursor.fetchone()[0]
         if(maxid is None):
             maxid = 0
         cursor.execute(qstr,("user" + str(maxid+1),auth,""))
+        result = cursor.fetchone()[0]
+        cursor.execute("insert into profile_img (userid) values (%s)",(result,))
         connection.commit()
     except:
         print("Failed to commit new user to users with auth")
@@ -177,6 +179,42 @@ def updateUserWithPicture(username,email,fname,lname,bio,userid,imgfile):
         cursor.close()
         connection.close()
 
+def UpdateProfilePicture(userid,image):
+    connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
+    cursor = connection.cursor()
+    img_str_update = "update profile_img set image_data = %s where userid = %s"
+    imgFileRAW = image.read()
+    try:
+        cursor.execute(img_str_update,(Binary(imgFileRAW),userid))
+        connection.commit()
+        return True
+    except:
+        print("Failed to update user image")
+        return False
+    finally:
+        cursor.close()
+        connection.close()
+
+def getProfilePicture(userid):
+    connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
+    cursor = connection.cursor()
+    print(userid,"userid")
+    img_str = "select image_data, image_link_sso from profile_img where userid = %s"
+    try:
+        cursor.execute(img_str,(userid,))
+        result = cursor.fetchone()
+        if result[0] is not None:
+            return (result[0],"img")
+        elif result[1] is not None:
+            return (result[1],"link")
+        else:
+            return ("/static/test.png", "file")
+    except:
+        print("Failed to get user image")
+        return None
+    finally:
+        cursor.close()
+        connection.close()
 
 # Returns list of tuples in form: (recipeid,title,description,ingredients,instructions,created_on,user_id)
 def getAllLikedRecipesForUser(userid):
@@ -330,7 +368,7 @@ def addRecipeToDBWithImage(dict,imgfile):
     connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
     cursor = connection.cursor()
     imgfileRAW = imgfile.read()
-    str = "insert into recipe (title,description,ingredients,ingredients_nomeasure,instructions,userid,categories,recipe_vector) values (%s,%s,%s,%s,%s,%s,%s,to_tsvector(%s))"
+    str = "insert into recipe (title,description,ingredients,ingredients_nomeasure,instructions,userid,categories,recipe_vector) values (%s,%s,%s,%s,%s,%s,%s,to_tsvector(%s)) returning recipeid"
     recipe_vector = dict["title"] + " " + dict["description"]
     ingredients_nomeasure = ""
     for ingredient in dict["ingredients"]:
@@ -364,7 +402,7 @@ def addRecipeToDBWithImage(dict,imgfile):
 def addRecipeToDBWithImageURL(dict):
     connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
     cursor = connection.cursor()
-    str = "insert into recipe (title,description,ingredients,ingredients_nomeasure,instructions,userid,categories,recipe_vector) values (%s,%s,%s,%s,%s,%s,%s,to_tsvector(%s))"
+    str = "insert into recipe (title,description,ingredients,ingredients_nomeasure,instructions,userid,categories,recipe_vector) values (%s,%s,%s,%s,%s,%s,%s,to_tsvector(%s)) returning recipeid"
     recipe_vector = dict["title"] + " " + dict["description"]
     ingredients_nomeasure = ""
     for ingredient in dict["ingredients"]:

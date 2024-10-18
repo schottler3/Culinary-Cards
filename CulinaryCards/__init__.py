@@ -7,10 +7,10 @@ import random
 from os import environ as env
 from urllib.parse import quote_plus, urlencode
 from functools import wraps
-
+import io
 from datetime import *
 
-from flask import Flask, redirect, render_template, session, url_for,request, json
+from flask import Flask, redirect, render_template, session, url_for,request, json,send_file
 
 from dotenv import find_dotenv, load_dotenv
 from authlib.integrations.flask_client import OAuth
@@ -171,6 +171,36 @@ def submitEditProfile():
     else:
         return json.jsonify({"status": "failure", "message": "Failed profile update"}), 400
     
+@requires_auth
+@app.route("/api/editprofilepicture",methods=['PUT'])
+def submitEditProfilePic():
+    if "newpfp" not in request.files:
+        return "No new image sent", 400
+    
+    if db.UpdateProfilePicture(session["user"],request.files["newpfp"]):
+        return json.jsonify({"status": "success", "message": "Profile Picture updated"}), 200
+    else:
+        return json.jsonify({"status": "failure", "message": "Failed profile picture update"}), 400
+
+@app.route("/api/getprofilepicture",methods=['GET'])
+def getProfilePic():
+    img = db.getProfilePicture(session["user"])
+    print(img)
+    if img is not None:
+        if img[1] == "img":
+            stream = io.BytesIO(img[0])
+            print(1)
+            return send_file(stream,download_name=img[1]+str(session["user"])), 200
+        elif img[1] == "link":
+            print(2)
+            return redirect(img[0]) , 200
+        elif img[1] == "file":
+            print(3)
+            return send_file(img[0], mimetype='image/png'),200
+    else:
+        print(4)
+        return send_file("static/test.png", mimetype='image/png'),200
+
 @app.route("/api/isUser",methods=['PUT'])
 def getUsernames():
     username = request.args.get("username")
