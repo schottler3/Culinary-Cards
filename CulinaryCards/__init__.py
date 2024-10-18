@@ -15,8 +15,6 @@ from flask import Flask, redirect, render_template, session, url_for,request, js
 from dotenv import find_dotenv, load_dotenv
 from authlib.integrations.flask_client import OAuth
 import dbinteractions as db
-import apirequests as apireq
-import apirequests as apireq
 import recipeOfTheDay as rotd
 import unsplash
 
@@ -72,8 +70,6 @@ def redirectToSearch():
     sendData = []
     user_query = request.form["queryhome"]
     results = db.searchRecipeByKeywords(user_query)
-    if len(results) < 1:
-        results = apireq.recipe_search(user_query)
     # for item in results:
     #     recipe = item['recipe']
     #     label = recipe.get('label')
