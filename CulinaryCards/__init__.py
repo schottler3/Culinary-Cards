@@ -77,7 +77,7 @@ def redirectToSearch():
     #     sendData.append([label, calories])
     for item in results:
         print(f"item: {item}")
-    return render_template("searchResults.html",results=results, recipeofday = rotd.getRecipeOfTheDay())
+    return render_template("searchResults.html",results=results)
 
 @app.route("/login")
 def login():

@@ -1,6 +1,8 @@
-{% extends "index.html" %}
-
-{% block searchResults %}
+{% extends "boxTemplates.html" %}
+{% block top %}
+  <div class="pure-u paper" id="hometop"></div>
+{% endblock %}
+{% block middle %}
 <div class="pure-g pure-u-1" id="results-div">
   {% for recipe in results %} {# Making a div for every submission to list their name and thoughts #}
   <a id="testingme" href="{{ '/recipe/%s'%recipe.recipeid }}">{{ recipe.recipeid }}>

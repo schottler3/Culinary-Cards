@@ -208,7 +208,7 @@ def getProfilePicture(userid):
         elif result[1] is not None:
             return (result[1],"link")
         else:
-            return ("/static/test.png", "file")
+            return ("static/test.png", "file")
     except:
         print("Failed to get user image")
         return None
