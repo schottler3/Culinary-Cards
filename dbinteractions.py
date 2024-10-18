@@ -299,7 +299,7 @@ def searchRecipeByKeywords(keywords):
 def addRecipeToDB(dict):
     connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
     cursor = connection.cursor()
-    str = "insert into recipe (title,description,ingredients,ingredients_nomeasure,instructions,userid,recipe_vector) values (%s,%s,%s,%s,%s,%s,to_tsvector(%s))"
+    str = "insert into recipe (title,description,ingredients,ingredients_nomeasure,instructions,userid,categories,recipe_vector) values (%s,%s,%s,%s,%s,%s,%s,to_tsvector(%s)) RETURNING recipeid"
     recipe_vector = dict["title"] + " " + dict["description"]
     ingredients_nomeasure = ""
     for ingredient in dict["ingredients"]:
@@ -310,15 +310,18 @@ def addRecipeToDB(dict):
         cursor.execute("select username from users where userid = %s", (dict["userid"],))
         username = cursor.fetchone()[0]
         recipe_vector += " " + username
-        cursor.execute(str,(dict["title"],dict["description"],dict["ingredients"],ingredients_nomeasure,dict["instructions"],dict["userid"],recipe_vector))
+        cursor.execute(str,(dict["title"],dict["description"],dict["ingredients"],ingredients_nomeasure,dict["instructions"],dict["userid"],dict["categories"],recipe_vector))
+        recipeid = cursor.fetchone()[0]
         connection.commit()
         cursor.execute("refresh materialized view recipe_search")
         connection.commit()
-    except:
-        print("Failed to add new recipe")
+    except Exception as e:
+        print(f"Failed to add new recipe {e}")
+        return None
     finally:
         cursor.close()
         connection.close()
+        return recipeid
 
 # dict has keys: title,description, ingredients, instructions, userid
 # ingredients & instructions are lists of strings
@@ -368,9 +371,7 @@ def addRecipeToDBWithImageURL(dict, img_url):
         recipe_vector += " " + ingredients[0]
         ingredients_nomeasure += ingredients[0] + " "
     try:
-        print("lol1")
         cursor.execute("select username from users where userid = %s", (dict["userid"],))
-        print("lol2")
         username = cursor.fetchone()[0]
         recipe_vector += " " + username
 
@@ -382,7 +383,6 @@ def addRecipeToDBWithImageURL(dict, img_url):
 
         qstr_img = "insert into recipe_img (image_link, recipeid) values (%s,%s)"
 
-        print(img_url)
         cursor.execute(qstr_img, (img_url, new_recipe_ID))
 
         cursor.execute("refresh materialized view recipe_search")

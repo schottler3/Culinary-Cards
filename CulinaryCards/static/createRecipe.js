@@ -674,12 +674,25 @@ function showPreviewPhoto(){
         .then(data => {
             if (data.status === 'success') {
                 let photoPreview = document.getElementById('photoPreview');
-                photoPreview.src = data.imgurl;
+                if(data.imgurl === ""){
+                    photoPreview.src = '/static/resources/Logo.png';
+                }
+                else{   
+                    photoPreview.src = data.imgurl;
+                }
             } 
             else {
                 alert('Fetch for image URL failed');
             }
         });
+}
+
+function setPhoto(){
+    let imgSelect = document.getElementById('imgSelect');
+    let file = document.getElementById('photoInput').files[0];
+    if (file) {
+        imgSelect.src = URL.createObjectURL(file);
+    }
 }
 
 let selected = '';
@@ -719,7 +732,7 @@ submitRecipe = async () => {
         finalInstructions.push(instruction.instruction);
     });
 
-    let url = '';
+    let url = 'None';
     if(selected === 'generated'){
         url = document.getElementById('photoPreview').src;
     }

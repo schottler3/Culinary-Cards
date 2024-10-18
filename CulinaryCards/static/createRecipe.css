@@ -353,13 +353,16 @@
     align-items: center;
     width: 32vmax;
     height: 100%;
-    gap: 2vh;
+    gap: 1vh;
     border: 3px solid black;
+}
 
-    img {
-        width: 50%;
-        height: auto;
-    }
+.photoPreview img {
+    padding-top: 2vh;
+    padding-bottom: 2vh;
+    width: 50%;
+    height: 100%;
+    object-fit: contain;
 }
 
 .photoPreview:hover {
