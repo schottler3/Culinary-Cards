@@ -131,18 +131,14 @@ def profile():
         print(4)
         return redirect('/login')
     
-
-# ROCKY HERE'S YOUR ENDPOINT FOR RECIPE VIEW
-# ROCKY HERE'S YOUR ENDPOINT FOR RECIPE VIEW
-# ROCKY HERE'S YOUR ENDPOINT FOR RECIPE VIEW
-# ROCKY HERE'S YOUR ENDPOINT FOR RECIPE VIEW
-# ROCKY HERE'S YOUR ENDPOINT FOR RECIPE VIEW
-# ROCKY HERE'S YOUR ENDPOINT FOR RECIPE VIEW
-# ROCKY HERE'S YOUR ENDPOINT FOR RECIPE VIEW
 @app.route("/recipe/<int:recipeid>", methods=["GET"])
 def viewRecipePage(recipeid):
     result = db.getRecipeByID(recipeid)
-    return render_template("test.html",results=result)
+    print(f"recipe id is: {recipeid}")
+    print(result)
+    print("line....")
+    print(result[0])
+    return render_template("recipePage.html",recipe=result[0])
 
 @app.route("/logout")
 def logout():
@@ -312,7 +308,7 @@ def testimgadd():
 
     #db.addUserToDB(testdictuser)
     # db.updateUser("Adam2","kvant003@umn.edu","Kvant","Adam","World Hello","2")
-     db.addRecipeToDB(testdictrecipe)
+    db.addRecipeToDB(testdictrecipe)
     # db.addRecipeToDBWithImageURL(testdictrecipe)
     # print('wow')
     # db.deleteRecipeInDB("1")
