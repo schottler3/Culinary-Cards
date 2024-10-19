@@ -70,11 +70,6 @@ def redirectToSearch():
     sendData = []
     user_query = request.form["queryhome"]
     results = db.searchRecipeByKeywords(user_query)
-    # for item in results:
-    #     recipe = item['recipe']
-    #     label = recipe.get('label')
-    #     calories = recipe.get('calories')
-    #     sendData.append([label, calories])
     for item in results:
         print(f"item: {item}")
     return render_template("searchResults.html",results=results)
@@ -187,8 +182,6 @@ def viewRecipePage(recipeid):
     result = db.getRecipeByID(recipeid)
     print(f"recipe id is: {recipeid}")
     print(result)
-    print("line....")
-    print(result[0])
     return render_template("recipePage.html",recipe=result[0])
 
 @app.route("/logout")

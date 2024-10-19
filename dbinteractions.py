@@ -552,7 +552,9 @@ def getRecipeByID(recipeid):
     cursor = connection.cursor()
     try:
         qstr = """select recipe.recipeid,recipe.title,recipe.description,recipe.ingredients,recipe.instructions,recipe.created_on,users.username,recipe.categories
-        from recipe join users on recipe.recipeid = %s"""
+        from recipe 
+        join users on recipe.userid = users.userid
+        where recipe.recipeid = %s"""
         cursor.execute(qstr,(recipeid,))
         result = cursor.fetchall()
         if result is not None:
