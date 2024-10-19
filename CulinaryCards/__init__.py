@@ -89,18 +89,27 @@ def login():
 
 @app.route("/callback", methods=["GET", "POST"])
 def callback():
-    AuthToken = oauth.auth0.authorize_access_token()
-    token = oauth.auth0.parse_id_token(AuthToken, nonce = session["nonce"])
-    token = token.get("sub")
-    userId = db.getUserIDFromAuth(token)
-    if  userId != -1:
-        session["user"] = userId
-        session["token"] = token
-    else:
-        db.addUserToDBAuthOnly(token)
+    try:
+        AuthToken = oauth.auth0.authorize_access_token()
+        token = oauth.auth0.parse_id_token(AuthToken, nonce = session["nonce"])
+        if not token:
+            raise Exception("No Token Found")
+        token = token.get("sub")
+        print(token)
         userId = db.getUserIDFromAuth(token)
-        session["user"] = userId
-        session["token"] = token
+        if  userId != -1:
+            session["user"] = userId
+            session["token"] = token
+        else:
+            db.addUserToDBAuthOnly(token)
+            userId = db.getUserIDFromAuth(token)
+            session["user"] = userId
+            session["token"] = token
+        return redirect("/")
+    except:
+        print("Error parsing 0Auth token")
+        session.pop("user", None)
+        session.pop("token", None)
     return redirect("/")
 
 @app.route("/profile")

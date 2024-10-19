@@ -131,10 +131,7 @@ function setProfile() {
 function submitPfp() {
     const pfpPreview = document.getElementById('pfpPreview');
     const imageSrc = pfpPreview.src;
-
     pfpToggle();
-
-    // This will change once we have a way to submit the user's profile picture
 }
 
 function sortRecipes() {
