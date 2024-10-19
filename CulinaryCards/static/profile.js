@@ -99,6 +99,9 @@ async function uploadImage(image){
     let binary = new FormData()
     binary.append("newpfp",image)
     let response = await fetch("/api/editprofilepicture",{method : "PUT", body: binary})
+    if (response.ok){
+        window.location.reload()
+    }
 }
 
 function showImage(img) {
@@ -142,17 +145,17 @@ function sortRecipes() {
 
 let changeToMy = function() {
     console.log('Changing to my recipes');
-    // Change the view of recipes shown to the user's recipes
+    window.location.href = "/profile"
 }
 
 let changeToLiked = function() {
     console.log('Changing to liked recipes');
-    // Change the view of recipes shown to the user's liked recipes
+    window.location.href = "/profile/likes"
 }
 
 let changeToSaved = function() {
     console.log('Changing to saved recipes');
-    // Change the view of recipes shown to the user's saved recipes
+    window.location.href = "/profile/saved"
 }
 
 window.onload = function() {

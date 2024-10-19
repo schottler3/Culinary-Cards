@@ -127,6 +127,52 @@ def profile():
         print(4)
         return redirect('/login')
     
+@app.route("/profile/likes")
+def profileGetLiked():
+    if 'user' in session:
+        user = session['user']
+        if('token' in session):
+            userid = db.getUserIDFromAuth(session['token']) 
+            if userid != -1:
+                user = db.getUserInfoByUserID(session['user'])
+                userlikes = db.getLikeCountForUser(session['user'])
+                recipes = db.getAllLikedRecipesForUser(session['user'])
+                recipecount = len(recipes)
+                print(user)
+                print(1)
+                return render_template('profile.html', user=user,userlikes = userlikes,recipes = recipes,recipecount = recipecount)
+            else:
+                print(2)
+                return redirect('/login')
+        print(3)
+        return render_template('profile.html', user=user)
+    else:
+        print(4)
+        return redirect('/login')
+    
+@app.route("/profile/saved")
+def profileGetSaved():
+    if 'user' in session:
+        user = session['user']
+        if('token' in session):
+            userid = db.getUserIDFromAuth(session['token']) 
+            if userid != -1:
+                user = db.getUserInfoByUserID(session['user'])
+                userlikes = db.getLikeCountForUser(session['user'])
+                recipes = db.getAllSavedRecipesForUser(session['user'])
+                recipecount = len(recipes)
+                print(user)
+                print(1)
+                return render_template('profile.html', user=user,userlikes = userlikes,recipes = recipes,recipecount = recipecount)
+            else:
+                print(2)
+                return redirect('/login')
+        print(3)
+        return render_template('profile.html', user=user)
+    else:
+        print(4)
+        return redirect('/login')
+    
 @app.route("/recipe/<int:recipeid>", methods=["GET"])
 def viewRecipePage(recipeid):
     result = db.getRecipeByID(recipeid)
