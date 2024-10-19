@@ -1,23 +1,38 @@
 {% extends "boxTemplates.html" %}
 
-{% block top %}
-  <div class="pure-u paper" id="hometop"></div>
+{% block extraHeadSpace %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='recipePage.css') }}">
 {% endblock %}
 
 {% block middle %}
-  <div class="pure-g pure-u-1" id="results-grid">
-    <div class="pure-u-1-2" id="result-image-container">
-      <img class="pure-img" id="result-image" src="../static/resources/breakfast.jpg">
+
+  <div class="pure-g pure-u-1" id="recipe-container">
+    <div class="pure-u-1 title" id="recipe-section-title">
+      {{recipe[1]}}
     </div>
-    <div class="pure-g pure-u-1-2" id="recipe-result"> 
-      <div class="pure-u-1" id="result-label">
-        {{ recipe[1] }}
+    <div class="pure-g pure-u-1" id="recipe-info-section">
+      <div class="pure-u-1-4" id="recipe-img">
+        <img class="pure-img" id="img-of-recipe" src="../static/resources/breakfast.jpg">
       </div>
-      <div class="pure-u-1" id="result-author">
-        Author: {{ recipe[6] }}
+      <div class="pure-g pure-u-1-5" id="recipe-info">
+        Ingredients:
+        {% for ingredient in recipe[3] %}
+          <p>- {{ ingredient }}</p>
+        {% endfor %}
       </div>
-      <div class="pure-u-1" id="result-description">
-        {{ recipe[2] }}
+      <div class="pure-g pure-u-1-5" id="recipe-info">
+        Directions: 
+        {% for instruction in recipe[4] %}
+          <p>- {{ instruction }}</p>
+        {% endfor %}
+      </div>
+      <div class="pure-g pure-u-1-4" id="recipe-info">
+        <div class="pure-u-1" id="recipe-day-author">
+          Written by: {{recipe[6]}}
+        </div>
+        <div class="pure-u-1" id="recipe-day-description">
+          {{recipe[2]}}
+        </div>
       </div>
     </div>
   </div>

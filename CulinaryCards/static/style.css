@@ -303,13 +303,6 @@ form{
     flex-direction: row;
 }
 
-#img-of-recipe {
-    width: auto; 
-    height: 100%; 
-    aspect-ratio: 1; 
-    object-fit: cover;
-    border-radius: 15px;
-}
 /* End Section */
 
 /* Navbar */
@@ -426,7 +419,7 @@ form{
     margin: 1em;
 }
 
-#results-grid {
+/* #results-grid {
     display: flex;
     justify-content: center;
     margin: 1em;
@@ -445,14 +438,14 @@ form{
     height: 100%;
     display: flex;
     justify-content: right;
-}
+} */
 
-#result-image {
+/* #result-image {
     width: auto;
     aspect-ratio: 1; 
     object-fit: cover;
     border-radius: 15px;
-}
+} */
 
 #result-label {
     font-size: 2.25em;
