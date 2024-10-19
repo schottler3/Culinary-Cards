@@ -21,14 +21,14 @@
       </div>
     </form>
   </div>
-  {% block searchResults %}
-  {% endblock %}
 {% endblock %}
 
 {% block bottom %}
     <div class="pure-u-1 paper" id="homebottom"><img class="pure-img" id="arrow" src="../static/resources/arrow.png"></div>
+    {% block searchResults %}
+    {% endblock %}
 
-    <div id="hero-container"> Search. Cook. Save. </div>
+    <div class="pure-u-1" id="hero-container"> Search. Cook. Save. </div>
 
     <div class="pure-g pure-u-1" id="recipe-day-container">
       <div class="pure-u-1 title" id="recipe-day-section-title">Recipe of the Day</div>

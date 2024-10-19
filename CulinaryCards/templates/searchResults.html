@@ -1,29 +1,33 @@
 {% extends "boxTemplates.html" %}
 {% block top %}
-  <div class="pure-u paper" id="hometop"></div>
 {% endblock %}
 {% block middle %}
-<div class="pure-g pure-u-1" id="results-div">
+
+<div class="pure-g pure-u-1" id="recipe-container" >
+  <div class="pure-u-1 title" id="recipe-section-title">Search Results:</div>
   {% for recipe in results %} {# Making a div for every submission to list their name and thoughts #}
-  <a id="testingme" href="{{ '/recipe/%s'%recipe.recipeid }}">{{ recipe.recipeid }}>
-  <div class="pure-g pure-u-1" id="results-grid">
-    <div class="pure-u-1-2" id="result-image-container">
-      <img class="pure-img" id="result-image" src="../static/resources/breakfast.jpg">
-    </div>
-    <div class="pure-g pure-u-1-2" id="recipe-result"> 
-      <div class="pure-u-1" id="result-label">
-        {{ recipe.title }}
+  <a class="pure-g pure-u-1 recipe-{{ recipe.recipeid }}" id="recipe-info-section" href="{{ '/recipe/%s'%recipe.recipeid }}">
+      <div class="pure-u-3-8" id="recipe-img"><img class="pure-img" id="img-of-recipe" src="../static/resources/breakfast.jpg"></div>
+      <div class="pure-g pure-u-5-8" id="recipe-info">
+        <div class="pure-u-1" id="recipe-title">{{ recipe.title }}</div>
+        <div class="pure-u-1" id="recipe-author">Written by: {{ recipe.username }}</div>
+        <div class="pure-u-1" id="recipe-description">{{ recipe.description }}</div>
+        <div class="pure-u-1" id="recipe-ingredients">Ingredients: 
+          {% for ingredient in recipe.ingredients %}
+            {{ ingredient }}{% if not loop.last %}, {% endif %}
+          {% endfor %}</div>
       </div>
-      <div class="pure-u-1" id="result-author">
-        Author: {{ recipe.username }}
-      </div>
-      <div class="pure-u-1" id="result-description">
-        {{ recipe.description }}
-      </div>
-    </div>
-  </div>
   </a>
   {% endfor %}
-  </div>
 </div>
+</div>
+
+<div class="pure-g pure-u-1" id="search-result-btns">
+  <button class="pure-button" id="scroll-btn" type="button" onClick="history.back();">Back to Search</button>
+  {% if results %}
+    <button class="pure-button" id="scroll-btn" type="button" onClick="document.getElementById('recipe-container').scrollIntoView();">Scroll to Top</button>
+  {% endif %}
+</div>
+
 {% endblock %}
+
