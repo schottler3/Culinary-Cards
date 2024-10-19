@@ -319,13 +319,6 @@ form{
     flex-direction: row;
 }
 
-#img-of-recipe {
-    width: auto; 
-    height: 100%; 
-    aspect-ratio: 1; 
-    object-fit: cover;
-    border-radius: 15px;
-}
 /* End Section */
 
 /* Navbar */

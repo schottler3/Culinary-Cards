@@ -72,11 +72,6 @@ def redirectToSearch():
     user_query = request.form["queryhome"]
     results = db.searchRecipeByKeywords(user_query)
     print(results)
-    # for item in results:
-    #     recipe = item['recipe']
-    #     label = recipe.get('label')
-    #     calories = recipe.get('calories')
-    #     sendData.append([label, calories])
     for item in results:
         print(f"item: {item}")
     return render_template("searchResults.html",results=results)
@@ -189,8 +184,6 @@ def viewRecipePage(recipeid):
     result = db.getRecipeByID(recipeid)
     print(f"recipe id is: {recipeid}")
     print(result)
-    print("line....")
-    print(result[0])
 
     t = pd.DataFrame({'timestamp': [pd.Timestamp(result[0][5])]})
     t['words'] = t['timestamp'].dt.strftime('%A, %B %d, %Y')
