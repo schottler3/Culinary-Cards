@@ -10,7 +10,7 @@ var lastEdit = '';
 
 //Units for ingredients to have in dropdown
 const units = {
-    imperial: ['tsp', 'tbsp', 'floz', 'C', 'pint', 'quart', 'gallon', 'oz', 'lb', ''],
+    imperial: ['tsp', 'tbsp', 'floz', 'cup', 'pint', 'quart', 'gallon', 'oz', 'lb', ''],
     metric: ['ml', 'l', 'g', 'kg', 'mg', '']
 };
 
