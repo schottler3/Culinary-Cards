@@ -618,6 +618,32 @@ def getAllRecipes():
         cursor.close()
         connection.close()
 
+def getAllRecipesCategory(category):
+    connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
+    cursor = connection.cursor()
+    try:
+        qstr = """select recipe.recipeid,recipe.title,recipe.description,recipe.ingredients,recipe.instructions,recipe.created_on,users.username,recipe.categories
+        from recipe join users on recipe.userid = users.userid
+        where %s = any(recipe.categories)"""
+        cursor.execute(qstr,(category,))
+        result = cursor.fetchall()
+        if result is not None:
+            resultlst = []
+            for i in range(len(result)):
+                resultdict = {}
+                for col in range(len(cursor.description)):
+                    resultdict[cursor.description[col][0]] = result[i][col]
+                resultlst.append(resultdict)
+            return resultlst 
+        else:
+            return []
+    except:
+        print("Failed to get all recipes")
+        return []
+    finally:
+        cursor.close()
+        connection.close()
+
 def getRecipeByID(recipeid):
     connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
     cursor = connection.cursor()

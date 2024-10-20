@@ -79,6 +79,13 @@ def redirectToSearch():
         results[i]["imagelink"] = "/api/getrecipeimage/" + str(results[i]["recipeid"])
     return render_template("searchResults.html",results=results)
 
+@app.route("/search/category/<string:category>",methods=['GET'])
+def redirectToSearchCategory(category):
+    sendData = []
+    results = db.getAllRecipesCategory(category)
+    for i in range(len(results)):
+        results[i]["imagelink"] = "/api/getrecipeimage/" + str(results[i]["recipeid"])
+    return render_template("searchResults.html",results=results)
 
 @app.route("/api/getrecipeimage/<int:recipeid>",methods=['GET'])
 def getRecipePic(recipeid):
