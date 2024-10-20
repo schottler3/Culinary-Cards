@@ -136,7 +136,14 @@ def callback():
 
 @app.route("/profile")
 def profile():
-    if 'user' in session:
+    userid = request.args.get("profile")
+    if userid:
+        user = db.getUserInfoByUserID(userid)
+        userlikes = db.getLikeCountForUser(userid)
+        recipes = db.getAllRecipesUserLikesDesc(userid)
+        recipecount = len(recipes)
+        return render_template('profile.html', profile=userid, user=user,userlikes = userlikes,recipes = recipes,recipecount = recipecount)
+    elif 'user' in session:
         user = session['user']
         if('token' in session):
             userid = db.getUserIDFromAuth(session['token']) 
@@ -148,7 +155,7 @@ def profile():
                 recipecount = len(recipes)
                 print(user)
                 print(1)
-                return render_template('profile.html', user=user,userlikes = userlikes,recipes = recipes,recipecount = recipecount)
+                return render_template('profile.html',profile=userid, user=user,userlikes = userlikes,recipes = recipes,recipecount = recipecount)
             else:
                 print(2)
                 return redirect('/login')
@@ -317,24 +324,24 @@ def submitEditProfilePic():
         print("Failed to update profile picture")
         return json.jsonify({"status": "failure", "message": "Failed profile picture update"}), 400
 
-@app.route("/api/getprofilepicture",methods=['GET'])
-def getProfilePic():
-    img = db.getProfilePicture(session["user"])
+@app.route("/api/getprofilepicture/<int:userid>", methods=['GET'])
+def getProfilePic(userid):
+    img = db.getProfilePicture(userid)
     print(img)
     if img is not None:
         if img[1] == "img":
             stream = io.BytesIO(img[0])
             print(1)
-            return send_file(stream,download_name=img[1]+str(session["user"])), 200
+            return send_file(stream, download_name=img[1] + str(userid)), 200
         elif img[1] == "link":
             print(2)
-            return redirect(img[0]) , 302
+            return redirect(img[0]), 302
         elif img[1] == "file":
             print(3)
-            return send_file(img[0], mimetype='image/png'),200
+            return send_file(img[0], mimetype='image/png'), 200
     else:
         print(4)
-        return send_file("static/test.png", mimetype='image/png'),200
+        return send_file("static/test.png", mimetype='image/png'), 200
 
 @app.route("/api/isUser",methods=['PUT'])
 def getUsernames():
@@ -375,15 +382,15 @@ if __name__ == "__main__":
         app.run()
 
 
-@app.route("/api/getRecipePreviewImage",methods=['GET'])
+@app.route("/api/getrecipepreviewimage",methods=['GET'])
 def getRecipePreviewImage():
     title = request.args.get("title")
     imgurl = unsplash.getImgUrl(title)
     return json.jsonify({"status": "success", "message": "Image URL retrieved", "imgurl": imgurl}), 200
 
-@app.route("/api/getRecipeImage",methods=['GET'])
-def getRecipeImage():
-    img = db.getRecipePhoto(request.args.get("recipeid"))
+@app.route("/api/getrecipeimage/<int:recipeid>",methods=['GET'])
+def getRecipeImage(recipeid):
+    img = db.getRecipePhoto(recipeid)
     print(img)
     if img is not None:
         if img[1] == "img":
