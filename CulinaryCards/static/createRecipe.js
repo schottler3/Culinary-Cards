@@ -20,16 +20,19 @@ var ingredientID = 0;
 function nextStep() {
     switch(currentStep) {
         case 1:
-            submitTitle();
-            currentStep++;
+            if (submitTitle()){
+                currentStep++;
+            }
             break;
         case 2:
-            submitIngredients();
-            currentStep++;
+            if (submitIngredients()){
+                currentStep++;
+            }
             break;
         case 3:
-            submitInstructions();
-            currentStep++;
+            if (submitInstructions()){
+                currentStep++;
+            }
             break;
         case 4:
             submitRecipe();
@@ -130,23 +133,24 @@ function submitTitle() {
     title = form.querySelector('#recipeTitle').value;
     if(title === '') {
         alert('Title is required!');
-        return;
+        return false;
     }
     description = form.querySelector('#recipeDescription').value;
     if(description === '') {
         alert('Description is required!');
-        return;
+        return false;
     }
 
     if(selectedCategories.length === 0) {
         alert('At least one category is required!');
         console.log(selectedCategories)
-        return;
+        return false;
     }
 
     form.style.display = 'none';
 
     showUnits();
+    return true
 }
 
 //Function to show the units form
@@ -217,19 +221,19 @@ function addIngredient() {
     //Check if all fields are filled out correctly
     if(ingredientNameValue === '') {
         alert('Ingredient name is required, silly!');
-        return;
+        return false;
     }
     else if(ingredientAmountValue === '' || !/^\d+$/.test(ingredientAmountValue)) {
         alert('Ingredient amount is required, silly!');
-        return;
+        return false;
     }
     else if(ingredientUnitValue === '') {
         alert('Ingredient unit is required, silly!');
-        return;
+        return false;
     }
     if (ingredientFractionValue !== '' && !/^\d+\/\d+$/.test(ingredientFractionValue)) {
         alert('Invalid Fractional Amount');
-        return;
+        return false;
     }
 
     //Create a new ingredient object and add it to the ingredients list
@@ -283,6 +287,7 @@ function addIngredient() {
     addedIngredientsTitle.style.display = 'block';
 
     console.log(ingredients);
+    return true
 }
 
 //Function to adjust an ingredient in the ingredients list (HTML & JS)
@@ -300,7 +305,7 @@ function adjustIngredient(changed) {
                     if(value === '') {
                         alert('Ingredient name is required. \nRemove the ingredient using the "X" button if you want to delete this ingredient.');
                         changed.value = curIngredient.name;
-                        return;
+                        return false;
                     }
                     else{
                         curIngredient.name = value;
@@ -310,7 +315,7 @@ function adjustIngredient(changed) {
                     if(value === '' || !/^\d+$/.test(value)) {
                         alert('Ingredient amount is required. \nRemove the ingredient using the "X" button if you want to delete this ingredient.');
                         changed.value = curIngredient.amount;
-                        return;
+                        return false;
                     }
                     else {
                         curIngredient.amount = value;
@@ -320,7 +325,7 @@ function adjustIngredient(changed) {
                     if (value !== '' && !/^\d+\/\d+$/.test(value)) {
                         alert('Invalid Fractional Amount');
                         changed.value = curIngredient.fraction;
-                        return;
+                        return false;
                     }
                     else {
                         curIngredient.fraction = value;
@@ -330,7 +335,7 @@ function adjustIngredient(changed) {
                     if(value === '') {
                         alert('Ingredient unit is required. \nRemove the ingredient using the "X" button if you want to delete this ingredient.');
                         changed.value = curIngredient.unit;
-                        return;
+                        return false;
                     }
                     else {
                         curIngredient.unit = value;
@@ -373,13 +378,14 @@ function removeIngredient(button) {
 function submitIngredients() {
     if(ingredients.length === 0) {
         alert('At least one ingredient is required!');
-        return;
+        return false;
     }
 
     let formTwo = document.getElementById('createRecipeTwo');
     formTwo.style.display = 'none';
 
     showStepThree();
+    return true;
 }
 
 //Function to show the instructions form
@@ -512,7 +518,7 @@ function addInstruction() {
     let instructionValue = instructionText.value;
     if(instructionValue === '') {
         alert('Instruction is required!');
-        return;
+        return false;
     }
 
     let instruction = {
@@ -555,10 +561,10 @@ function saveEditInstruction() {
 
     if(instructionEntry.value === '') {
         alert('Instruction is required!');
-        return;
+        return false;
     }
     else if(instructionEntry.value === lastEdit[1]) {
-        return;
+        return false;
     }
     else if(!/^[0-9]+\./.test(instructionEntry.value) || !instructionEntry.value.startsWith(`${parseInt(ID) + 1}.`)) {
         let listNum = parseInt(ID) + 1;
@@ -580,6 +586,7 @@ function saveEditInstruction() {
     editTitle.style.display = 'none';
     instructionEntryGrid.querySelector('#submitInstruction').style.display = 'block';
     instructionEntryGrid.querySelector('#saveInstruction').style.display = 'none';
+    return true
 }
 
 //variable to save the current instruction being edited or deleted
@@ -652,13 +659,14 @@ function deleteInstruction() {
 function submitInstructions() {
     if(instructions.length === 0) {
         alert('At least one instruction is required!');
-        return;
+        return false;
     }
 
     let formThree = document.getElementById('createRecipeThree');
     formThree.style.display = 'none';
 
     showStepFour();
+    return true
 }
 
 function showStepFour() {
