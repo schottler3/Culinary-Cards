@@ -102,18 +102,6 @@ async function setPfp(){
     }
 }
 
-//This will change once we have a way to set the user's profile
-function setProfile() {
-    user = sessionStorage.getItem('user');
-
-    pfp = document.getElementById('pfp');
-    pfp.setAttribute('src', '/api/getprofilepicture');
-
-    username = document.getElementById('username');
-
-    bio = document.getElementById('bio');
-}
-
 function submitPfp() {
     const pfpPreview = document.getElementById('pfpPreview');
     const imageSrc = pfpPreview.src;
@@ -142,9 +130,6 @@ let changeToSaved = function() {
 }
 
 window.onload = function() {
-    setProfile();
 
     document.getElementById('sortProfileRecipes').addEventListener('change', sortRecipes);
-
-    setRecipes();
 }

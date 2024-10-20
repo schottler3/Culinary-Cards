@@ -677,7 +677,7 @@ function showStepFour() {
 }
 
 function showPreviewPhoto(){
-    fetch(`/api/getRecipePreviewImage?title=${encodeURIComponent(title)}`)
+    fetch(`/api/getrecipepreviewimage?title=${encodeURIComponent(title)}`)
         .then(response => response.json())
         .then(data => {
             if (data.status === 'success') {
@@ -791,7 +791,7 @@ submitRecipe = async () => {
                 }
 
             }
-            alert('Recipe created successfully');
+            window.location.href = `/recipe/${data.recipeID}`;
         } else {
             alert('Failed to create recipe: ' + data.message);
         }
