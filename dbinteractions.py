@@ -67,7 +67,6 @@ def addUserToDBAuthOnly(auth):
         cursor.close()
         connection.close()
 
-
 # dict has these keys: username, email, authid, fname,lname, bio
 def addUserToDB(dict):
     connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
@@ -479,6 +478,27 @@ def setRecipeImage(recipeid, imgfile):
         cursor.close()
         connection.close()
         return True
+    
+def getRecipePhoto(recipeid):
+    connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
+    cursor = connection.cursor()
+    img_str = "select image_data, image_link from recipe_img where recipeid = %s"
+    try:
+        cursor.execute(img_str,(recipeid,))
+        result = cursor.fetchone()
+        if result[0] is not None:
+            return (result[0],"img")
+        elif result[1] is not None:
+            print("Recipe link: " + result[1])
+            return (result[1],"link")
+        else:
+            return ("static/resources/Logo.png", "file")
+    except Exception as e:
+        print("Failed to get user image, %s", e)
+        return None
+    finally:
+        cursor.close()
+        connection.close()
 
 # dict has keys: title,description, ingredients, instructions,recipeid
 def updateRecipeInDB(dict):

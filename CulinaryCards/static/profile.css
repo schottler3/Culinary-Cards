@@ -213,6 +213,13 @@ body {
     aspect-ratio: 3 / 2;
     border: 2px solid black;
     transition: box-shadow 0.4s ease;
+    background-size: cover;
+}
+
+.recipeTitle {
+    font-size: 3vh;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.5);
 }
 
 .profileRecipe:hover {
