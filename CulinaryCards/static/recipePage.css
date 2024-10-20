@@ -42,3 +42,13 @@
   padding: 1em;
   border-radius: 15px;
 }
+
+#comment-with-button {
+  /* display: flex; */
+}
+
+#delete-button {
+  display: flex;
+  justify-content: right;
+  align-items: right;
+}

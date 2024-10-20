@@ -597,6 +597,7 @@ form{
 }
 
 #comment-container {
+    display: flex;
     overflow: auto;
     overflow-y: scroll;
     height: 60vh;

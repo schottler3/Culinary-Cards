@@ -2,7 +2,7 @@
 
 {% block extraHeadSpace %}
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='recipePage.css') }}">
-    <script src="{{ url_for('static', filename='profile.js') }}"></script>
+    <script src="{{ url_for('static', filename='recipePage.js') }}"></script>
 {% endblock %}
 
 {% block middle %}
@@ -64,16 +64,14 @@
       <div class="pure-g pure-u-1" id="comment-container">
         {% for comment in comments %}
           {% if session.get("user") == comment[4] %}
-            <div class="pure-u-1 comment" id="" commentid="{{ comment[0] }}">
-              <p>
-                {{ comment[3] }}: {{ comment[2] }}
-              </p>
+            <div class="pure-u-1 comment" id="comment-with-button" commentid="{{ comment[0] }}">
+              {{ comment[3] }}: {{ comment[2] }}
+              <button class="pure-button delete-btn" id="delete-button" type="button" commentid="{{ comment[0] }}" commentuserid="{{ comment[4] }}" onClick="deleteComment()">
+          
+              </button>
             </div>
-            <button class="pure-button delete-btn" id="" type="button" commentid="{{ comment[0] }}" commentuserid="{{ comment[4] }}" onClick="deleteComment()">
-              D
-            </button>
           {% else %}
-            <div class="pure-u-1 comment" id="" commentid="{{ comment[0] }}">{{ comment[0] }} {{ comment[3] }}: {{ comment[2] }}</div>
+            <div class="pure-u-1 comment" id="" commentid="{{ comment[0] }}">{{ comment[3] }}: {{ comment[2] }}</div>
           {% endif %}
         {% endfor %}
       </div>
