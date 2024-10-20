@@ -79,7 +79,7 @@ function pfpToggle() {
     }
 }
 
-function setPfp(input) {
+function setPfpPreview(input) {
     const file = input.files[0];
     if (file) {
         const reader = new FileReader();
@@ -89,12 +89,10 @@ function setPfp(input) {
         }
         reader.readAsDataURL(file);
     } 
-    uploadImage(file).then(() => {
-        setProfile();
-    });
 }
 
-async function uploadImage(image){
+async function setPfp(){
+    let image = document.getElementById('pfpInput').files[0]
 
     let binary = new FormData()
     binary.append("newpfp",image)
@@ -102,10 +100,6 @@ async function uploadImage(image){
     if (response.ok){
         window.location.reload()
     }
-}
-
-function showImage(img) {
-    img.style.display = 'block';
 }
 
 //This will change once we have a way to set the user's profile
@@ -116,16 +110,8 @@ function setProfile() {
     pfp.setAttribute('src', '/api/getprofilepicture');
 
     username = document.getElementById('username');
-    //username.innerHTML = 'schottler3';
 
     bio = document.getElementById('bio');
-    //bio.innerHTML = 'I like to cook and bake!';
-
-    let numRecipes = document.getElementById('numberOfRecipes');
-    //numRecipes.innerHTML = '0';
-
-    let numLikes = document.getElementById('numberOfLikes');
-    //numLikes.innerHTML = '0';
 }
 
 function submitPfp() {

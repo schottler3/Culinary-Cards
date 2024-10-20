@@ -239,8 +239,6 @@ def deleteRecipeAPI():
     else:
         return json.jsonify({"status": "failure", "message": "Recipe failed to DELETE"}), 400
     
-
-# Incomplete addRecipeAPI for when lucas finishes the form submit
 @requires_auth
 @app.route("/api/addrecipe",methods=['POST']) 
 def addRecipeAPI():
@@ -269,7 +267,6 @@ def addRecipeAPI():
     if photoUrl == 'None':
         recipeid = db.addRecipeToDB(recipeDict)
         if recipeid:
-            print("Recipe ID BRUH: {recipeid}")
             return json.jsonify({"status": "success", "recipeID": recipeid}), 200
         else:
             return json.jsonify({"status": "failure", "message": "Recipe failed to ADD"}), 400
@@ -283,9 +280,6 @@ def addRecipeAPI():
 def setRecipeImageAPI():
     photo = request.files['image']
     recipeid = request.form['recipeid']
-
-    print(photo)
-    print(recipeid)
 
     if db.setRecipeImage(recipeid, photo):
         return json.jsonify({"status": "success", "message": "Image added"}), 200
@@ -301,15 +295,17 @@ def submitEditProfile():
     else:
         return json.jsonify({"status": "failure", "message": "Failed profile update"}), 400
     
+@app.route("/api/editprofilepicture", methods=['PUT'])
 @requires_auth
-@app.route("/api/editprofilepicture",methods=['PUT'])
 def submitEditProfilePic():
     if "newpfp" not in request.files:
         return "No new image sent", 400
     
-    if db.UpdateProfilePicture(session["user"],request.files["newpfp"]):
+    if db.UpdateProfilePicture(session["user"], request.files["newpfp"]):
+        print("Profile picture updated successfully")
         return json.jsonify({"status": "success", "message": "Profile Picture updated"}), 200
     else:
+        print("Failed to update profile picture")
         return json.jsonify({"status": "failure", "message": "Failed profile picture update"}), 400
 
 @app.route("/api/getprofilepicture",methods=['GET'])
@@ -323,7 +319,7 @@ def getProfilePic():
             return send_file(stream,download_name=img[1]+str(session["user"])), 200
         elif img[1] == "link":
             print(2)
-            return redirect(img[0]) , 200
+            return redirect(img[0]) , 302
         elif img[1] == "file":
             print(3)
             return send_file(img[0], mimetype='image/png'),200
@@ -375,6 +371,25 @@ def getRecipePreviewImage():
     title = request.args.get("title")
     imgurl = unsplash.getImgUrl(title)
     return json.jsonify({"status": "success", "message": "Image URL retrieved", "imgurl": imgurl}), 200
+
+@app.route("/api/getRecipeImage",methods=['GET'])
+def getRecipeImage():
+    img = db.getRecipePhoto(request.args.get("recipeid"))
+    print(img)
+    if img is not None:
+        if img[1] == "img":
+            stream = io.BytesIO(img[0])
+            print(1)
+            return send_file(stream, download_name=f"{img[1]}_{session['user']}.png"), 200
+        elif img[1] == "link":
+            print("Link is: ", img[0])
+            return redirect(img[0]), 302
+        elif img[1] == "file":
+            print(3)
+            return send_file(img[0], mimetype='image/png'), 200
+    else:
+        print(4)
+        return send_file("static/test.png", mimetype='image/png'), 200
 
 @app.route("/api/testimgadd",methods=['GET']) #use this to test out adding recipes and imgs
 def testimgadd():
