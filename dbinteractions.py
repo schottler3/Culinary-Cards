@@ -551,7 +551,7 @@ def getRecipeByID(recipeid):
     connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
     cursor = connection.cursor()
     try:
-        qstr = """select recipe.recipeid,recipe.title,recipe.description,recipe.ingredients,recipe.instructions,recipe.created_on,users.username,recipe.categories
+        qstr = """select recipe.recipeid,recipe.title,recipe.description,recipe.ingredients,recipe.instructions,recipe.created_on,users.username,recipe.userid,recipe.categories
         from recipe 
         join users on recipe.userid = users.userid
         where recipe.recipeid = %s"""

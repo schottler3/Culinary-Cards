@@ -183,7 +183,9 @@ def profileGetSaved():
 def viewRecipePage(recipeid):
     result = db.getRecipeByID(recipeid)
     print(f"recipe id is: {recipeid}")
-    print(result)
+    print(result[0][7])
+    user = db.getProfilePicture(result[0][7])
+    print(user)
 
     t = pd.DataFrame({'timestamp': [pd.Timestamp(result[0][5])]})
     t['words'] = t['timestamp'].dt.strftime('%A, %B %d, %Y')

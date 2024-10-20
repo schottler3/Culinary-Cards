@@ -1,6 +1,8 @@
 {% extends "boxTemplates.html" %}
 
-{% block top %}
+{% block extraHeadSpace %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='recipePage.css') }}">
+    <script src="{{ url_for('static', filename='profile.js') }}"></script>
 {% endblock %}
 
 {% block middle %}
