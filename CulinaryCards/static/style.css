@@ -47,11 +47,11 @@ html, body {
     font-size: 2em;
     font-weight: bold;
     color: white;
-    text-shadow:
+    /* text-shadow:
         0.01em 0 black,
         0 0.01em black,
         -0.01em 0 black,
-        0 -0.01em black;
+        0 -0.01em black; */
 }
 
 #scroll-btn {

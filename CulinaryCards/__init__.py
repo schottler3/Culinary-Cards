@@ -76,7 +76,7 @@ def redirectToSearch():
             results[i]["ingredients"][j] = results[i]["ingredients"][j].split(",")[-1]
     print(results)
     for i in range(len(results)):
-        results[i]["imagelink"] = "api/getrecipeimage/" + str(results[i]["recipeid"])
+        results[i]["imagelink"] = "/api/getrecipeimage/" + str(results[i]["recipeid"])
     return render_template("searchResults.html",results=results)
 
 
@@ -88,10 +88,13 @@ def getRecipePic(recipeid):
         if img[1] == "img":
             stream = io.BytesIO(img[0])
             print(1)
-            return send_file(stream,download_name=img[1]+str(session["user"])), 200
+            return send_file(stream,download_name=img[1]+str(recipeid)), 200
         elif img[1] == "link":
             print(2)
-            return redirect(img[0]) , 200
+            print(img[0])
+            image_from_link = requests.get(img[0])
+            image_raw = io.BytesIO(image_from_link.content)
+            return send_file(image_raw,mimetype="image/jpeg") , 200
         elif img[1] == "file":
             print(3)
             return send_file(img[0], mimetype='image/png'),200
@@ -204,11 +207,17 @@ def profileGetSaved():
 @app.route("/recipe/<int:recipeid>", methods=["GET"])
 def viewRecipePage(recipeid):
     result = db.getRecipeByID(recipeid)
+    result[0] = list(result[0])
     print(f"recipe id is: {recipeid}")
     print(result[0][7])
     user = db.getProfilePicture(result[0][7])
     print(user)
-
+    for ingredient in range(len(result[0][3])):
+        print(result[0][3])
+        result[0][3][ingredient] = result[0][3][ingredient].replace(","," of ")
+    print(result[0])
+    result[0].append("/api/getrecipeimage/" + str(result[0][0]))
+    result[0] = tuple(result[0])
     t = pd.DataFrame({'timestamp': [pd.Timestamp(result[0][5])]})
     t['words'] = t['timestamp'].dt.strftime('%A, %B %d, %Y')
 
