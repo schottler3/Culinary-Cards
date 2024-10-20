@@ -23,7 +23,7 @@
       <div class="pure-u-5-8" id="recipe-view-description">{{ recipe[2] }}</div>
       <br/><br/>
       <div class="pure-u-1" id="category-container">Categories: 
-        {% for info in recipe[4] %}
+        {% for info in recipe[8] %}
           {{ info }}{% if not loop.last %}, {% endif %}
         {% endfor %}
       </div>
@@ -54,10 +54,10 @@
     <div class="pure-g pure-u-3-8" id="right-side">
       <div class="pure-g pure-u-1" id="likes-and-saves-container">
         <div class="pure-g pure-u-1-5" id="likes-container">
-          <div class="pure-u-1" id="likes"><a href="#" ><img class="icon" src="{{ url_for('static', filename='resources/like.png') }}"></a></div>
+          <div class="pure-u-1" id="likes"><a href="#" ><img class="icon" src="{{ url_for('static', filename='resources/like.svg') }}"></a></div>
           <div class="pure-u-1" id="likes-count">{{likes}}</div>
         </div>
-        <div class="pure-u-1-5" id="saves"><a href="#"><img class="icon" src="{{ url_for('static', filename='resources/save.png') }}"></a></div>
+        <div class="pure-u-1-5" id="saves"><a href="#"><img class="icon" src="{{ url_for('static', filename='resources/save.svg') }}"></a></div>
       </div>
       
       <div class="pure-u-1 title" id="comment-section-title">Comment Section</div>
