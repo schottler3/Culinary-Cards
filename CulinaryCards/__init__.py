@@ -17,6 +17,7 @@ from authlib.integrations.flask_client import OAuth
 import dbinteractions as db
 import recipeOfTheDay as rotd
 import unsplash
+import pandas as pd
 
 
 
@@ -70,6 +71,7 @@ def redirectToSearch():
     sendData = []
     user_query = request.form["queryhome"]
     results = db.searchRecipeByKeywords(user_query)
+    print(results)
     for item in results:
         print(f"item: {item}")
     return render_template("searchResults.html",results=results)
@@ -182,7 +184,11 @@ def viewRecipePage(recipeid):
     result = db.getRecipeByID(recipeid)
     print(f"recipe id is: {recipeid}")
     print(result)
-    return render_template("recipePage.html",recipe=result[0])
+
+    t = pd.DataFrame({'timestamp': [pd.Timestamp(result[0][5])]})
+    t['words'] = t['timestamp'].dt.strftime('%A, %B %d, %Y')
+
+    return render_template("recipePage.html",recipe=result[0], time=t.words[0])
 
 @app.route("/logout")
 def logout():

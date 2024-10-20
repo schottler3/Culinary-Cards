@@ -7,34 +7,17 @@
   <label class="menu-icon" for="menu-btn"><span class="nav-icon"></span></label>
   <ul class="menu">
     {% if session.get("user") %}
-      <li><a href="/">Categories</a></li>
+      {% if request.path == '/' %}
+        <li><a href="#" onClick="document.getElementsByClassName('card-container')[0].scrollIntoView();">Categories</a></li>
+      {% endif %}
       <li><a href="/profile">Profile</a></li>
       <li><a href="/logout">Log Out</a></li>
     {% else %}
-      <li><a href="/">Categories</a></li>
+      {% if request.path == '/' %}
+        <li><a href="#" onClick="document.getElementsByClassName('card-container')[0].scrollIntoView();">Categories</a></li>
+      {% endif %}
       <li><a href="/login">Login</a></li>
     {% endif %}
     
   </ul>
-
-
-  <!-- <div class="home-menu pure-menu pure-menu-horizontal pure-menu-fixed navbar">
-      <a class="pure-menu-heading" href="/"><img id="logo-img" src="../static/resources/logo.png"></a>
-
-      <ul class="pure-menu-list options">
-          <li class="pure-menu-item pure-menu-selected"><a href="/" class="pure-menu-link">Home</a></li>
-          <li class="pure-menu-item"><a href="/categories" class="pure-menu-link">Categories</a></li>
-      </ul>
-      <ul class="pure-menu-list accountAccess">
-        {% if session %}
-          <li class="pure-menu-item"><a href="/profile" class="pure-menu-link">Profile</a></li>
-          <li class="pure-menu-item"><a href="/logout" class="pure-menu-link">Log Out</a></li>
-        {% else %}
-          <li class="pure-menu-item"><a href="/login" class="pure-menu-link">Log In</a></li>
-        {% endif %}
-      </ul>
-  </div> -->
 </div>
-
-<!-- <div id="hometop">
-</div> -->

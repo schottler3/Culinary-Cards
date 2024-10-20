@@ -1,39 +1,90 @@
 {% extends "boxTemplates.html" %}
 
-{% block extraHeadSpace %}
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='recipePage.css') }}">
+{% block top %}
 {% endblock %}
 
 {% block middle %}
 
-  <div class="pure-g pure-u-1" id="recipe-container">
-    <div class="pure-u-1 title" id="recipe-section-title">
-      {{recipe[1]}}
-    </div>
-    <div class="pure-g pure-u-1" id="recipe-info-section">
-      <div class="pure-u-1-4" id="recipe-img">
-        <img class="pure-img" id="img-of-recipe" src="../static/resources/breakfast.jpg">
+<div class="pure-g pure-u-1" id="recipe-view-body">
+  <div class="pure-g pure-u-7-8" id="recipe-view-container">
+    <div class="pure-g pure-u-3-5" id="left-side">
+      <div class="pure-u-1" id="recipe-view-title">{{ recipe[1] }}</div>
+      <div id="recipe-view-post-details">
+        <div class="pure-u-1" id="recipe-view-author">Written by: {{ recipe[6] }}</div>
+        <div class="pure-u-1" id="recipe-view-date">Published: {{ time }}</div>
       </div>
-      <div class="pure-g pure-u-1-5" id="recipe-info">
+
+      <div class="pure-u-5-8" id="recipe-view-img-container">
+        <img class="pure-img pure-u-1" id="recipe-view-img" src="../static/resources/breakfast.jpg">
+      </div>
+
+      <div class="pure-u-5-8" id="recipe-view-description">{{ recipe[2] }}</div>
+      <br/><br/>
+      <div class="pure-u-1" id="category-container">Categories: 
+        {% for info in recipe[7] %}
+          {{ info }}{% if not loop.last %}, {% endif %}
+        {% endfor %}
+      </div>
+      <div class="pure-g pure-u-1-2" id=""> 
+        <br/>
         Ingredients:
-        {% for ingredient in recipe[3] %}
-          <p>- {{ ingredient }}</p>
-        {% endfor %}
+        <ul class="pure-g pure-u-1" id="ingredient-container" >
+          {% for info in recipe[3] %}
+          <li class="ingredients" id="item-{{ loop.index }}">
+            <input type="checkbox" class="" id="ingredient-{{ loop.index }}" />
+            <label for="ingredient-{{ loop.index }}">{{ info }}</label>
+          </li>
+          {% endfor %}
+        </ul>
+
+        Steps:
+        <ul class="pure-g pure-u-1" id="step-container" >
+          {% for info in recipe[4] %}
+            <li class="ingredients" id="instruction-{{ loop.index }}">
+              <input type="checkbox" class="" id="step-{{ loop.index }}" />
+              <label for="step-{{ loop.index }}">{{ loop.index}}. {{ info }}</label>
+            </li>
+          {% endfor %}
+        </ul>
       </div>
-      <div class="pure-g pure-u-1-5" id="recipe-info">
-        Directions: 
-        {% for instruction in recipe[4] %}
-          <p>- {{ instruction }}</p>
-        {% endfor %}
+    </div> 
+
+    <div class="pure-g pure-u-3-8" id="right-side">
+      <div class="pure-g pure-u-1" id="likes-and-saves-container">
+        <div class="pure-g pure-u-1-5" id="likes-container">
+          <div class="pure-u-1" id="likes"><a href="#" ><img class="icon" src="{{ url_for('static', filename='resources/like.png') }}"></a></div>
+          <div class="pure-u-1" id="likes-count">13,125 Likes</div>
+        </div>
+        <div class="pure-u-1-5" id="saves"><a href="#"><img class="icon" src="{{ url_for('static', filename='resources/save.png') }}"></a></div>
       </div>
-      <div class="pure-g pure-u-1-4" id="recipe-info">
-        <div class="pure-u-1" id="recipe-day-author">
-          Written by: {{recipe[6]}}
-        </div>
-        <div class="pure-u-1" id="recipe-day-description">
-          {{recipe[2]}}
-        </div>
+      
+      <div class="pure-u-1 title" id="comment-section-title">Comment Section</div>
+      <div class="pure-g pure-u-1" id="comment-container">
+        <div class="pure-u-1 comment" id="">User1: blah blah blah</div>
+        <div class="pure-u-1 comment" id="">User2: blah Wah blah</div>
+        <div class="pure-u-1 comment" id="">User1: blah blah blah</div>
+        <div class="pure-u-1 comment" id="">User2: blah Wah blah</div>
+        <div class="pure-u-1 comment" id="">User1: blah blah blah</div>
+        <div class="pure-u-1 comment" id="">User2: blah Wah blah</div>
+        <div class="pure-u-1 comment" id="">User1: blah blah blah</div>
+        <div class="pure-u-1 comment" id="">User2: blah Wah blah</div>
+        <div class="pure-u-1 comment" id="">User1: blah blah blah</div>
+        <div class="pure-u-1 comment" id="">User2: blah Wah blah</div>
+        <div class="pure-u-1 comment" id="">User2: blah Wah blah</div>
+        <div class="pure-u-1 comment" id="">User1: blah blah blah</div>
+        <div class="pure-u-1 comment" id="">User2: blah Wah blah</div>
+        <div class="pure-u-1 comment" id="">User1: blah blah blah</div>
+        <div class="pure-u-1 comment" id="">User2: blah Wah blah</div>
       </div>
     </div>
   </div>
+  <div class="pure-u-1"></div>
+  <div class="pure-g pure-u-1" id="search-result-btns">
+    <button class="pure-button" id="scroll-btn" type="button" onClick="history.back()">Back</button>
+    {% if session.get("user") %}
+      <button class="pure-button" id="scroll-btn" type="button" onClick="">Make a Comment</button>
+    {% endif %}
+  </div>
+</div>
+<script src="{{ url_for('static', filename='recipePage.js') }}"></script>
 {% endblock %}
