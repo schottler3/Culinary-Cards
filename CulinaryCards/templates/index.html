@@ -29,7 +29,7 @@
     {% endblock %}
 
     <div class="pure-u-1" id="hero-container"> Search. Cook. Save. </div>
-
+    <a class="pure-g pure-u-1" id="recipe-day-link" href="{{ '/recipe/%s'%recipeofday[0] }}">
     <div class="pure-g pure-u-1" id="recipe-day-container">
       <div class="pure-u-1 title" id="recipe-day-section-title">Recipe of the Day</div>
       <div class="pure-g pure-u-1" id="recipe-day-info-section">
@@ -41,6 +41,7 @@
           <div class="pure-u-1" id="recipe-day-ingredients">Ingredients: {{recipeofday[3]}}</div>
         </div>
       </div>
+    </a>
     </div>
 
     <!-- <div class="pure-u-1" id="above-cards"></div> -->

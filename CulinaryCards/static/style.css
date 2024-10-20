@@ -594,6 +594,12 @@ form{
 
 .icon {
     height: 5vh;
+    transition: 0.3s ease-out;
+    filter: invert(97%) sepia(2%) saturate(2146%) hue-rotate(326deg) brightness(85%) contrast(97%); /* use https://codepen.io/sosuke/pen/Pjoqqp to get color filter */
+}
+
+.icon:hover {
+    filter: invert(78%) sepia(11%) saturate(277%) hue-rotate(349deg) brightness(89%) contrast(88%);
 }
 
 #comment-container {
@@ -606,9 +612,12 @@ form{
 .comment {
     margin-top: 2vh;
     background-color: #d6ccc2;
+    /* background-color: #b7ada3; */
     padding: 2vh 3vh;
     border-radius: 15px;
 }
+
+
 
 /* End Section */
 

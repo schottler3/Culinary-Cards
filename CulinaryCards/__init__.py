@@ -259,6 +259,7 @@ def viewRecipePage(recipeid):
                 db.deleteRecipeContent(commentid)
 
     result = db.getRecipeByID(recipeid)
+    likecount = db.getRecipeLikes(recipeid)
     print(f"result 0 is: {result[0]}")
     result[0] = list(result[0])
     user = db.getProfilePicture(result[0][7])
@@ -272,7 +273,7 @@ def viewRecipePage(recipeid):
 
     comments = db.getAllCommentsForRecipe(recipeid)
 
-    return render_template("recipePage.html", recipe=result[0], time=t.words[0], comments=comments)
+    return render_template("recipePage.html", recipe=result[0], time=t.words[0], comments=comments,likes=likecount)
 
 @app.route("/logout")
 def logout():
