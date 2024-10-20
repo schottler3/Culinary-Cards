@@ -185,7 +185,7 @@ def profileGetLiked():
                 recipecount = len(recipes)
                 print(user)
                 print(1)
-                return render_template('profile.html', user=user,userlikes = userlikes,recipes = recipes,recipecount = recipecount)
+                return render_template('profile.html', profile=userid, user=user,userlikes = userlikes,recipes = recipes,recipecount = recipecount)
             else:
                 print(2)
                 return redirect('/login')
@@ -208,7 +208,7 @@ def profileGetSaved():
                 recipecount = len(recipes)
                 print(user)
                 print(1)
-                return render_template('profile.html', user=user,userlikes = userlikes,recipes = recipes,recipecount = recipecount)
+                return render_template('profile.html', profile=userid, user=user,userlikes = userlikes,recipes = recipes,recipecount = recipecount)
             else:
                 print(2)
                 return redirect('/login')
