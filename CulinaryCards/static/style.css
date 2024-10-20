@@ -60,11 +60,22 @@ html, body {
     border: solid 1px hsl(39, 14%, 58%);
 }
 
+#comment-box {
+    margin-bottom: 11vh;
+    margin-top: -10vh;
+    gap: 5px;
+}
+
 #search-result-btns {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 5px;
+}
+
+#comment-text-box {
+    display: flex;
+    justify-content: center;
 }
 
 .pfp {

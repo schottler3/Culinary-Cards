@@ -367,6 +367,35 @@ def testimgadd():
     db.addRecipeToDBWithImageURL(testdictrecipe)
     return "Noice"
 
+
+#### COMMENTS ####
+@app.route("/comment", methods=['POST'])
+def addComment():
+    data = request.get_json()
+
+    if 'user' in session:
+        userid = session.get('user')
+    else:
+        return json.jsonify({"status": "failure", "message": "User not logged in"}), 400
+    
+    recipeid = data.get('recipeid')
+    comment = data.get('comment')
+    comment_time = data.get('comment_time')
+
+    commentDict = {
+        "comment": comment,
+        "userid": userid,
+        "recipeid": recipeid,
+        "comment_time": comment_time
+    }
+
+    print(f"Received data - User ID: {userid}, Recipe ID: {recipeid}, Comment: {comment}, Comment Time: {comment_time}")
+
+    db.addCommentToDB(commentDict)
+
+    # Respond back to the client
+    return "nice"
+
 #######################################################
 #Adam's test stuff
 # testdictuser = {
@@ -396,7 +425,7 @@ def testimgadd():
 
     #db.addUserToDB(testdictuser)
     # db.updateUser("Adam2","kvant003@umn.edu","Kvant","Adam","World Hello","2")
-    db.addRecipeToDB(testdictrecipe)
+    # db.addRecipeToDB(testdictrecipe)
     # db.addRecipeToDBWithImageURL(testdictrecipe)
     # print('wow')
     # db.deleteRecipeInDB("1")

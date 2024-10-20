@@ -9,5 +9,36 @@ function matchHeight() {
     rightSide.style.height = `${leftSide.offsetHeight - 250}px`;
 }
 
+function addComment() {
+    const comment = document.getElementById('comment-box').value;
+    const recipeid = document.getElementById('hidden-recipe-id').innerText;
+    const currentTime = new Date().toISOString();
+
+    const data = {
+        recipeid: recipeid,
+        comment: comment,
+        comment_time: currentTime
+    };
+
+    fetch('/comment', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => {
+        if (response.ok) {
+            console.log("Comment submitted successfully!");
+        } else {
+            console.error("Failed to submit comment.");
+        }
+    })
+    .catch(error => {
+        console.error("Error:", error);
+    });
+}
+
+
 matchHeight();
 window.addEventListener('resize', matchHeight);

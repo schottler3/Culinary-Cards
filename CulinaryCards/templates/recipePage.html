@@ -23,7 +23,7 @@
       <div class="pure-u-5-8" id="recipe-view-description">{{ recipe[2] }}</div>
       <br/><br/>
       <div class="pure-u-1" id="category-container">Categories: 
-        {% for info in recipe[7] %}
+        {% for info in recipe[4] %}
           {{ info }}{% if not loop.last %}, {% endif %}
         {% endfor %}
       </div>
@@ -64,27 +64,18 @@
       <div class="pure-g pure-u-1" id="comment-container">
         <div class="pure-u-1 comment" id="">User1: blah blah blah</div>
         <div class="pure-u-1 comment" id="">User2: blah Wah blah</div>
-        <div class="pure-u-1 comment" id="">User1: blah blah blah</div>
-        <div class="pure-u-1 comment" id="">User2: blah Wah blah</div>
-        <div class="pure-u-1 comment" id="">User1: blah blah blah</div>
-        <div class="pure-u-1 comment" id="">User2: blah Wah blah</div>
-        <div class="pure-u-1 comment" id="">User1: blah blah blah</div>
-        <div class="pure-u-1 comment" id="">User2: blah Wah blah</div>
-        <div class="pure-u-1 comment" id="">User1: blah blah blah</div>
-        <div class="pure-u-1 comment" id="">User2: blah Wah blah</div>
-        <div class="pure-u-1 comment" id="">User2: blah Wah blah</div>
-        <div class="pure-u-1 comment" id="">User1: blah blah blah</div>
-        <div class="pure-u-1 comment" id="">User2: blah Wah blah</div>
-        <div class="pure-u-1 comment" id="">User1: blah blah blah</div>
-        <div class="pure-u-1 comment" id="">User2: blah Wah blah</div>
       </div>
     </div>
   </div>
-  <div class="pure-u-1"></div>
+  <div id="hidden-recipe-id">{{ recipe[0] }}</div>
+    <textarea id="comment-box" name="comment" class="pure-g pure-u-1-2" rows="4" cols="50" placeholder="Write your comment here..."></textarea>
+  <!-- </div> -->
   <div class="pure-g pure-u-1" id="search-result-btns">
     <button class="pure-button" id="scroll-btn" type="button" onClick="history.back()">Back</button>
     {% if session.get("user") %}
-      <button class="pure-button" id="scroll-btn" type="button" onClick="">Make a Comment</button>
+      <form id="comment-form">
+        <button class="pure-button" id="scroll-btn" type="button" onClick="addComment()">Make a Comment</button>
+      </form>
     {% endif %}
   </div>
 </div>

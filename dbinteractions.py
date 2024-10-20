@@ -357,6 +357,7 @@ def searchRecipeByKeywords(keywords):
 # dict has keys: title,description, ingredients, instructions, userid, categories
 # ingredients & instructions are lists of strings
 def addRecipeToDB(dict):
+    print(dict)
     connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
     cursor = connection.cursor()
     str = "insert into recipe (title,description,ingredients,ingredients_nomeasure,instructions,userid,categories,recipe_vector) values (%s,%s,%s,%s,%s,%s,%s,to_tsvector(%s)) RETURNING recipeid"
@@ -422,6 +423,26 @@ def addRecipeToDBWithImage(dict,imgfile):
     finally:
         cursor.close()
         connection.close()
+
+# dict has keys: content, recipeid, userid
+def addCommentToDB(dict):
+    connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
+    cursor = connection.cursor()
+    query = """
+    INSERT INTO recipe_comment (comment_time, comment_content, recipeid, userid)
+    VALUES (%s, %s, %s, %s) RETURNING commentid;
+    """
+    try:
+        cursor.execute(query, (dict["comment_time"], dict["comment"], dict["recipeid"], dict["userid"]))
+
+        connection.commit()
+    except Exception as e:
+        print(f"Failed to add new recipe {e}")
+        return None
+    finally:
+        cursor.close()
+        connection.close()
+        return 1
 
 # Unsplash API Function - Adds recipe but uses unsplash to find a photo for it when User doesn't upload one
 def addRecipeToDBWithImageURL(dict, img_url):
