@@ -71,14 +71,36 @@ def redirectToSearch():
     sendData = []
     user_query = request.form["queryhome"]
     results = db.searchRecipeByKeywords(user_query)
+    for i in range(len(results)):
+        for j in range(len(results[i]["ingredients"])):
+            results[i]["ingredients"][j] = results[i]["ingredients"][j].split(",")[-1]
     print(results)
-    for item in results:
-        print(f"item: {item}")
+    for i in range(len(results)):
+        results[i]["imagelink"] = "api/getrecipeimage/" + str(results[i]["recipeid"])
     return render_template("searchResults.html",results=results)
+
+
+@app.route("/api/getrecipeimage/<int:recipeid>",methods=['GET'])
+def getRecipePic(recipeid):
+    img = db.getRecipePicture(recipeid)
+    print(img)
+    if img is not None:
+        if img[1] == "img":
+            stream = io.BytesIO(img[0])
+            print(1)
+            return send_file(stream,download_name=img[1]+str(session["user"])), 200
+        elif img[1] == "link":
+            print(2)
+            return redirect(img[0]) , 200
+        elif img[1] == "file":
+            print(3)
+            return send_file(img[0], mimetype='image/png'),200
+    else:
+        print(4)
+        return send_file("static/test.png", mimetype='image/png'),200
 
 @app.route("/login")
 def login():
-    
     session["nonce"] = str(uuid.uuid4().hex)
     return oauth.auth0.authorize_redirect(
         redirect_uri=url_for("callback", _external=True),nonce = session["nonce"]

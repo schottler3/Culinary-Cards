@@ -732,7 +732,7 @@ submitRecipe = async () => {
 
     let finalIngredients = [];
     ingredients.forEach(ingredient => {
-        finalIngredients.push((`${ingredient.amount} ${ingredient.fraction} ${ingredient.unit} ${ingredient.name}`).replace(/\s\s+/g, ' '));
+        finalIngredients.push((`${ingredient.amount} ${ingredient.fraction} ${ingredient.unit},${ingredient.name}`).replace(/\s\s+/g, ' '));
     });
 
     let finalInstructions = [];

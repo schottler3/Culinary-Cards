@@ -330,12 +330,18 @@ def searchRecipeByKeywords(keywords):
     keywords += ":*"
     try:
         str = """
-            select recipe_search.recipeid,recipe_search.title,recipe_search.description,recipe_search.ingredients, 
-            recipe_search.instructions,users.username,recipe_search.categories
-            from recipe_search
-            join recipe on recipe_search.recipeid = recipe.recipeid
-            join users on recipe.userid = users.userid
-            where recipe_search.recipe_vector @@ to_tsquery(%s);
+                select recipe_search.recipeid,recipe_search.title,recipe_search.description,recipe_search.ingredients,
+                recipe_search.instructions,users.username,recipe_search.categories,count(recipe_like.likeid) as like_count,
+                recipe_img.image_data,recipe_img.image_link,users.userid
+                from recipe_search
+                join recipe on recipe_search.recipeid = recipe.recipeid
+                join users on recipe.userid = users.userid
+                left join recipe_like on recipe.recipeid = recipe_like.recipeid
+                left join recipe_img on recipe.recipeid = recipe_img.recipeid
+                where recipe_search.recipe_vector @@ to_tsquery(%s)
+                group by recipe_search.recipeid,recipe_search.title,recipe_search.description,recipe_search.ingredients,recipe_search.instructions,
+                users.username,recipe_search.categories,recipe_img.image_data,recipe_img.image_link,users.userid
+                order by like_count
             """
         cursor.execute(str, (keywords,))
         result = cursor.fetchall()
@@ -354,10 +360,31 @@ def searchRecipeByKeywords(keywords):
         cursor.close()
         connection.close()
 
+
+def getRecipePicture(recipeid):
+    connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
+    cursor = connection.cursor()
+    img_str = "select image_data, image_link from recipe_img where recipeid = %s"
+    try:
+        cursor.execute(img_str,(recipeid,))
+        result = cursor.fetchone()
+        if result[0] is not None:
+            return (result[0],"img")
+        elif result[1] is not None:
+            return (result[1],"link")
+        else:
+            return ("static/resources/lunch.jpg", "file")
+    except:
+        print("Failed to get recipe image")
+        return None
+    finally:
+        cursor.close()
+        connection.close()
+
 # dict has keys: title,description, ingredients, instructions, userid, categories
 # ingredients & instructions are lists of strings
 def addRecipeToDB(dict):
-    print(dict)
+    print("dict", dict)
     connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
     cursor = connection.cursor()
     str = "insert into recipe (title,description,ingredients,ingredients_nomeasure,instructions,userid,categories,recipe_vector) values (%s,%s,%s,%s,%s,%s,%s,to_tsvector(%s)) RETURNING recipeid"
@@ -365,8 +392,8 @@ def addRecipeToDB(dict):
     ingredients_nomeasure = ""
     for ingredient in dict["ingredients"]:
         ingredients = ingredient.split(",")
-        recipe_vector += " " + ingredients[0]
-        ingredients_nomeasure += ingredients[0] + " "
+        recipe_vector += " " + ingredients[1]
+        ingredients_nomeasure += ingredients[1] + " "
     for category in dict["categories"]:
         recipe_vector += " " + category
     try:
@@ -376,7 +403,7 @@ def addRecipeToDB(dict):
         cursor.execute(str,(dict["title"],dict["description"],dict["ingredients"],ingredients_nomeasure,dict["instructions"],dict["userid"],dict["categories"],recipe_vector))
         recipeid = cursor.fetchone()[0]
         connection.commit()
-        cursor.execute("refresh materialized view recipe_search")
+        cursor.execute("refresh materialized view concurrently recipe_search")
         connection.commit()
     except Exception as e:
         print(f"Failed to add new recipe {e}")
@@ -391,6 +418,7 @@ def addRecipeToDB(dict):
 # imgfile is a file object of the image.
 # This is NOT the LINK input for Minh's API
 def addRecipeToDBWithImage(dict,imgfile):
+    print("dict", dict)
     connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
     cursor = connection.cursor()
     imgfileRAW = imgfile.read()
@@ -399,8 +427,10 @@ def addRecipeToDBWithImage(dict,imgfile):
     ingredients_nomeasure = ""
     for ingredient in dict["ingredients"]:
         ingredients = ingredient.split(",")
-        recipe_vector += " " + ingredients[0]
-        ingredients_nomeasure += ingredients[0] + " "
+        recipe_vector += " " + ingredients[1]
+        ingredients_nomeasure += ingredients[1] + " "
+        ingredient = ingredient.replace(",", " ")
+    print("ingredients", dict["ingredients"])
     for category in dict["categories"]:
         recipe_vector += " " + category
     try:
@@ -416,7 +446,7 @@ def addRecipeToDBWithImage(dict,imgfile):
 
         cursor.execute(qstr_img, (Binary(imgfileRAW),new_recipe_ID))
 
-        cursor.execute("refresh materialized view recipe_search")
+        cursor.execute("refresh materialized view concurrently recipe_search")
         connection.commit()
     except:
         print("Failed to add new recipe")
@@ -471,7 +501,7 @@ def addRecipeToDBWithImageURL(dict, img_url):
 
         cursor.execute(qstr_img, (img_url, new_recipe_ID))
 
-        cursor.execute("refresh materialized view recipe_search")
+        cursor.execute("refresh materialized view concurrently recipe_search")
         connection.commit()
     except Exception as e:
         print(f"Failed to add new recipe {e}")
@@ -524,7 +554,7 @@ def updateRecipeInDB(dict):
         recipe_vector += " " + username
         cursor.execute(qstr,(dict["title"],dict["description"],dict["ingredients"], ingredients_nomeasure,dict["instructions"],dict["categories"],recipe_vector,dict["recipeid"]))
         connection.commit()
-        cursor.execute("refresh materialized view recipe_search")
+        cursor.execute("refresh materialized view concurrently recipe_search")
         connection.commit()
     except:
         print("Failed to update recipe")
@@ -541,7 +571,7 @@ def deleteRecipeInDB(recipeid):
         str = "delete from recipe where recipeid = %s"
         cursor.execute(str, (recipeid,))
         connection.commit()
-        cursor.execute("refresh materialized view recipe_search")
+        cursor.execute("refresh materialized view concurrently recipe_search")
         connection.commit()
     except:
         print("Failed to delete recipe")
