@@ -1,6 +1,3 @@
-var username;
-var bio;
-var pfp;
 var recipes;
 
 function toggleEdit(location) {
@@ -8,18 +5,19 @@ function toggleEdit(location) {
     
     let editUsername = document.getElementById('editUsername');
     let editBio = document.getElementById('editBio');
-    editUsername.value = username.innerHTML;
-    editBio.value = bio.innerHTML;
+    editUsername.value = username;
+    editBio.value = bio;
 
     if(editProfileContainer.style.display === 'flex') {
         if(location.getAttribute('id') === 'editProfile') {
             pfpToggle();
         }
         editProfileContainer.style.display = 'none';
-    } else {
+    } 
+    else {
         editProfileContainer.style.display = 'flex';
         let preview = document.getElementById('pfpPreview');
-        preview.setAttribute('src', pfp.getAttribute('src'));
+        preview.setAttribute('src', document.getElementById('pfp').getAttribute('src'));
     }
 }
 
@@ -57,7 +55,6 @@ async function submitEdit(event) {
     setProfileResponse = await fetch("/api/editprofile",{method : "PUT", headers : {"Content-Type" : "application/json"}, body: JSON.stringify(changes)});
     console.log(setProfileResponse.ok)
     if(setProfileResponse.ok){
-        //setProfile();
         username = document.getElementById('username');
         username.innerText = newUsername
         bio = document.getElementById('bio');
@@ -129,7 +126,33 @@ let changeToSaved = function() {
     window.location.href = "/profile/saved"
 }
 
-window.onload = function() {
+let toggleSettings = function() {
+    let profileContainerAll = document.getElementById('profileContainerAll');
+    let accountSettings = document.getElementById('accountSettings');
+    if(profileContainerAll.style.display === 'none') {
+        profileContainerAll.style.display = 'block';
+        accountSettings.style.display = 'none';
+    }
+    else{
+        profileContainerAll.style.display = 'none';
+        accountSettings.style.display = 'flex';
+    }
+}
 
+window.onload = function() {
+    var accountGear = document.getElementById('accountGear');
+    accountGear.addEventListener('click', function() {
+        if(accountGear.classList.contains('spin')) {
+            accountGear.classList.remove('spin');
+            accountGear.classList.add('spinBack');
+        }
+        else {
+            if(accountGear.classList.contains('spinBack')) {
+                accountGear.classList.remove('spinBack');
+            }
+            accountGear.classList.add('spin');
+        }
+        toggleSettings();
+    });
     document.getElementById('sortProfileRecipes').addEventListener('change', sortRecipes);
 }

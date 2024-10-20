@@ -9,8 +9,57 @@ body {
     background-color: white;
 }
 
-#profileContainer {
+#profileContainerAll {
+    display: block;
     margin-top: 12vh;
+}
+
+#accountSettings {
+    top: auto;
+    bottom: auto;
+    display: none;
+    flex-direction: column;
+    gap: 1vh;
+}
+
+#accountGear {
+    top: 80px;;
+    right: 2vh;
+    position: fixed;
+    width: 2%;
+    height: auto;
+    min-width: 20px;
+    z-index: 10000;
+    cursor: pointer;
+}
+
+#accountGear.spin {
+    animation: gearSpin 1.618s linear;
+}
+
+#accountGear.spinBack {
+    animation: gearSpinBack 1.618s linear;
+}
+
+@keyframes gearSpin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(-360deg);
+    }
+}
+
+@keyframes gearSpinBack {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+#profileContainer {
     margin-bottom: 2vh;
     justify-content: center;
     align-items: center;
@@ -93,6 +142,8 @@ body {
     padding: 5% 5% 5% 5%;
     background-color: white;
     position: fixed;
+    margin-top: auto;
+    margin-bottom: auto;
     margin-left: 30%;
     margin-right: 30%;
     z-index: 1001;
@@ -176,11 +227,12 @@ body {
 }
 
 .profileRecipeMenu {
+    margin-top: vmax;
     margin-left: var(--margins_sides);
     margin-right: var(--margins_sides);
     display: flex;
-    align-items: center;
     background-color: rgb(255, 230, 204);
+    cursor: pointer
 }
 
 #sortContainer {
@@ -229,7 +281,7 @@ body {
 .createRecipeTile {
     aspect-ratio: 3 / 2;
     border: 2px solid black;
-    font-size: 6vh;
+    font-size: 3vh;
     text-align: center;
     align-content: center;
     transition: background-color 0.4s ease;
