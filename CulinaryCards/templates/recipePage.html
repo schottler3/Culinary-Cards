@@ -62,14 +62,16 @@
       
       <div class="pure-u-1 title" id="comment-section-title">Comment Section</div>
       <div class="pure-g pure-u-1" id="comment-container">
-        <div class="pure-u-1 comment" id="">User1: blah blah blah</div>
-        <div class="pure-u-1 comment" id="">User2: blah Wah blah</div>
+        {% for comment in comments %}
+          <div class="pure-u-1 comment" id="">{{ comment[3] }}: {{ comment[2] }}</div>
+        {% endfor %}
       </div>
     </div>
   </div>
   <div id="hidden-recipe-id">{{ recipe[0] }}</div>
+  {% if session.get("user") %}
     <textarea id="comment-box" name="comment" class="pure-g pure-u-1-2" rows="4" cols="50" placeholder="Write your comment here..."></textarea>
-  <!-- </div> -->
+  {% endif %}
   <div class="pure-g pure-u-1" id="search-result-btns">
     <button class="pure-button" id="scroll-btn" type="button" onClick="history.back()">Back</button>
     {% if session.get("user") %}

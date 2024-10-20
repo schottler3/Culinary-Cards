@@ -218,8 +218,29 @@ def profileGetSaved():
         print(4)
         return redirect('/login')
     
-@app.route("/recipe/<int:recipeid>", methods=["GET"])
+@app.route("/recipe/<int:recipeid>", methods=["GET", "POST"])
 def viewRecipePage(recipeid):
+    if request.method == 'POST':
+        print('hi')
+        data = request.get_json()
+
+        if 'user' in session:
+            userid = session.get('user')
+        else:
+            return json.jsonify({"status": "failure", "message": "User not logged in"}), 400
+        
+        comment = data.get('comment')
+        comment_time = data.get('comment_time')
+
+        commentDict = {
+            "comment": comment,
+            "userid": userid,
+            "recipeid": recipeid,
+            "comment_time": comment_time
+        }
+        # print(f"Received data - User ID: {userid}, Recipe ID: {recipeid}, Comment: {comment}, Comment Time: {comment_time}")
+        db.addCommentToDB(commentDict)
+
     result = db.getRecipeByID(recipeid)
     result[0] = list(result[0])
     print(f"recipe id is: {recipeid}")
@@ -235,7 +256,9 @@ def viewRecipePage(recipeid):
     t = pd.DataFrame({'timestamp': [pd.Timestamp(result[0][5])]})
     t['words'] = t['timestamp'].dt.strftime('%A, %B %d, %Y')
 
-    return render_template("recipePage.html",recipe=result[0], time=t.words[0])
+    comments = db.getAllCommentsForRecipe(recipeid)
+
+    return render_template("recipePage.html", recipe=result[0], time=t.words[0], comments=comments)
 
 @app.route("/logout")
 def logout():
@@ -426,35 +449,6 @@ def testimgadd():
 
     db.addRecipeToDBWithImageURL(testdictrecipe)
     return "Noice"
-
-
-#### COMMENTS ####
-@app.route("/comment", methods=['POST'])
-def addComment():
-    data = request.get_json()
-
-    if 'user' in session:
-        userid = session.get('user')
-    else:
-        return json.jsonify({"status": "failure", "message": "User not logged in"}), 400
-    
-    recipeid = data.get('recipeid')
-    comment = data.get('comment')
-    comment_time = data.get('comment_time')
-
-    commentDict = {
-        "comment": comment,
-        "userid": userid,
-        "recipeid": recipeid,
-        "comment_time": comment_time
-    }
-
-    print(f"Received data - User ID: {userid}, Recipe ID: {recipeid}, Comment: {comment}, Comment Time: {comment_time}")
-
-    db.addCommentToDB(commentDict)
-
-    # Respond back to the client
-    return "nice"
 
 #######################################################
 #Adam's test stuff

@@ -20,7 +20,7 @@ function addComment() {
         comment_time: currentTime
     };
 
-    fetch('/comment', {
+    fetch(`/recipe/${recipeid}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -29,9 +29,9 @@ function addComment() {
     })
     .then(response => {
         if (response.ok) {
-            console.log("Comment submitted successfully!");
+            window.location.reload();
         } else {
-            console.error("Failed to submit comment.");
+            console.error("Failed to submit comment");
         }
     })
     .catch(error => {
