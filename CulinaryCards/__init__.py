@@ -259,6 +259,7 @@ def viewRecipePage(recipeid):
                 db.deleteRecipeContent(commentid)
 
     result = db.getRecipeByID(recipeid)
+    print(f"result 0 is: {result[0]}")
     result[0] = list(result[0])
     user = db.getProfilePicture(result[0][7])
     for ingredient in range(len(result[0][3])):

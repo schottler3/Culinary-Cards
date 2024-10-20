@@ -19,7 +19,7 @@ function matchHeight() {
 
 function addComment() {
     const comment = document.getElementById('comment-box').value;
-    const recipeid = document.getElementById('hidden-recipe-id').innerText;
+    const recipeid = document.getElementById('hidden-recipe-id').textContent;
     const currentTime = new Date().toISOString();
 
     const data = {
