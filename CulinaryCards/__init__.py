@@ -161,8 +161,6 @@ def deleteRecipeAPI():
     else:
         return json.jsonify({"status": "failure", "message": "Recipe failed to DELETE"}), 400
     
-
-# Incomplete addRecipeAPI for when lucas finishes the form submit
 @requires_auth
 @app.route("/api/addrecipe",methods=['POST']) 
 def addRecipeAPI():
@@ -191,7 +189,6 @@ def addRecipeAPI():
     if photoUrl == 'None':
         recipeid = db.addRecipeToDB(recipeDict)
         if recipeid:
-            print("Recipe ID BRUH: {recipeid}")
             return json.jsonify({"status": "success", "recipeID": recipeid}), 200
         else:
             return json.jsonify({"status": "failure", "message": "Recipe failed to ADD"}), 400
@@ -205,9 +202,6 @@ def addRecipeAPI():
 def setRecipeImageAPI():
     photo = request.files['image']
     recipeid = request.form['recipeid']
-
-    print(photo)
-    print(recipeid)
 
     if db.setRecipeImage(recipeid, photo):
         return json.jsonify({"status": "success", "message": "Image added"}), 200
