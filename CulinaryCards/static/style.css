@@ -2,6 +2,8 @@
     font-family: "Bentham", serif;
     color: #393535;
     box-sizing: border-box;
+    text-decoration: none;
+    word-wrap: break-word;
 }
 
 .bentham-regular { /* Bentham CSS Class */
@@ -14,6 +16,7 @@ html, body {
     background-color: #edede9;
     max-width: 100%;
     overflow-x: hidden;
+    scroll-behavior: smooth;
 }
 
 .paper {
@@ -44,11 +47,25 @@ html, body {
     font-size: 2em;
     font-weight: bold;
     color: white;
+    text-shadow:
+        0.01em 0 black,
+        0 0.01em black,
+        -0.01em 0 black,
+        0 -0.01em black;
 }
 
-/* #header {
-    height: 2vh;
-} */
+#scroll-btn {
+    margin-bottom: 10vh;
+    margin-top: -10vh;
+    border: solid 1px hsl(39, 14%, 58%);
+}
+
+#search-result-btns {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+}
 
 .pfp {
     width: 15vh;
@@ -214,7 +231,6 @@ form{
     height: 40px;
     width: 100%;
     display: flex;
-    /* justify-content: center; */
     align-items: center;
     padding-left: 1vw;
     background-color: #d6ccc2;
@@ -393,7 +409,7 @@ form{
     transition: all .2s ease-out;
 }
 
-.header .menu-btn { /* get rid of checkbox  */
+.header .menu-btn { 
     display: none;
 }
 
@@ -420,58 +436,169 @@ form{
 
 
 /* Recipe Result Section */
-#results-div {
+#recipe-container {
     display: flex;
     justify-content: center;
-    margin: 1em;
+    padding: 10vh 0vh;
 }
 
-#results-grid {
-    display: flex;
-    justify-content: center;
-    margin: 1em;
+#recipe-info-section {
     height: 40vh;
-    width: 60%;
+    width: 60vw;
+    display: flex;
+    justify-content: center;
+    padding: 5vh;
+    margin-bottom: 5vh;
+    background-color: #d6ccc2;
+    border-radius: 15px;
+    --shadow-color: hsl(39, 14%, 58%);
+    filter: drop-shadow(
+        1px 2px 8px var(--shadow-color)
+    );
+    overflow: hidden;
+    overflow-y: scroll;
 }
 
-#recipe-result {
+#recipe-info {
     padding-left: 1vw;
-    margin-bottom: 1em;
-    height: 10em;
+    overflow: hidden;
+    overflow-y: scroll;
 }
 
-#result-image-container {
+#recipe-section-title {
+    text-align: center;
+    font-weight: bold;
+    padding-bottom: 6vh;
+    padding-top: 6vh;
+    font-size: 2.75em;
+}
+
+#recipe-title {
+    font-size: 2.25em;
+}
+
+#recipe-author {
+    font-size: 1.0em;
+    padding-bottom: 2vh;
+}
+
+#recipe-description {
+    font-size: 1.0em;
+    padding-bottom: 2vh;
+}
+
+#recipe-img{
     padding-right: 1vw;
     height: 100%;
     display: flex;
     justify-content: right;
+    flex-direction: row;
 }
 
-#result-image {
-    width: auto;
+#img-of-recipe {
+    width: auto; 
+    width: 100%; 
     aspect-ratio: 1; 
     object-fit: cover;
     border-radius: 15px;
 }
 
-#result-label {
-    font-size: 2.25em;
-    height: 25%;
-    /* overflow: clip; */
-}
+/* Recipe View Page */
 
-#result-author {
-    height: 20%
-}
-
-#testingme {
+#recipe-view-body {
     display: flex;
     justify-content: center;
-    height: 40vh;
-    width: 60%;
-    margin: 1em;
-    margin-bottom: 1em;
 }
+#recipe-view-container {
+    padding-top: 10vh;
+    padding-bottom: 10vh;
+    /* border: black 1px dashed; */
+}
+
+#recipe-view-title {
+    font-weight: bold;
+    padding-top: 6vh;
+    font-size: 2.75em;
+}
+
+#recipe-view-description {
+    overflow: hidden;
+    word-wrap: break-word;
+}
+
+#recipe-view-img-container {
+    display: flex;
+    justify-content: left;
+    height: 40vh;
+    margin: 1.5vw 0
+}
+
+#recipe-view-img {
+    width: 100%; 
+    aspect-ratio: 1; 
+    object-fit: cover;
+    border-radius: 15px;
+    min-width: 347.81px;
+}
+
+#recipe-view-date {
+    font-size: small;
+}
+
+#recipe-view-author {
+    font-size: 1.25em;
+}
+
+#ingredient-container, #step-container {
+    list-style: none;
+    padding: 0;
+}
+/* end section */
+
+/* Recipe View Comments Likes & Saves */
+
+#right-side {
+    padding-top: 6vh;
+}
+
+#comment-section-title {
+    padding-top: 9vh;
+}
+
+#likes-and-saves-container, #saves, #likes-container, #likes, #likes-count{
+    display: flex;
+    justify-content: right;
+}
+
+#likes-container, #saves {
+    min-width: 50px;
+}
+
+#likes, #likes-count{
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+
+.icon {
+    height: 5vh;
+}
+
+#comment-container {
+    overflow: auto;
+    overflow-y: scroll;
+    height: 60vh;
+    margin-top: 1vh;
+}
+.comment {
+    margin-top: 2vh;
+    background-color: #d6ccc2;
+    padding: 2vh 3vh;
+    border-radius: 15px;
+}
+
+/* End Section */
+
 
 /* Small only */
 @media screen and (max-width: 39.9375em) {

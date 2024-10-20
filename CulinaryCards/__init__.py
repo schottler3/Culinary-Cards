@@ -17,6 +17,7 @@ from authlib.integrations.flask_client import OAuth
 import dbinteractions as db
 import recipeOfTheDay as rotd
 import unsplash
+import pandas as pd
 
 
 
@@ -70,14 +71,10 @@ def redirectToSearch():
     sendData = []
     user_query = request.form["queryhome"]
     results = db.searchRecipeByKeywords(user_query)
-    # for item in results:
-    #     recipe = item['recipe']
-    #     label = recipe.get('label')
-    #     calories = recipe.get('calories')
-    #     sendData.append([label, calories])
+    print(results)
     for item in results:
         print(f"item: {item}")
-    return render_template("searchResults.html",results=results, recipeofday = rotd.getRecipeOfTheDay())
+    return render_template("searchResults.html",results=results)
 
 @app.route("/login")
 def login():
@@ -89,18 +86,27 @@ def login():
 
 @app.route("/callback", methods=["GET", "POST"])
 def callback():
-    AuthToken = oauth.auth0.authorize_access_token()
-    token = oauth.auth0.parse_id_token(AuthToken, nonce = session["nonce"])
-    token = token.get("sub")
-    userId = db.getUserIDFromAuth(token)
-    if  userId != -1:
-        session["user"] = userId
-        session["token"] = token
-    else:
-        db.addUserToDBAuthOnly(token)
+    try:
+        AuthToken = oauth.auth0.authorize_access_token()
+        token = oauth.auth0.parse_id_token(AuthToken, nonce = session["nonce"])
+        if not token:
+            raise Exception("No Token Found")
+        token = token.get("sub")
+        print(token)
         userId = db.getUserIDFromAuth(token)
-        session["user"] = userId
-        session["token"] = token
+        if  userId != -1:
+            session["user"] = userId
+            session["token"] = token
+        else:
+            db.addUserToDBAuthOnly(token)
+            userId = db.getUserIDFromAuth(token)
+            session["user"] = userId
+            session["token"] = token
+        return redirect("/")
+    except:
+        print("Error parsing 0Auth token")
+        session.pop("user", None)
+        session.pop("token", None)
     return redirect("/")
 
 @app.route("/profile")
@@ -127,14 +133,62 @@ def profile():
         print(4)
         return redirect('/login')
     
+@app.route("/profile/likes")
+def profileGetLiked():
+    if 'user' in session:
+        user = session['user']
+        if('token' in session):
+            userid = db.getUserIDFromAuth(session['token']) 
+            if userid != -1:
+                user = db.getUserInfoByUserID(session['user'])
+                userlikes = db.getLikeCountForUser(session['user'])
+                recipes = db.getAllLikedRecipesForUser(session['user'])
+                recipecount = len(recipes)
+                print(user)
+                print(1)
+                return render_template('profile.html', user=user,userlikes = userlikes,recipes = recipes,recipecount = recipecount)
+            else:
+                print(2)
+                return redirect('/login')
+        print(3)
+        return render_template('profile.html', user=user)
+    else:
+        print(4)
+        return redirect('/login')
+    
+@app.route("/profile/saved")
+def profileGetSaved():
+    if 'user' in session:
+        user = session['user']
+        if('token' in session):
+            userid = db.getUserIDFromAuth(session['token']) 
+            if userid != -1:
+                user = db.getUserInfoByUserID(session['user'])
+                userlikes = db.getLikeCountForUser(session['user'])
+                recipes = db.getAllSavedRecipesForUser(session['user'])
+                recipecount = len(recipes)
+                print(user)
+                print(1)
+                return render_template('profile.html', user=user,userlikes = userlikes,recipes = recipes,recipecount = recipecount)
+            else:
+                print(2)
+                return redirect('/login')
+        print(3)
+        return render_template('profile.html', user=user)
+    else:
+        print(4)
+        return redirect('/login')
+    
 @app.route("/recipe/<int:recipeid>", methods=["GET"])
 def viewRecipePage(recipeid):
     result = db.getRecipeByID(recipeid)
     print(f"recipe id is: {recipeid}")
     print(result)
-    print("line....")
-    print(result[0])
-    return render_template("recipePage.html",recipe=result[0])
+
+    t = pd.DataFrame({'timestamp': [pd.Timestamp(result[0][5])]})
+    t['words'] = t['timestamp'].dt.strftime('%A, %B %d, %Y')
+
+    return render_template("recipePage.html",recipe=result[0], time=t.words[0])
 
 @app.route("/logout")
 def logout():

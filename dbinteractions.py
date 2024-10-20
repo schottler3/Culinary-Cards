@@ -208,7 +208,7 @@ def getProfilePicture(userid):
         elif result[1] is not None:
             return (result[1],"link")
         else:
-            return ("/static/test.png", "file")
+            return ("static/test.png", "file")
     except:
         print("Failed to get user image")
         return None
@@ -225,7 +225,8 @@ def getAllLikedRecipesForUser(userid):
     try:
         str = """select recipe.recipeid, recipe.title, recipe.description, recipe.ingredients, recipe.instructions, recipe.created_on,recipe.userid
         from recipe_like join recipe on recipe_like.recipeid = recipe.recipeid
-        where recipe_like.userid = %s"""
+        where recipe_like.userid = %s
+        order by recipe_like.like_time desc"""
         cursor.execute(str, (userid,))
         result = cursor.fetchall()
         if result:
@@ -239,6 +240,30 @@ def getAllLikedRecipesForUser(userid):
         cursor.close()
         connection.close()
 
+# Returns list of tuples in form: (recipeid,title,description,ingredients,instructions,created_on,user_id)
+def getAllSavedRecipesForUser(userid):
+    connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
+    cursor = connection.cursor()
+    if userid is None:
+        return []
+    try:
+        str = """select recipe.recipeid, recipe.title, recipe.description, recipe.ingredients, recipe.instructions, recipe.created_on,recipe.userid
+        from recipe_saved join recipe on recipe_saved.recipeid = recipe.recipeid
+        where recipe_saved.userid = %s
+        order by recipe_saved.savedtime desc"""
+        cursor.execute(str, (userid,))
+        result = cursor.fetchall()
+        if result:
+            return result
+        else:
+            return []
+    except:
+        print("Failed to get saved recipes")
+        return []
+    finally:
+        cursor.close()
+        connection.close()
+
 # Returns list of tuples in form: (recipeid,title,description,ingredients,instructions,created_on,likecount)
 def getAllRecipesUser(userid):
     connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
@@ -246,13 +271,10 @@ def getAllRecipesUser(userid):
     if userid is None:
         return []
     try:
-        str = """
-            select recipe.recipeid, recipe.title, recipe.description, recipe.ingredients,
-            recipe.instructions, recipe.created_on,count(recipe_like.likeid) as postlikes
-            from recipe
-            left join recipe_like on recipe.recipeid = recipe_like.recipeid
-            where recipe.userid = %s
-            group by recipe.recipeid"""
+        str = """select recipe.recipeid, recipe.title, recipe.description, recipe.ingredients,recipe.instructions, recipe.created_on, count(recipe_like.likeid) as postlikes
+                from recipe left join recipe_like on recipe.recipeid = recipe_like.recipeid where recipe.userid = %s
+                group by recipe.recipeid, recipe.title, recipe.description, recipe.ingredients, recipe.instructions, recipe.created_on
+                order by postlikes desc;"""
         cursor.execute(str, (userid,))
         result = cursor.fetchall()
         if result:
@@ -530,7 +552,9 @@ def getRecipeByID(recipeid):
     cursor = connection.cursor()
     try:
         qstr = """select recipe.recipeid,recipe.title,recipe.description,recipe.ingredients,recipe.instructions,recipe.created_on,users.username,recipe.categories
-        from recipe join users on recipe.recipeid = %s"""
+        from recipe 
+        join users on recipe.userid = users.userid
+        where recipe.recipeid = %s"""
         cursor.execute(qstr,(recipeid,))
         result = cursor.fetchall()
         if result is not None:

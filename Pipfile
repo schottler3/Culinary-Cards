@@ -11,6 +11,8 @@ requests = "*"
 authlib = "*"
 python-dotenv = "*"
 schedule = "*"
+pandas = "*"
+numpy = "*"
 
 [dev-packages]
 
