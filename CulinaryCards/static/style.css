@@ -664,3 +664,11 @@ form{
         font-size: 5em;
     }
 }
+
+.profileTag {
+    font-weight: bold;
+}
+
+.profileTag:hover {
+    color: #aaa;
+}

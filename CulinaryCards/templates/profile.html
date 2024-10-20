@@ -24,11 +24,22 @@
 </div>
 <div id="pfpGrayBackground"></div>
 
+<div>
+    <img id="accountGear" src="https://cdn-icons-png.flaticon.com/512/40/40031.png" alt="Account Settings">
+</div>
+
+<div id="accountSettings">
+    <button type="button" class="pure-button" id="deleteAccount">Delete Account</button>
+
+</div>
+
+<div id="profileContainerAll">
+
     <div id="profileContainer" class="pure-g">
         <div class="pure-u-1-4 profileInfo" id="profileInfo">
             <div id="imgContainer">
                 <img id="pfp" src="/api/getprofilepicture/{{ profile }}" alt="Profile Picture" class="pfp">
-                {% if user["userid"] == session["user"] %}
+                {% if profile == session["user"] %}
                     <img id="editProfile" src="https://cdn-icons-png.flaticon.com/512/1250/1250925.png" alt="Edit Profile" class="editPfp" onclick="toggleEdit(this)">
                 {% endif %}
             </div>
@@ -68,9 +79,11 @@
                 <li class="pure-menu-item">
                     <a onclick="changeToLiked()" class="pure-menu-link">Liked Recipes</a>
                 </li>
-                <li class="pure-menu-item">
-                    <a onclick="changeToSaved()" class="pure-menu-link">Saved Recipes</a>
-                </li>
+                {% if session["user"] == profile %}
+                    <li class="pure-menu-item">
+                        <a onclick="changeToSaved()" class="pure-menu-link">Saved Recipes</a>
+                    </li>
+                {% endif %}
             </ul>
         </div>
         <div id="hamburgerMenu" onclick="toggleHamburger()">
@@ -88,15 +101,22 @@
     </div>  
     <div class="pure-g" id="profileRecipesContainer">
         {% if session["user"] == profile %}
-            <a class="pure-u-1-3 createRecipeTile" id="createRecipe" href="/createRecipe">New Recipe</a>
+            <a class="pure-u-1-5 createRecipeTile" id="createRecipe" href="/createRecipe">New Recipe</a>
         {% endif %}
         {% for recipe in recipes %}
-            <a class="pure-u-1-3 profileRecipe" data-id="{{recipe[0]}}" href="/recipe/{{recipe[0]}}" style="background-image: url(/api/getrecipeimage/{{recipe[0]}})">
+            <a class="pure-u-1-5 profileRecipe" data-id="{{recipe[0]}}" href="/recipe/{{recipe[0]}}" style="background-image: url(/api/getrecipeimage/{{recipe[0]}})">
                 <div id="{{recipe[0]}}">
                     <h1 class="recipeTitle">{{recipe[1]}}</h1>
                 </div>
             </a>
         {% endfor %}
     </div>
+</div>
+
+    <script>
+        var userId = "{{ user.userid }}";
+        var username = "{{ user.username }}";
+        var bio = "{{ user.bio }}";
+    </script>
 
 {% endblock %}
