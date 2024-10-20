@@ -218,10 +218,9 @@ def profileGetSaved():
         print(4)
         return redirect('/login')
     
-@app.route("/recipe/<int:recipeid>", methods=["GET", "POST"])
+@app.route("/recipe/<int:recipeid>", methods=["GET", "POST", "DELETE"])
 def viewRecipePage(recipeid):
     if request.method == 'POST':
-        print('hi')
         data = request.get_json()
 
         if 'user' in session:
@@ -241,16 +240,30 @@ def viewRecipePage(recipeid):
         # print(f"Received data - User ID: {userid}, Recipe ID: {recipeid}, Comment: {comment}, Comment Time: {comment_time}")
         db.addCommentToDB(commentDict)
 
+    if request.method == 'DELETE':
+        data = request.get_json()
+
+        if 'user' in session:
+            userid = session.get('user')
+        else:
+            return json.jsonify({"status": "failure", "message": "User not logged in"}), 400
+        
+        commentid = data.get('commentid')
+        commentuserid = data.get('commentuserid')
+
+        print(f"commentid: {commentid}, userid: {userid}, commentuserid: {commentuserid}")
+        print(commentuserid == userid)
+        if commentuserid is not None and userid is not None:
+            if int(commentuserid) == int(userid):
+                print("SDLKFHJSDHFJKSHDLKFJHKJDSLJFHSDKJLFHKJSDHLK")
+                db.deleteRecipeContent(commentid)
+
     result = db.getRecipeByID(recipeid)
     result[0] = list(result[0])
-    print(f"recipe id is: {recipeid}")
-    print(result[0][7])
     user = db.getProfilePicture(result[0][7])
-    print(user)
     for ingredient in range(len(result[0][3])):
         print(result[0][3])
         result[0][3][ingredient] = result[0][3][ingredient].replace(","," of ")
-    print(result[0])
     result[0].append("/api/getrecipeimage/" + str(result[0][0]))
     result[0] = tuple(result[0])
     t = pd.DataFrame({'timestamp': [pd.Timestamp(result[0][5])]})

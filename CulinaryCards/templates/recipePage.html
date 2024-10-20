@@ -63,7 +63,18 @@
       <div class="pure-u-1 title" id="comment-section-title">Comment Section</div>
       <div class="pure-g pure-u-1" id="comment-container">
         {% for comment in comments %}
-          <div class="pure-u-1 comment" id="">{{ comment[3] }}: {{ comment[2] }}</div>
+          {% if session.get("user") == comment[4] %}
+            <div class="pure-u-1 comment" id="" commentid="{{ comment[0] }}">
+              <p>
+                {{ comment[3] }}: {{ comment[2] }}
+              </p>
+            </div>
+            <button class="pure-button delete-btn" id="" type="button" commentid="{{ comment[0] }}" commentuserid="{{ comment[4] }}" onClick="deleteComment()">
+              D
+            </button>
+          {% else %}
+            <div class="pure-u-1 comment" id="" commentid="{{ comment[0] }}">{{ comment[0] }} {{ comment[3] }}: {{ comment[2] }}</div>
+          {% endif %}
         {% endfor %}
       </div>
     </div>
