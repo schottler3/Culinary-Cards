@@ -22,6 +22,8 @@ function addComment() {
     const recipeid = document.getElementById('hidden-recipe-id').textContent;
     const currentTime = new Date().toISOString();
 
+    console.log(recipeid)
+
     const data = {
         recipeid: recipeid,
         comment: comment,
@@ -40,6 +42,7 @@ function addComment() {
             window.location.reload();
         } else {
             console.error("Failed to submit comment");
+            console.log(response);
         }
     })
     .catch(error => {

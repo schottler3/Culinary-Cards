@@ -61,3 +61,8 @@
   font-family: sans-serif;
 }
 
+#hidden-recipe-id {
+  display: none;
+}
+
+

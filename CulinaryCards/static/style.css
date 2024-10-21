@@ -58,11 +58,19 @@ html, body {
     margin-bottom: 10vh;
     margin-top: -10vh;
     border: solid 1px hsl(39, 14%, 58%);
+    background-color: #d6ccc2;
+    border-radius: 5px;
+}
+
+#comment-btn {
+    border: solid 1px hsl(39, 14%, 58%);
+    background-color: #d6ccc2;
+    border-radius: 5px;
 }
 
 #comment-box {
-    margin-bottom: 11vh;
-    margin-top: -10vh;
+    margin-bottom: 2vh;
+    resize: none;
     gap: 5px;
 }
 
@@ -518,11 +526,16 @@ form{
 #recipe-view-body {
     display: flex;
     justify-content: center;
+
 }
 #recipe-view-container {
-    padding-top: 10vh;
-    padding-bottom: 10vh;
-    /* border: black 1px dashed; */
+    margin-top: 10vh;
+    padding-left: 4vh;
+    padding-top: 0;
+    padding-bottom: 12vh;
+    background-color: #eee8e1;
+    border-radius: 15px;
+    box-shadow: 1px 1px 4px 0 rgba(0,0,0,.3);
 }
 
 #recipe-view-title {

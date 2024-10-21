@@ -77,19 +77,30 @@
           {% endif %}
         {% endfor %}
       </div>
+      <div class="pure-u-1" id="hidden-recipe-id" style>{{ recipe[0] }}</div>
+      {% if session.get("user") %}
+        <textarea id="comment-box" name="comment" class="pure-g pure-u-1" rows="4" cols="50" placeholder="Write your comment here..."></textarea>
+        <form id="comment-form">
+          <button class="pure-button" id="comment-btn" type="button" onClick="addComment()">Make a Comment</button>
+        </form>
+      {% endif %} 
+      
     </div>
   </div>
-  <div id="hidden-recipe-id">{{ recipe[0] }}</div>
+
+  <!-- <div id="hidden-recipe-id">{{ recipe[0] }}</div>
   {% if session.get("user") %}
     <textarea id="comment-box" name="comment" class="pure-g pure-u-1-2" rows="4" cols="50" placeholder="Write your comment here..."></textarea>
-  {% endif %}
+  {% endif %} -->
+
+
   <div class="pure-g pure-u-1" id="search-result-btns">
     <button class="pure-button" id="scroll-btn" type="button" onClick="history.back()">Back</button>
-    {% if session.get("user") %}
+    <!-- {% if session.get("user") %}
       <form id="comment-form">
         <button class="pure-button" id="scroll-btn" type="button" onClick="addComment()">Make a Comment</button>
       </form>
-    {% endif %}
+    {% endif %} -->
   </div>
 </div>
 <script src="{{ url_for('static', filename='recipePage.js') }}"></script>
