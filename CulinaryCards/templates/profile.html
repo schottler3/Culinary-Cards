@@ -29,8 +29,15 @@
 </div>
 
 <div id="accountSettings">
-    <button type="button" class="pure-button" id="deleteAccount">Delete Account</button>
-
+    <h1>Delete Account</h1>
+    <h3>This action will delete your account from our databases.</h3>
+    <h3>Only proceed if you are sure you want to.</h3>
+    <button type="button" class="pure-button" id="deleteAccount" onclick="toggleDeletion()">Delete Account</button>
+    <div id="accountDeletionConfirmation" style="display: none;">
+        <h2>Are you sure you would like to delete your account?</h2>
+        <button type="button" class="pure-button" id="cancelDeletion" onclick="toggleDeletion()">No</button>
+        <button type="button" class="pure-button" id="confirmDeletion" href="/api/deleteaccount">Yes</button>
+    </div>
 </div>
 
 <div id="profileContainerAll">

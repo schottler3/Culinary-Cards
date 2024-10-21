@@ -25,7 +25,7 @@ async function submitEdit(event) {
     let newUsername = document.getElementById('editUsername').value;
     let newBio = document.getElementById('editBio').value;
 
-    let isUser = await fetch("/api/isUser",{method : "PUT", headers : {"Content-Type" : "application/json"}, body: JSON.stringify(newUsername)});
+    let isUser = await fetch("/api/isUser",{method : "GET", headers : {"Content-Type" : "application/json"}, body: JSON.stringify(newUsername)});
 
     if(newUsername.length > 20 || newUsername.length < 3 || isUser.ok) {
         usernameError.style.display = 'block';
@@ -55,10 +55,10 @@ async function submitEdit(event) {
     setProfileResponse = await fetch("/api/editprofile",{method : "PUT", headers : {"Content-Type" : "application/json"}, body: JSON.stringify(changes)});
     console.log(setProfileResponse.ok)
     if(setProfileResponse.ok){
-        username = document.getElementById('username');
-        username.innerText = newUsername
-        bio = document.getElementById('bio');
-        bio.innerText = newBio
+        username = newUsername;
+        bio = newBio;
+        document.getElementById('username').innerText = newUsername;
+        document.getElementById('bio').innerText = newBio;
         toggleEdit(event.target);
     }
     
@@ -129,13 +129,31 @@ let changeToSaved = function() {
 let toggleSettings = function() {
     let profileContainerAll = document.getElementById('profileContainerAll');
     let accountSettings = document.getElementById('accountSettings');
+    let accountDeletionConfirmation = document.getElementById('accountDeletionConfirmation');
     if(profileContainerAll.style.display === 'none') {
         profileContainerAll.style.display = 'block';
         accountSettings.style.display = 'none';
+        if(accountDeletionConfirmation.style.display === 'block') {
+            accountDeletionConfirmation.style.display = 'none';
+            pfpGrayBackground.style.display = 'none';
+        }
     }
     else{
         profileContainerAll.style.display = 'none';
-        accountSettings.style.display = 'flex';
+        accountSettings.style.display = 'block';
+    }
+}
+
+let toggleDeletion = function() {
+    let accountDeletionConfirmation = document.getElementById('accountDeletionConfirmation');
+    let pfpGrayBackground = document.getElementById('pfpGrayBackground');
+    if(accountDeletionConfirmation.style.display === 'none') {
+        accountDeletionConfirmation.style.display = 'block';
+        pfpGrayBackground.style.display = 'block';
+    }
+    else{
+        accountDeletionConfirmation.style.display = 'none';
+        pfpGrayBackground.style.display = 'none';
     }
 }
 

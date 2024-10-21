@@ -421,7 +421,7 @@ def getProfilePic(userid):
         print(4)
         return send_file("static/test.png", mimetype='image/png'), 200
 
-@app.route("/api/isUser",methods=['PUT'])
+@app.route("/api/isUser",methods=['GET'])
 def getUsernames():
     username = request.args.get("username")
     if db.getUserInstanceFromUsername(username):
@@ -485,6 +485,17 @@ def getRecipeImage(recipeid):
         print(4)
         return send_file("static/test.png", mimetype='image/png'), 200
 
+@app.route("/api/deleteaccount",methods=['DELETE'])
+def deleteAccount():
+    if 'user' in session:
+        if db.deleteUserByUserID(session['user']):
+            session.clear()
+            return json.jsonify({"status": "success", "message": "Account Deleted"}), 200
+        else:
+            return json.jsonify({"status": "failure", "message": "Account failed to DELETE"}), 400
+    else:
+        return json.jsonify({"status": "failure", "message": "User not logged in"}), 400
+    
 @app.route("/api/testimgadd",methods=['GET']) #use this to test out adding recipes and imgs
 def testimgadd():
     testdictrecipe = {

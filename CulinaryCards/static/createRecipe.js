@@ -790,6 +790,7 @@ submitRecipe = async () => {
                     return;
                 }
             }
+            console.log(data.recipeID);
             window.location.href = `/recipe/${data.recipeID}`;
         } else {
             alert('Failed to create recipe: ' + data.message);

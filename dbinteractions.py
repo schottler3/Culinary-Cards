@@ -512,7 +512,7 @@ def addRecipeToDBWithImageURL(dict, img_url):
         
         # adding image to db
         new_recipe_ID = cursor.fetchone()[0] # How does this fetchone return a new_recipe_id?
-        print(new_recipe_ID)
+        print("RecipeID AHH:", new_recipe_ID)
         qstr_img = "insert into recipe_img (image_link, recipeid) values (%s,%s)"
 
         cursor.execute(qstr_img, (img_url, new_recipe_ID))
