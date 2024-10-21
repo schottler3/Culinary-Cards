@@ -592,8 +592,8 @@ form{
 
 .profile-icon {
     height: 5vh;
-    transition: 0.3s ease-out;
-    filter: invert(97%) sepia(2%) saturate(2146%) hue-rotate(326deg) brightness(85%) contrast(97%); /* use https://codepen.io/sosuke/pen/Pjoqqp to get color filter */
+    /* transition: 1s ease-out; */
+    filter: invert(97%) sepia(2%) saturate(2146%) hue-rotate(326deg) brightness(85%) contrast(97%); use https://codepen.io/sosuke/pen/Pjoqqp to get color filter
 }
 
 .profile-icon:hover {
