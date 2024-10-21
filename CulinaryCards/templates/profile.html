@@ -47,7 +47,7 @@
             <div id="imgContainer">
                 <img id="pfp" src="/api/getprofilepicture/{{ profile }}" alt="Profile Picture" class="pfp">
                 {% if profile == session["user"] %}
-                    <img id="editProfile" src="{{ url_for('static', filename='resources/likeheart.svg') }}" alt="Edit Profile" class="editPfp" onclick="toggleEdit(this)">
+                    <img id="editProfile" src="https://cdn-icons-png.flaticon.com/512/1250/1250925.png" alt="Edit Profile" class="editPfp" onclick="toggleEdit(this)">
                 {% endif %}
             </div>
             <h1 id="username" class="username">{{user["username"]}}</h1>
