@@ -4,6 +4,14 @@
   padding: 20vh 0vh;
 }
 
+#editRecipe {
+  width: 16px;
+  height: 16px;
+  position: relative;
+  top: -2px;
+  cursor: pointer;
+}
+
 #recipe-info-section {
   height: 40vh;
   overflow: hidden;

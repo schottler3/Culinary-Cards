@@ -62,9 +62,14 @@ def requires_auth(f):
 def index():
     return render_template("index.html", recipeofday = rotd.getRecipeOfTheDay())
 
-@app.route("/createRecipe")
-def createRecipe():
-    return render_template("createRecipe.html")
+@app.route("/createRecipe", defaults={'recipeid': None}, methods=['GET'])
+@app.route("/createRecipe/<int:recipeid>", methods=['GET'])
+def createRecipe(recipeid):
+    if recipeid:
+        recipe = db.getRecipeByID(recipeid)
+        return render_template("createRecipe.html", edit=recipe)
+    else:
+        return render_template("createRecipe.html", edit=None)
 
 @app.route("/search",methods=['POST'])
 def redirectToSearch():
@@ -91,7 +96,6 @@ def redirectToSearchCategory(category):
 @app.route("/api/getrecipeimage/<int:recipeid>",methods=['GET'])
 def getRecipePic(recipeid):
     img = db.getRecipePicture(recipeid)
-    print(img)
     if img is not None:
         if img[1] == "img":
             stream = io.BytesIO(img[0])
@@ -258,16 +262,26 @@ def viewRecipePage(recipeid):
             if int(commentuserid) == int(userid):
                 print("SDLKFHJSDHFJKSHDLKFJHKJDSLJFHSDKJLFHKJSDHLK")
                 db.deleteRecipeContent(commentid)
-    savedstatus = db.checkSaved(session["user"],recipeid)
-    likedstatus = db.checkLiked(session["user"],recipeid)
+
+    savedstatus = "unsaved"
+    likedstatus = "unliked"
+
+    if('user' in session):
+        savedstatus = db.checkSaved(session["user"],recipeid)
+        likedstatus = db.checkLiked(session["user"],recipeid)
+
     result = db.getRecipeByID(recipeid)
     likecount = db.getRecipeLikes(recipeid)
+
     print(f"result 0 is: {result[0]}")
+
     result[0] = list(result[0])
     user = db.getProfilePicture(result[0][7])
+
     for ingredient in range(len(result[0][3])):
         print(result[0][3])
         result[0][3][ingredient] = result[0][3][ingredient].replace(","," of ")
+
     result[0].append("/api/getrecipeimage/" + str(result[0][0]))
     result[0] = tuple(result[0])
     t = pd.DataFrame({'timestamp': [pd.Timestamp(result[0][5])]})

@@ -41,6 +41,10 @@ function nextStep() {
     }
 }
 
+//====================================================================================================
+//Title, Categories, and Description
+//====================================================================================================
+
 //Backend call to get the current categories
 function getCategories() {
     //backend integration later
@@ -194,6 +198,10 @@ function setUnitsMetric() {
 
     showStepTwo();
 }
+
+//====================================================================================================
+//Ingredients
+//====================================================================================================
 
 //Function to show the ingredients form
 function showStepTwo() {
@@ -387,6 +395,10 @@ function submitIngredients() {
     showStepThree();
     return true;
 }
+
+//====================================================================================================
+//Instructions
+//====================================================================================================
 
 //Function to show the instructions form
 function showStepThree() {
@@ -669,6 +681,10 @@ function submitInstructions() {
     return true
 }
 
+//====================================================================================================
+//Photo and submit recipe
+//====================================================================================================
+
 function showStepFour() {
     let formFour = document.getElementById('createRecipeFour');
     formFour.style.display = 'flex';
@@ -801,10 +817,53 @@ submitRecipe = async () => {
     }
 }
 
+//====================================================================================================
+//Edit Recipe Start
+//====================================================================================================
+
+let fillStepOne = function(title, description, categories) {
+    let titleField = document.getElementById('recipeTitle');
+    titleField.value = title;
+    let descriptionField = document.getElementById('recipeDescription');
+    descriptionField.value = description;
+    let selectedCategoriesList = document.querySelector('#selectedCategories .pure-menu-list');
+    for(let category of categories) {
+        selectedCategories.push(category);
+        let selectedCategory = document.createElement('li');
+        selectedCategory.setAttribute('class', 'pure-menu-item');
+        let categoryElement = document.createElement('a');
+        categoryElement.setAttribute('class', 'pure-menu-item');
+        categoryElement.textContent = category;
+        selectedCategory.appendChild(categoryElement);
+        selectedCategoriesList.appendChild(selectedCategory);
+    }
+}
+
+let fillStepTwo = function(data) {
+
+}
+
+let fillStepThree = function(data) {
+
+}
+
+let fillStepFour = function(data) {
+
+}
+
+//====================================================================================================
+//Edit Recipe End
+//====================================================================================================
+
 //Loads categories and popup exit functions
 window.onload = function() {
     populateCategories();
-    //showPreviewPhoto();
+    if(editData){
+        fillStepOne(editData[1], editData[2], editData[8]);
+        //fillStepTwo();
+        //fillStepThree();
+        //fillStepFour();
+    }
 
 window.addEventListener('click', function(event) {
     if(categoryFlag){

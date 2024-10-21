@@ -1,19 +1,16 @@
-document.addEventListener('click', function(event) {
-    if (event.target && event.target.classList.contains('delete-btn')) {
-        var commentId = event.target.getAttribute('commentid');
-        var commentUserId = event.target.getAttribute('commentuserid');
-        deleteComment(commentId, commentUserId);
-    }
-});
-
-const leftSide = document.getElementById('left-side');
-const rightSide = document.getElementById('comment-container');
-
-console.log(leftSide);
-console.log(rightSide);
+var leftSide;
+var rightSide;
 
 // function to match the height of left and right side on recipe page
 function matchHeight() {
+    if(leftSide)
+        console.log(leftSide.offsetHeight);
+    else
+        console.log("leftSide is null");
+    if(rightSide)
+        console.log(rightSide.style.height);
+    else
+        console.log("rightSide is null");
     rightSide.style.height = `${leftSide.offsetHeight - 250}px`;
 }
 
@@ -135,5 +132,17 @@ async function updateLiked(recipeid) {
     }
 }
 
-matchHeight();
-window.addEventListener('resize', matchHeight);
+window.onload = function() {
+    leftSide = document.getElementById('left-side');
+    rightSide = document.getElementById('comment-container');
+    matchHeight();
+    window.addEventListener('resize', matchHeight);
+
+    document.addEventListener('click', function(event) {
+        if (event.target && event.target.classList.contains('delete-btn')) {
+            var commentId = event.target.getAttribute('commentid');
+            var commentUserId = event.target.getAttribute('commentuserid');
+            deleteComment(commentId, commentUserId);
+        }
+    });
+}
