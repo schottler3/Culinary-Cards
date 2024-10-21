@@ -127,13 +127,20 @@ def getLikeCountForUser(userid):
     if userid is None:
         return -1
     try:
-        str = "select count(*) as likes from recipe_like where userid = %s"
+        str = """select count(recipe_like.likeid) as total_likes
+                from users
+                join recipe on users.userid = recipe.userid
+                left join recipe_like on recipe.recipeid = recipe_like.recipeid
+                where users.userid = %s
+                group by users.userid, users.username;
+                """
         cursor.execute(str, (userid,))
         result = cursor.fetchone()
+        print("result",result)
         if result[0] >= 0:
             return result[0]
         else:
-            return -1
+            return 0
     except:
         print("Failed to get user like count")
     finally:

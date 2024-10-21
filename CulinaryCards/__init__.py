@@ -152,6 +152,7 @@ def profile():
     if userid:
         user = db.getUserInfoByUserID(userid)
         userlikes = db.getLikeCountForUser(userid)
+        print("likes",userlikes)
         recipes = db.getAllRecipesUserLikesDesc(userid)
         recipecount = len(recipes)
         return render_template('profile.html', profile=userid, user=user,userlikes = userlikes,recipes = recipes,recipecount = recipecount)
