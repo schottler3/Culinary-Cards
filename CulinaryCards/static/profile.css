@@ -60,10 +60,10 @@ body {
 }
 
 #profileContainer {
+    display: flex;
     margin-bottom: 2vh;
     justify-content: center;
     align-items: center;
-    height: 36vh;
 }
 
 #editProfileContainer {
@@ -82,6 +82,7 @@ body {
 .profileInfo {
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center; 
     text-align: center;
 }
