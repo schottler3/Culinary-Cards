@@ -789,7 +789,6 @@ submitRecipe = async () => {
                     alert('Failed to upload recipe image: ' + errorText);
                     return;
                 }
-
             }
             window.location.href = `/recipe/${data.recipeID}`;
         } else {
@@ -810,8 +809,6 @@ window.addEventListener('click', function(event) {
     if(categoryFlag){
         let x = event.clientX;
         let y = event.clientY;
-
-        console.log("SILLY");
 
         let dropdown = document.getElementById('dropdown');
         let selectCategories = document.getElementById('selectCategories');

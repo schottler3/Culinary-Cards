@@ -508,7 +508,7 @@ def addRecipeToDBWithImageURL(dict, img_url):
     finally:
         cursor.close()
         connection.close()
-        return True
+        return new_recipe_ID
 
 def setRecipeImage(recipeid, imgfile):
     if recipeid is None or imgfile is None:

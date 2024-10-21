@@ -331,8 +331,9 @@ def addRecipeAPI():
             return json.jsonify({"status": "success", "recipeID": recipeid}), 200
         else:
             return json.jsonify({"status": "failure", "message": "Recipe failed to ADD"}), 400
-    elif db.addRecipeToDBWithImageURL(recipeDict, photoUrl):
-        return json.jsonify({"status": "success", "message": "Recipe added"}), 200
+    elif photoUrl != "None":
+        recipeid = db.addRecipeToDBWithImageURL(recipeDict, photoUrl)
+        return json.jsonify({"status": "success", "message": "Recipe added", "recipeID": recipeid}), 200
     else:
         return json.jsonify({"status": "failure", "message": "Recipe failed to ADD"}), 400
     
