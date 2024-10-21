@@ -4,7 +4,11 @@
 {% block middle %}
 
 <div class="pure-g pure-u-1" id="recipe-container" >
-  <div class="pure-u-1 title" id="recipe-section-title">Search Results:</div>
+  {% if results %}
+    <div class="pure-u-1 title" id="recipe-section-title">Search Results:</div>
+  {% else %}
+  <div class="pure-u-1 title" id="recipe-section-title">No Results</div>
+  {% endif %}
   {% for recipe in results %} {# Making a div for every submission to list their name and thoughts #}
   <a class="pure-g pure-u-1 recipe-{{ recipe.recipeid }}" id="recipe-info-section" href="{{ '/recipe/%s'%recipe.recipeid }}">
       <div class="pure-u-3-8" id="recipe-img"><img class="pure-img" id="img-of-recipe" src="/api/getrecipeimage/{{ recipe.recipeid }}"></div>

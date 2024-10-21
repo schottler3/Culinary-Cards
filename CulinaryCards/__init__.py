@@ -77,6 +77,7 @@ def redirectToSearch():
     print(results)
     for i in range(len(results)):
         results[i]["imagelink"] = "/api/getrecipeimage/" + str(results[i]["recipeid"])
+
     return render_template("searchResults.html",results=results)
 
 @app.route("/search/category/<string:category>",methods=['GET'])
