@@ -86,18 +86,7 @@
                 {% endif %}
             </ul>
         </div>
-        <div id="hamburgerMenu" onclick="toggleHamburger()">
-            Ham
-        </div>
 
-        <div id="sortContainer">
-            <label for="sortProfileRecipes">Sort</label>
-            <select id="sortProfileRecipes" class="pure-input-1-2">
-                <option value="newest">Newest</option>
-                <option value="oldest">Oldest</option>
-                <option value="most_liked">Most Liked</option>
-            </select>
-        </div>
     </div>  
     <div class="pure-g" id="profileRecipesContainer">
         {% if session["user"] == profile %}

@@ -44,11 +44,20 @@
 }
 
 #comment-with-button {
-  /* display: flex; */
+  display: flex;
+  justify-content: space-between;
 }
 
 #delete-button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  margin: 0;
+  padding: 0;
   display: flex;
   justify-content: right;
-  align-items: right;
+  align-items: top;
+  font-weight: bolder;
+  font-family: sans-serif;
 }
+

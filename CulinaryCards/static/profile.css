@@ -209,21 +209,11 @@ body {
 }
 
 @media only screen and (max-width: 766px) {
-    #hamburgerMenu {
-        display: flex;
-    }
-    #profileMenu {
-        display: none;
-    }
+
 }
 
 @media only screen and (min-width: 766px) {
-    #hamburgerMenu {
-        display: none;
-    }
-    #profileMenu {
-        display: flex;
-    }
+
 }
 
 .profileRecipeMenu {
