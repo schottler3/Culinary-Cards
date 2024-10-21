@@ -10,7 +10,13 @@
 <div class="pure-g pure-u-1" id="recipe-view-body">
   <div class="pure-g pure-u-7-8" id="recipe-view-container">
     <div class="pure-g pure-u-3-5" id="left-side">
-      <div class="pure-u-1" id="recipe-view-title">{{ recipe[1] }}</div>
+      <div class="pure-u-1" id="recipe-view-title">{{ recipe[1] }}
+        {% if session.get("user") and recipe[7] == session.get("user") %}
+          <a href="/createRecipe/{{recipe[0]}}">
+            <img id="editRecipe" src="https://cdn-icons-png.flaticon.com/512/1250/1250925.png" alt="Edit Recipe">
+          </a>
+        {% endif %}
+      </div>
       <div id="recipe-view-post-details">
         <div class="pure-u-1" id="recipe-view-author">Written by: <a class="profileTag" href="/profile?profile={{recipe[7]}}">{{ recipe[6] }}</a></div>
         <div class="pure-u-1" id="recipe-view-date">Published: {{ time }}</div>
@@ -54,11 +60,11 @@
     <div class="pure-g pure-u-3-8" id="right-side">
       <div class="pure-g pure-u-1" id="likes-and-saves-container">
         <div class="pure-g pure-u-3-24" id="likes-container">
-          <div class="pure-u-1" id="likes"><a href="javascript:updateLiked({{recipe[0]}})" ><img id="likedICON" class="profile-icon" src="{{ url_for('static', filename='resources/likeheart.svg') }}"
+          <div class="pure-u-1" id="likes">{% if session.get("user") %}<a href="javascript:updateLiked({{recipe[0]}})" >{% endif %}<img id="likedICON" class="profile-icon" src="{{ url_for('static', filename='resources/likeheart.svg') }}"
             style="filter: {% if likedstatus %}invert(57%) sepia(62%) saturate(4768%) hue-rotate(162deg) brightness(95%) contrast(101%){% else %}invert(97%) sepia(2%) saturate(2146%) hue-rotate(326deg) brightness(85%) contrast(97%){% endif %};"></a></div>
           <div class="pure-u-1" id="likes-count">{{likes}}</div>
         </div>
-        <div class="pure-u-3-24" id="saves"><a href="javascript:updateSaved({{recipe[0]}})"><img id="savedICON" class="profile-icon" src="{{ url_for('static', filename='resources/save.svg') }}"
+        <div class="pure-u-3-24" id="saves">{% if session.get("user") %}<a href="javascript:updateSaved({{recipe[0]}})" >{% endif %}<img id="savedICON" class="profile-icon" src="{{ url_for('static', filename='resources/save.svg') }}"
           style="filter: {% if savedstatus %}invert(57%) sepia(62%) saturate(4768%) hue-rotate(162deg) brightness(95%) contrast(101%){% else %}invert(97%) sepia(2%) saturate(2146%) hue-rotate(326deg) brightness(85%) contrast(97%){% endif %};"></a></div>
       </div>
 
@@ -92,5 +98,4 @@
     {% endif %}
   </div>
 </div>
-<script src="{{ url_for('static', filename='recipePage.js') }}"></script>
 {% endblock %}

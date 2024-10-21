@@ -26,7 +26,7 @@ async function submitEdit(event) {
     let newBio = document.getElementById('editBio').value;
 
     let isUser = false;
-    let isUserCall = await fetch("/api/isuser?username=" + newUsername)
+    await fetch("/api/isuser?username=" + newUsername)
     .then(response => response.json())
     .then(data => {
         if (data.status === "success") {
@@ -38,7 +38,11 @@ async function submitEdit(event) {
         return false;
     });
 
-    if(newUsername.length > 20 || newUsername.length < 3 || isUser) {
+    if(newUsername == username) {
+        isUser = false;
+    }
+
+    if(newUsername.length > 20 || newUsername.length < 3 || isUser ) {
         usernameError.style.display = 'block';
         return;
     }
@@ -191,5 +195,4 @@ window.onload = function() {
         }
         toggleSettings();
     });
-    document.getElementById('sortProfileRecipes').addEventListener('change', sortRecipes);
 }
