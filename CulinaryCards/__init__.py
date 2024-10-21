@@ -263,8 +263,8 @@ def viewRecipePage(recipeid):
                 print("SDLKFHJSDHFJKSHDLKFJHKJDSLJFHSDKJLFHKJSDHLK")
                 db.deleteRecipeContent(commentid)
 
-    savedstatus = "unsaved"
-    likedstatus = "unliked"
+    savedstatus = False
+    likedstatus = False
 
     if('user' in session):
         savedstatus = db.checkSaved(session["user"],recipeid)
