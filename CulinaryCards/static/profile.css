@@ -11,20 +11,50 @@ body {
 
 #profileContainerAll {
     display: block;
-    margin-top: 12vh;
+    margin-top: 15vh;
 }
 
 #accountSettings {
-    top: auto;
-    bottom: auto;
+    margin-top: 32vh;
+    font-size: 3vmin;
+    height: 100%;
     display: none;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
     flex-direction: column;
     gap: 1vh;
 }
 
+#deleteAccount {
+    background-color: red;
+}
+
+#accountDeletionConfirmation {
+    font-size: 3vmin;
+    display: none;
+    padding: 5% 5% 5% 5%;
+    position: relative;
+    top: -200px;
+    margin-left: 20%;
+    margin-right: 20%;
+    z-index: 1001;
+    border-radius: 10px;
+    background-color: rgb(255, 255, 255);
+    margin-bottom: -50vw;
+}
+
+#cancelDeletion:hover {
+    background-color: rgb(0,255,0,.2);
+}
+
+#confirmDeletion:hover {
+    background-color: rgb(255,0,0,.2);
+}
+
 #accountGear {
-    top: 80px;;
-    right: 2vh;
+    top: 12vh;
+    right: 3vw;
     position: fixed;
     width: 2%;
     height: auto;
@@ -227,11 +257,11 @@ body {
 }
 
 .profileRecipeMenu {
-    margin-top: vmax;
+    margin-top: 10vh;
     margin-left: var(--margins_sides);
     margin-right: var(--margins_sides);
     display: flex;
-    background-color: rgb(255, 230, 204);
+    background-color: antiquewhite;
     cursor: pointer
 }
 
@@ -259,6 +289,7 @@ body {
     justify-content: center;
     margin-left: var(--margins_sides);
     margin-right: var(--margins_sides);
+    margin-bottom: 10vh;
 }
 
 .profileRecipe {

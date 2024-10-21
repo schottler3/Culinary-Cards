@@ -791,6 +791,7 @@ submitRecipe = async () => {
                 }
 
             }
+            console.log(data.recipeID);
             window.location.href = `/recipe/${data.recipeID}`;
         } else {
             alert('Failed to create recipe: ' + data.message);
@@ -810,8 +811,6 @@ window.addEventListener('click', function(event) {
     if(categoryFlag){
         let x = event.clientX;
         let y = event.clientY;
-
-        console.log("SILLY");
 
         let dropdown = document.getElementById('dropdown');
         let selectCategories = document.getElementById('selectCategories');
