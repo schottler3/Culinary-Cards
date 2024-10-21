@@ -77,5 +77,60 @@ function deleteComment(commentId, commentUserId) {
 }
 
 
+async function updateSaved(recipeid) {
+    let response = await fetch(`/api/setusersave/${recipeid}`, {
+        method: 'GET'
+    })
+    if (response.ok){
+        let status = await response.json()
+        status = status.status
+        console.log(status)
+        const savedButton = document.getElementById("savedICON")
+        if (status === "saved"){
+            savedButton.style.filter = "invert(57%) sepia(62%) saturate(4768%) hue-rotate(162deg) brightness(95%) contrast(101%)"
+        }
+        else if (status === "unsaved"){
+            savedButton.style.filter = "invert(97%) sepia(2%) saturate(2146%) hue-rotate(326deg) brightness(85%) contrast(97%)"
+        }
+        else{
+            console.log("Error saving")
+        }
+    }
+    else{
+        console.log("Error saving")
+    }
+}
+
+
+async function updateLiked(recipeid) {
+    let response = await fetch(`/api/setuserlike/${recipeid}`, {
+        method: 'GET'
+    })
+    if (response.ok){
+        let status = await response.json()
+        status = status.status
+        console.log(status)
+        const likedButton = document.getElementById("likedICON")
+        const likecountDoc = document.getElementById("likes-count")
+        let likecount = likecountDoc.innerText
+        if (status === "liked"){
+            likecount = parseInt(likecount) + 1
+            likecountDoc.innerText = likecount
+            likedButton.style.filter = "invert(57%) sepia(62%) saturate(4768%) hue-rotate(162deg) brightness(95%) contrast(101%)"
+        }
+        else if (status === "unliked"){
+            likecount = parseInt(likecount) - 1
+            likecountDoc.innerText = likecount
+            likedButton.style.filter = "invert(97%) sepia(2%) saturate(2146%) hue-rotate(326deg) brightness(85%) contrast(97%)"
+        }
+        else{
+            console.log("Error liking")
+        }
+    }
+    else{
+        console.log("Error liking")
+    }
+}
+
 matchHeight();
 window.addEventListener('resize', matchHeight);

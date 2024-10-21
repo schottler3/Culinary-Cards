@@ -182,7 +182,7 @@ def profileGetLiked():
                 user = db.getUserInfoByUserID(session['user'])
                 userlikes = db.getLikeCountForUser(session['user'])
                 recipes = db.getAllLikedRecipesForUser(session['user'])
-                recipecount = len(recipes)
+                recipecount = db.getCountUserRecipes(session['user'])
                 print(user)
                 print(1)
                 return render_template('profile.html', profile=userid, user=user,userlikes = userlikes,recipes = recipes,recipecount = recipecount)
@@ -205,7 +205,7 @@ def profileGetSaved():
                 user = db.getUserInfoByUserID(session['user'])
                 userlikes = db.getLikeCountForUser(session['user'])
                 recipes = db.getAllSavedRecipesForUser(session['user'])
-                recipecount = len(recipes)
+                recipecount = db.getCountUserRecipes(session['user'])
                 print(user)
                 print(1)
                 return render_template('profile.html', profile=userid, user=user,userlikes = userlikes,recipes = recipes,recipecount = recipecount)
@@ -257,7 +257,8 @@ def viewRecipePage(recipeid):
             if int(commentuserid) == int(userid):
                 print("SDLKFHJSDHFJKSHDLKFJHKJDSLJFHSDKJLFHKJSDHLK")
                 db.deleteRecipeContent(commentid)
-
+    savedstatus = db.checkSaved(session["user"],recipeid)
+    likedstatus = db.checkLiked(session["user"],recipeid)
     result = db.getRecipeByID(recipeid)
     likecount = db.getRecipeLikes(recipeid)
     print(f"result 0 is: {result[0]}")
@@ -273,7 +274,7 @@ def viewRecipePage(recipeid):
 
     comments = db.getAllCommentsForRecipe(recipeid)
 
-    return render_template("recipePage.html", recipe=result[0], time=t.words[0], comments=comments,likes=likecount)
+    return render_template("recipePage.html", likedstatus = likedstatus,savedstatus = savedstatus, recipe=result[0], time=t.words[0], comments=comments,likes=likecount)
 
 @app.route("/logout")
 def logout():
@@ -331,8 +332,9 @@ def addRecipeAPI():
             return json.jsonify({"status": "success", "recipeID": recipeid}), 200
         else:
             return json.jsonify({"status": "failure", "message": "Recipe failed to ADD"}), 400
-    elif db.addRecipeToDBWithImageURL(recipeDict, photoUrl):
-        return json.jsonify({"status": "success", "message": "Recipe added"}), 200
+    elif photoUrl != "None":
+        recipeid = db.addRecipeToDBWithImageURL(recipeDict, photoUrl)
+        return json.jsonify({"status": "success", "message": "Recipe added", "recipeID": recipeid}), 200
     else:
         return json.jsonify({"status": "failure", "message": "Recipe failed to ADD"}), 400
     
@@ -368,6 +370,37 @@ def submitEditProfilePic():
     else:
         print("Failed to update profile picture")
         return json.jsonify({"status": "failure", "message": "Failed profile picture update"}), 400
+
+
+@app.route("/api/setusersave/<int:recipeid>", methods=['GET'])
+@requires_auth
+def updateRecipeSaved(recipeid): 
+    result = db.updateUserSavedStatus(recipeid,session["user"])
+    print(result)
+    if result == "saved":
+        print("recipe saved!")
+        return json.jsonify({"status": "saved", "message": "recipe saved"}), 200
+    elif result == "unsaved":
+        print("recipe unsaved!")
+        return json.jsonify({"status": "unsaved", "message": "recipe unsaved"}), 200
+    else:
+        print("Failed to update saved recipe status")
+        return json.jsonify({"status": "failure", "message": "Failed to save/unsave"}), 400
+    
+@app.route("/api/setuserlike/<int:recipeid>", methods=['GET'])
+@requires_auth
+def updateRecipeLiked(recipeid): 
+    result = db.updateUserLikedStatus(recipeid,session["user"])
+    print(result)
+    if result == "liked":
+        print("recipe liked!")
+        return json.jsonify({"status": "liked", "message": "recipe saved"}), 200
+    elif result == "unliked":
+        print("recipe unliked!")
+        return json.jsonify({"status": "unliked", "message": "recipe unsaved"}), 200
+    else:
+        print("Failed to update like recipe status")
+        return json.jsonify({"status": "failure", "message": "Failed to like/unlike"}), 400
 
 @app.route("/api/getprofilepicture/<int:userid>", methods=['GET'])
 def getProfilePic(userid):

@@ -314,7 +314,24 @@ def getAllRecipesUserLikesDesc(userid):
         cursor.close()
         connection.close()
 
- 
+def getCountUserRecipes(userid):
+    connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
+    cursor = connection.cursor()
+    if userid is None:
+        return -1
+    try:
+        qstr = "select count(*) from recipe where userid = %s"
+        cursor.execute(qstr,(userid,))
+        result = cursor.fetchone()
+        if result != None:
+            return result[0]
+        return -1 
+    except:
+        print(f"Failed to select user")
+        return -1
+    finally:
+        cursor.close()
+        connection.close()
 
 ####################################################################################
 
@@ -508,7 +525,7 @@ def addRecipeToDBWithImageURL(dict, img_url):
     finally:
         cursor.close()
         connection.close()
-        return True
+        return new_recipe_ID
 
 def setRecipeImage(recipeid, imgfile):
     if recipeid is None or imgfile is None:
@@ -757,6 +774,42 @@ def deleteRecipeLike(likeid):
         cursor.close()
         connection.close()
 
+def updateUserLikedStatus(recipeid,userid):
+    connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
+    cursor = connection.cursor()
+    str = "insert into recipe_like (recipeid, userid) values(%s, %s)"
+    try:
+        cursor.execute("select * from recipe_like where userid = %s and recipeid = %s", (userid,recipeid))
+        result = cursor.fetchone()
+        if result is None:
+            cursor.execute(str,(recipeid,userid))
+            connection.commit()
+            return "liked"
+        else:
+            cursor.execute("delete from recipe_like where userid = %s and recipeid = %s",(userid,recipeid))
+            connection.commit()
+            return "unliked"
+    except:
+        print("Failed to update recipe Like")
+    finally:
+        cursor.close()
+        connection.close()
+        
+def checkLiked(userid,recipeid):
+    connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
+    cursor = connection.cursor()
+    try:
+        cursor.execute("select * from recipe_like where userid = %s and recipeid = %s", (userid,recipeid))
+        result = cursor.fetchone()
+        if result is None:
+            return False
+        else:
+            return True
+    except:
+        print("Failed to check liked status")
+    finally:
+        cursor.close()
+        connection.close()
 ####################################################################################
 # recipe_comment functions
 
@@ -795,6 +848,45 @@ def updateRecipeComment(comment_content,commentid):
         connection.commit()
     except:
         print("Failed to update recipe comment")
+    finally:
+        cursor.close()
+        connection.close()
+
+####################################################################################
+#recipe_saved functions
+def updateUserSavedStatus(recipeid,userid):
+    connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
+    cursor = connection.cursor()
+    str = "insert into recipe_saved (recipeid, userid) values(%s, %s)"
+    try:
+        cursor.execute("select * from recipe_saved where userid = %s and recipeid = %s", (userid,recipeid))
+        result = cursor.fetchone()
+        if result is None:
+            cursor.execute(str,(recipeid,userid))
+            connection.commit()
+            return "saved"
+        else:
+            cursor.execute("delete from recipe_saved where userid = %s and recipeid = %s",(userid,recipeid))
+            connection.commit()
+            return "unsaved"
+    except:
+        print("Failed to update recipe saved")
+    finally:
+        cursor.close()
+        connection.close()
+        
+def checkSaved(userid,recipeid):
+    connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
+    cursor = connection.cursor()
+    try:
+        cursor.execute("select * from recipe_saved where userid = %s and recipeid = %s", (userid,recipeid))
+        result = cursor.fetchone()
+        if result is None:
+            return False
+        else:
+            return True
+    except:
+        print("Failed to check saved status")
     finally:
         cursor.close()
         connection.close()
