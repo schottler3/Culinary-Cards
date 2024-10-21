@@ -25,9 +25,20 @@ async function submitEdit(event) {
     let newUsername = document.getElementById('editUsername').value;
     let newBio = document.getElementById('editBio').value;
 
-    let isUser = await fetch("/api/isUser",{method : "GET", headers : {"Content-Type" : "application/json"}, body: JSON.stringify(newUsername)});
+    let isUser = false;
+    let isUserCall = await fetch("/api/isuser?username=" + newUsername)
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === "success") {
+            isUser = true;
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        return false;
+    });
 
-    if(newUsername.length > 20 || newUsername.length < 3 || isUser.ok) {
+    if(newUsername.length > 20 || newUsername.length < 3 || isUser) {
         usernameError.style.display = 'block';
         return;
     }
@@ -154,6 +165,14 @@ let toggleDeletion = function() {
     else{
         accountDeletionConfirmation.style.display = 'none';
         pfpGrayBackground.style.display = 'none';
+    }
+}
+
+async function deleteAccount(){
+    let call = await fetch("/api/deleteaccount",{method : "DELETE"})
+    if(call.ok){
+        alert("Account Deleted")
+        window.location.href = "/"
     }
 }
 
