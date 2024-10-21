@@ -468,13 +468,11 @@ form{
         1px 2px 8px var(--shadow-color)
     );
     overflow: hidden;
-    overflow-y: scroll;
 }
 
 #recipe-info {
     padding-left: 1vw;
     overflow: hidden;
-    overflow-y: scroll;
 }
 
 #recipe-section-title {
@@ -592,14 +590,14 @@ form{
     text-align: center;
 }
 
-.icon {
+.profile-icon {
     height: 5vh;
     transition: 0.3s ease-out;
     filter: invert(97%) sepia(2%) saturate(2146%) hue-rotate(326deg) brightness(85%) contrast(97%); /* use https://codepen.io/sosuke/pen/Pjoqqp to get color filter */
 }
 
-.icon:hover {
-    filter: invert(78%) sepia(11%) saturate(277%) hue-rotate(349deg) brightness(89%) contrast(88%);
+.profile-icon:hover {
+    filter: invert(78%) sepia(11%) saturate(277%) brightness(89%) contrast(88%);
 }
 
 #comment-container {
