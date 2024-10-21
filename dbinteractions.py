@@ -113,8 +113,10 @@ def deleteUserByUserID(userid):
         qstr = "delete from users where userid = %s"
         cursor.execute(qstr, (str(userid),))
         connection.commit()
+        return True
     except:
         print("Failed to delete user")
+        return False
     finally:
         cursor.close()
         connection.close()
