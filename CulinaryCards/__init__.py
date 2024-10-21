@@ -421,7 +421,7 @@ def getProfilePic(userid):
         print(4)
         return send_file("static/test.png", mimetype='image/png'), 200
 
-@app.route("/api/isUser",methods=['GET'])
+@app.route("/api/isuser",methods=['GET'])
 def getUsernames():
     username = request.args.get("username")
     if db.getUserInstanceFromUsername(username):

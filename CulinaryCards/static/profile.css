@@ -96,6 +96,10 @@ body {
     align-items: center;
 }
 
+#editUsername {
+    width: 100%;
+}
+
 #editProfileContainer {
     display: none;
     flex-direction: column;
@@ -103,10 +107,13 @@ body {
 }
 
 #editProfileContainer input {
-    width: 50%;
     padding: 8px;
     border-radius: 5px;
     border: 1px solid black;
+}
+
+#editProfileContainer button {
+    padding: 5px;
 }
 
 .profileInfo {
