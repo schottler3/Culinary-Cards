@@ -142,7 +142,8 @@ def getLikeCountForUser(userid):
         else:
             return 0
     except:
-        print("Failed to get user like count")
+        print("Failed to get user like count, most likely doesn't have likes")
+        return 0
     finally:
         cursor.close()
         connection.close()
