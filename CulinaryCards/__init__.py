@@ -316,8 +316,9 @@ def deleteRecipeAPI():
     else:
         return json.jsonify({"status": "failure", "message": "Recipe failed to DELETE"}),
     
+
+@app.route("/api/addrecipe",methods=['POST'])
 @requires_auth
-@app.route("/api/addrecipe",methods=['POST']) 
 def addRecipeAPI():
     data = request.get_json()
     title = data.get('title')
@@ -353,8 +354,9 @@ def addRecipeAPI():
     else:
         return json.jsonify({"status": "failure", "message": "Recipe failed to ADD"}), 400
     
-@requires_auth
+
 @app.route("/api/setRecipeImage",methods=['POST'])
+@requires_auth
 def setRecipeImageAPI():
     photo = request.files['image']
     recipeid = request.form['recipeid']
@@ -364,8 +366,9 @@ def setRecipeImageAPI():
     else:
         return json.jsonify({"status": "failure", "message": "Image failed to ADD"}), 400
 
-@requires_auth
+
 @app.route("/api/editprofile",methods=['PUT'])
+@requires_auth
 def submitEditProfile():
     edits = request.get_json()
     if db.updateUser(edits["username"],None,"","",edits["bio"],session["user"]):
