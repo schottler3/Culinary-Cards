@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     document.addEventListener("scroll", (event) => {
+        if (circleTop != null){
         if (window.scrollY >= 200) {
             circleTop.style.bottom = "50px";
             circleTop.style.right = "50px";
@@ -20,11 +21,13 @@ document.addEventListener('DOMContentLoaded', function() {
             circleTop.style.width = "0px";
             circleTop.style.height = "0px";
         }
+    }
     });
 
+    if (circleTop != null){
     circleTop.addEventListener('click', function() { 
         Scroll();
-    });
+    });}
 
 
 

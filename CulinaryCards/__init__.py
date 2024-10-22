@@ -148,15 +148,17 @@ def profile():
     userid = 0
     if request.args.get("profile") is not None:
         userid = int(request.args.get("profile"))
-    print("printing userid",type(userid))
-    if userid > 0 and "user" not in session and "token" not in session:
+    print("printing userid",userid)
+    if userid > 0:
         user = db.getUserInfoByUserID(userid)
         userlikes = db.getLikeCountForUser(userid)
         print("likes",userlikes)
         recipes = db.getAllRecipesUserLikesDesc(userid)
         recipecount = len(recipes)
-        # UPDATE the isUser
-        return render_template('profile.html', isUser=False, profile=userid, user=user,userlikes = userlikes,recipes = recipes,recipecount = recipecount)
+        isUser=False
+        if "user" in session and "token" in session and int(session["user"]) == userid:
+            isUser = True
+        return render_template('profile.html', isUser=isUser, profile=userid, user=user,userlikes = userlikes,recipes = recipes,recipecount = recipecount)
     elif 'user' in session:
         user = session['user']
         if('token' in session):
@@ -185,14 +187,16 @@ def profileGetLiked():
     if request.args.get("profile") is not None:
         userid = int(request.args.get("profile"))
     print("printing userid",userid)
-    if userid > 0 and "user" not in session and "token" not in session:
+    if userid > 0:
         user = db.getUserInfoByUserID(userid)
         userlikes = db.getLikeCountForUser(userid)
         print("likes",userlikes)
-        recipes = db.getAllRecipesUserLikesDesc(userid)
+        recipes = db.getAllLikedRecipesForUser(userid)
         recipecount = len(recipes)
-        # UPDATE the isUser
-        return render_template('profile.html', isUser=False, profile=userid, user=user,userlikes = userlikes,recipes = recipes,recipecount = recipecount)
+        isUser=False
+        if "user" in session and "token" in session and int(session["user"]) == userid:
+            isUser = True
+        return render_template('profile.html', isUser=isUser, profile=userid, user=user,userlikes = userlikes,recipes = recipes,recipecount = recipecount)
     if 'user' in session:
         user = session['user']
         if('token' in session):
