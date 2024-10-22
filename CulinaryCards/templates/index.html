@@ -24,7 +24,7 @@
 {% endblock %}
 
 {% block bottom %}
-    <div class="pure-u-1 paper" id="homebottom"><img class="pure-img" id="arrow" src="../static/resources/arrow.png"></div>
+    <div class="pure-u-1 paper" id="homebottom"><img class="pure-img" id="arrow" src="{{ url_for('static', filename='resources/arrow.png') }}"></div>
     {% block searchResults %}
     {% endblock %}
 
@@ -47,14 +47,15 @@
     <!-- <div class="pure-u-1" id="above-cards"></div> -->
     <div id="categories">
       <div class="pure-g card-container">
-        <a href="/search/category/Breakfast" class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-4 pure-img card" id="breakfast">Breakfast</a>
-        <a href="/search/category/Lunch" class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-4 pure-img card" id="lunch"> Lunch </a>
-        <a href="/search/category/Dinner" class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-4 pure-img card" id="dinner"> Dinner </a>
-        <a href="/search/category/Dessert" class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-4 pure-img card" id="dessert"> Dessert </a>
-        <a href="/search/category/Drink" class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-4 pure-img card" id="dessert"> Drink </a>
-        <a href="/search/category/Snack" class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-4 pure-img card" id="dessert"> Snack </a>
+        <a href="/search/category/Breakfast" class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3 pure-img card" id="breakfast">Breakfast</a>
+        <a href="/search/category/Lunch" class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3 pure-img card" id="lunch"> Lunch </a>
+        <a href="/search/category/Dinner" class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3 pure-img card" id="dinner"> Dinner </a>
+        <a href="/search/category/Dessert" class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3 pure-img card" id="dessert"> Dessert </a>
+        <a href="/search/category/Drinks" class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3 pure-img card" id="drinks"> Drinks </a>
+        <a href="/search/category/Snacks" class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3 pure-img card" id="snacks"> Snacks </a>
+      </div>
     </div>
-    </div>
+    <a href="#" class="animation-scroll-to-top" id="scroll-to-top"><img id="scroll-up-icon" src="{{ url_for('static', filename='resources/arrow.png') }}"></a>
     <div class="pure-u-1" id="footer">
       Project by: Adam Kvant, Minh Tong, Rock Zgutowicz, Lucas Schottler
     </div>
