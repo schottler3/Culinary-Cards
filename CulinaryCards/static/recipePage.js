@@ -95,7 +95,7 @@ function deleteComment(commentId, commentUserId) {
     })
     .then(response => {
         if (response.ok) {
-            const commentDiv = document.getElementById(`div[commentid="${commentId}"]`);
+            const commentDiv = document.querySelector(`div[commentid="${commentId}"]`);
             if (commentDiv) {
                 commentDiv.remove();
             }
