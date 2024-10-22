@@ -23,7 +23,7 @@
     </div>  
 </div>
 <div id="pfpGrayBackground"></div>
-
+{%if isUser%}
 <div>
     <img id="accountGear" src="https://cdn-icons-png.flaticon.com/512/40/40031.png" alt="Account Settings">
 </div>
@@ -39,13 +39,13 @@
         <button type="button" class="pure-button" id="confirmDeletion" onclick="deleteAccount()">Yes</button>
     </div>
 </div>
-
+{%endif%}
 <div id="profileContainerAll">
 
     <div id="profileContainer" class="pure-g">
         <div class="pure-u-1-4 profileInfo" id="profileInfo">
             <div id="imgContainer">
-                <img id="pfp" src="/api/getprofilepicture/{{ profile }}" alt="Profile Picture" class="pfp">
+                <img id="pfp" src="/api/getprofilepicture/{{ profile }}" class="pfp">
                 {% if profile == session["user"] %}
                     <img id="editProfile" src="https://cdn-icons-png.flaticon.com/512/1250/1250925.png" alt="Edit Profile" class="editPfp" onclick="toggleEdit(this)">
                 {% endif %}
@@ -81,7 +81,7 @@
         <div id="profileMenu" class="pure-menu pure-menu-horizontal profileMenu">
             <ul class="pure-menu-list" id="recipePagesContainer">
                 <li class="pure-menu-item">
-                    <a onclick="changeToMy()" class="pure-menu-link">My Recipes</a>
+                    <a onclick="changeToMy()" class="pure-menu-link">{%if isUser%}My{%endif%} Recipes</a>
                 </li>
                 <li class="pure-menu-item">
                     <a onclick="changeToLiked()" class="pure-menu-link">Liked Recipes</a>

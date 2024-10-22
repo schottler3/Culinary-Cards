@@ -136,7 +136,6 @@ def getLikeCountForUser(userid):
                 """
         cursor.execute(str, (userid,))
         result = cursor.fetchone()
-        print("result",result)
         if result[0] >= 0:
             return result[0]
         else:

@@ -148,14 +148,19 @@ def callback():
 
 @app.route("/profile")
 def profile():
-    userid = request.args.get("profile")
-    if userid:
+    userid = 0
+    if request.args.get("profile") is not None:
+        userid = int(request.args.get("profile"))
+    print("printing userid",type(userid))
+    print(type(session["user"]))
+    if userid != 0 and "user" in session and session["user"] != userid:
         user = db.getUserInfoByUserID(userid)
         userlikes = db.getLikeCountForUser(userid)
         print("likes",userlikes)
         recipes = db.getAllRecipesUserLikesDesc(userid)
         recipecount = len(recipes)
-        return render_template('profile.html', profile=userid, user=user,userlikes = userlikes,recipes = recipes,recipecount = recipecount)
+        # UPDATE the isUser
+        return render_template('profile.html', isUser=False, profile=userid, user=user,userlikes = userlikes,recipes = recipes,recipecount = recipecount)
     elif 'user' in session:
         user = session['user']
         if('token' in session):
@@ -168,18 +173,30 @@ def profile():
                 recipecount = len(recipes)
                 print(user)
                 print(1)
-                return render_template('profile.html',profile=userid, user=user,userlikes = userlikes,recipes = recipes,recipecount = recipecount)
+                return render_template('profile.html',isUser=True,profile=userid, user=user,userlikes = userlikes,recipes = recipes,recipecount = recipecount)
             else:
                 print(2)
                 return redirect('/login')
         print(3)
-        return render_template('profile.html', user=user)
+        return render_template('profile.html', user=user,isUser=False)
     else:
         print(4)
         return redirect('/login')
     
 @app.route("/profile/likes")
 def profileGetLiked():
+    userid = 0
+    if request.args.get("profile") is not None:
+        userid = int(request.args.get("profile"))
+    print("printing userid",userid)
+    if userid != 0 and "user" in session and session["user"] != userid:
+        user = db.getUserInfoByUserID(userid)
+        userlikes = db.getLikeCountForUser(userid)
+        print("likes",userlikes)
+        recipes = db.getAllRecipesUserLikesDesc(userid)
+        recipecount = len(recipes)
+        # UPDATE the isUser
+        return render_template('profile.html', isUser=False, profile=userid, user=user,userlikes = userlikes,recipes = recipes,recipecount = recipecount)
     if 'user' in session:
         user = session['user']
         if('token' in session):
@@ -191,12 +208,12 @@ def profileGetLiked():
                 recipecount = db.getCountUserRecipes(session['user'])
                 print(user)
                 print(1)
-                return render_template('profile.html', profile=userid, user=user,userlikes = userlikes,recipes = recipes,recipecount = recipecount)
+                return render_template('profile.html',profile=userid, user=user,userlikes = userlikes,recipes = recipes,recipecount = recipecount,isUser=True)
             else:
                 print(2)
                 return redirect('/login')
         print(3)
-        return render_template('profile.html', user=user)
+        return render_template('profile.html', user=user,isUser=False)
     else:
         print(4)
         return redirect('/login')
@@ -214,12 +231,12 @@ def profileGetSaved():
                 recipecount = db.getCountUserRecipes(session['user'])
                 print(user)
                 print(1)
-                return render_template('profile.html', profile=userid, user=user,userlikes = userlikes,recipes = recipes,recipecount = recipecount)
+                return render_template('profile.html', profile=userid, user=user,userlikes = userlikes,recipes = recipes,recipecount = recipecount,isUser=True)
             else:
                 print(2)
                 return redirect('/login')
         print(3)
-        return render_template('profile.html', user=user)
+        return render_template('profile.html', user=user,isUser=False)
     else:
         print(4)
         return redirect('/login')
