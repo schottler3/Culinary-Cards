@@ -149,8 +149,7 @@ def profile():
     if request.args.get("profile") is not None:
         userid = int(request.args.get("profile"))
     print("printing userid",type(userid))
-    print(type(session["user"]))
-    if userid > 0 and "user" in session and session["user"] != userid:
+    if userid > 0 and "user" not in session and "token" not in session:
         user = db.getUserInfoByUserID(userid)
         userlikes = db.getLikeCountForUser(userid)
         print("likes",userlikes)
@@ -186,7 +185,7 @@ def profileGetLiked():
     if request.args.get("profile") is not None:
         userid = int(request.args.get("profile"))
     print("printing userid",userid)
-    if userid > 0 and "user" in session and session["user"] != userid:
+    if userid > 0 and "user" not in session and "token" not in session:
         user = db.getUserInfoByUserID(userid)
         userlikes = db.getLikeCountForUser(userid)
         print("likes",userlikes)
@@ -243,7 +242,7 @@ def viewRecipePage(recipeid):
     if request.method == 'DELETE':
         data = request.get_json()
 
-        if 'user' in session:
+        if 'user' in session and "token" in session:
             userid = session.get('user')
         else:
             return json.jsonify({"status": "failure", "message": "User not logged in"}), 400
@@ -261,7 +260,7 @@ def viewRecipePage(recipeid):
     savedstatus = False
     likedstatus = False
 
-    if('user' in session):
+    if('user' in session and "token" in session):
         savedstatus = db.checkSaved(session["user"],recipeid)
         likedstatus = db.checkLiked(session["user"],recipeid)
 
@@ -283,6 +282,7 @@ def viewRecipePage(recipeid):
     t['words'] = t['timestamp'].dt.strftime('%A, %B %d, %Y')
 
     comments = db.getAllCommentsForRecipe(recipeid)
+    print(comments)
 
     return render_template("recipePage.html", likedstatus = likedstatus,savedstatus = savedstatus, recipe=result[0], time=t.words[0], comments=comments,likes=likecount)
 
@@ -328,7 +328,7 @@ def addRecipeAPI():
     instructions = data.get('instructions')
     photoUrl = data.get('photoUrl')
 
-    if 'user' in session:
+    if 'user' in session and "token" in session:
         userid = session.get('user')
     else:
         return json.jsonify({"status": "failure", "message": "User not logged in"}), 400
@@ -474,7 +474,7 @@ def getUserPostsSortByLikes():
 def addComment(recipeid):
     data = request.get_json()
 
-    if 'user' in session:
+    if 'user' in session and "token" in session:
         userid = session.get('user')
     else:
         return json.jsonify({"status": "failure", "message": "User not logged in"}), 400
@@ -535,7 +535,7 @@ def updateRecipe():
 
 @app.route("/api/deleteaccount",methods=['DELETE'])
 def deleteAccount():
-    if 'user' in session:
+    if 'user' in session and "token" in session:
         if db.deleteUserByUserID(session['user']):
             session.clear()
             return json.jsonify({"status": "success", "message": "Account Deleted"}), 200

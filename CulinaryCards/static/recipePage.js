@@ -53,9 +53,18 @@ function addComment() {
             newCommentDiv.id = 'comment-with-button';
             newCommentDiv.setAttribute('commentid', data.commentid);
 
+            const profileLink = document.createElement("a")
+            profileLink.href = `/profile/${data.userid}`
+            profileLink.textContent = data.username
+            profileLink.classList.add('username-link')
+            profileLink.classList.add("profileTag")
+            profileLink.setAttribute('userid', data.userid)
+
             const commentTextDiv = document.createElement('div');
             commentTextDiv.classList.add('pure-u-22-24');
-            commentTextDiv.textContent = `${data.username}: ${comment}`;
+            commentTextDiv.appendChild(profileLink)
+            let profileLinkText = document.createTextNode(`: ${comment}`)
+            commentTextDiv.appendChild(profileLinkText)
 
             const deleteButton = document.createElement('button');
             deleteButton.classList.add('pure-u-1-24', 'delete-btn');
