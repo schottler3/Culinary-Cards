@@ -153,7 +153,7 @@ def profile():
         userid = int(request.args.get("profile"))
     print("printing userid",type(userid))
     print(type(session["user"]))
-    if userid != 0 and "user" in session and session["user"] != userid:
+    if userid > 0 and "user" in session and session["user"] != userid:
         user = db.getUserInfoByUserID(userid)
         userlikes = db.getLikeCountForUser(userid)
         print("likes",userlikes)
@@ -189,7 +189,7 @@ def profileGetLiked():
     if request.args.get("profile") is not None:
         userid = int(request.args.get("profile"))
     print("printing userid",userid)
-    if userid != 0 and "user" in session and session["user"] != userid:
+    if userid > 0 and "user" in session and session["user"] != userid:
         user = db.getUserInfoByUserID(userid)
         userlikes = db.getLikeCountForUser(userid)
         print("likes",userlikes)
@@ -456,7 +456,8 @@ def getProfilePic(userid):
 
 @app.route("/api/isuser",methods=['GET'])
 def getUsernames():
-    username = request.args.get("username")
+    if request.args.get("username") is not None:
+        username = request.args.get("username")
     if db.getUserInstanceFromUsername(username):
         return json.jsonify({"status": "success", "message": "True"}), 200
     else:
