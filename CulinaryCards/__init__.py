@@ -19,8 +19,6 @@ import recipeOfTheDay as rotd
 import unsplash
 import pandas as pd
 
-
-
 ENV_FILE = find_dotenv()
 if ENV_FILE:
     load_dotenv(ENV_FILE)
@@ -66,10 +64,9 @@ def index():
 @app.route("/createRecipe/<int:recipeid>", methods=['GET'])
 def createRecipe(recipeid):
     if recipeid:
-        recipe = db.getRecipeByID(recipeid)
-        return render_template("createRecipe.html", edit=recipe)
+        return render_template("createRecipe.html", recipeid=recipeid)
     else:
-        return render_template("createRecipe.html", edit=None)
+        return render_template("createRecipe.html")
 
 @app.route("/search",methods=['POST'])
 def redirectToSearch():
@@ -148,13 +145,19 @@ def callback():
 
 @app.route("/profile")
 def profile():
-    userid = request.args.get("profile")
-    if userid:
+    userid = 0
+    if request.args.get("profile") is not None:
+        userid = int(request.args.get("profile"))
+    print("printing userid",type(userid))
+    print(type(session["user"]))
+    if userid > 0 and "user" in session and session["user"] != userid:
         user = db.getUserInfoByUserID(userid)
         userlikes = db.getLikeCountForUser(userid)
+        print("likes",userlikes)
         recipes = db.getAllRecipesUserLikesDesc(userid)
         recipecount = len(recipes)
-        return render_template('profile.html', profile=userid, user=user,userlikes = userlikes,recipes = recipes,recipecount = recipecount)
+        # UPDATE the isUser
+        return render_template('profile.html', isUser=False, profile=userid, user=user,userlikes = userlikes,recipes = recipes,recipecount = recipecount)
     elif 'user' in session:
         user = session['user']
         if('token' in session):
@@ -167,18 +170,30 @@ def profile():
                 recipecount = len(recipes)
                 print(user)
                 print(1)
-                return render_template('profile.html',profile=userid, user=user,userlikes = userlikes,recipes = recipes,recipecount = recipecount)
+                return render_template('profile.html',isUser=True,profile=userid, user=user,userlikes = userlikes,recipes = recipes,recipecount = recipecount)
             else:
                 print(2)
                 return redirect('/login')
         print(3)
-        return render_template('profile.html', user=user)
+        return render_template('profile.html', user=user,isUser=False)
     else:
         print(4)
         return redirect('/login')
     
 @app.route("/profile/likes")
 def profileGetLiked():
+    userid = 0
+    if request.args.get("profile") is not None:
+        userid = int(request.args.get("profile"))
+    print("printing userid",userid)
+    if userid > 0 and "user" in session and session["user"] != userid:
+        user = db.getUserInfoByUserID(userid)
+        userlikes = db.getLikeCountForUser(userid)
+        print("likes",userlikes)
+        recipes = db.getAllRecipesUserLikesDesc(userid)
+        recipecount = len(recipes)
+        # UPDATE the isUser
+        return render_template('profile.html', isUser=False, profile=userid, user=user,userlikes = userlikes,recipes = recipes,recipecount = recipecount)
     if 'user' in session:
         user = session['user']
         if('token' in session):
@@ -190,12 +205,12 @@ def profileGetLiked():
                 recipecount = db.getCountUserRecipes(session['user'])
                 print(user)
                 print(1)
-                return render_template('profile.html', profile=userid, user=user,userlikes = userlikes,recipes = recipes,recipecount = recipecount)
+                return render_template('profile.html',profile=userid, user=user,userlikes = userlikes,recipes = recipes,recipecount = recipecount,isUser=True)
             else:
                 print(2)
                 return redirect('/login')
         print(3)
-        return render_template('profile.html', user=user)
+        return render_template('profile.html', user=user,isUser=False)
     else:
         print(4)
         return redirect('/login')
@@ -213,16 +228,16 @@ def profileGetSaved():
                 recipecount = db.getCountUserRecipes(session['user'])
                 print(user)
                 print(1)
-                return render_template('profile.html', profile=userid, user=user,userlikes = userlikes,recipes = recipes,recipecount = recipecount)
+                return render_template('profile.html', profile=userid, user=user,userlikes = userlikes,recipes = recipes,recipecount = recipecount,isUser=True)
             else:
                 print(2)
                 return redirect('/login')
         print(3)
-        return render_template('profile.html', user=user)
+        return render_template('profile.html', user=user,isUser=False)
     else:
         print(4)
         return redirect('/login')
-    
+
 @app.route("/recipe/<int:recipeid>", methods=["GET", "POST", "DELETE"])
 def viewRecipePage(recipeid):
     if request.method == 'DELETE':
@@ -285,6 +300,11 @@ def logout():
             quote_via=quote_plus,
         )
     )
+
+@app.route("/api/getrecipe/<int:recipeid>",methods=['GET'])
+def getRecipe(recipeid):
+    result = db.getRecipeByID(recipeid)
+    return json.jsonify({"status": "success", "message": "Recipe retrieved", "recipe": result}), 200
 
 @requires_auth
 @app.route("/api/deleterecipe",methods=['DELETE'])
@@ -418,7 +438,8 @@ def getProfilePic(userid):
 
 @app.route("/api/isuser",methods=['GET'])
 def getUsernames():
-    username = request.args.get("username")
+    if request.args.get("username") is not None:
+        username = request.args.get("username")
     if db.getUserInstanceFromUsername(username):
         return json.jsonify({"status": "success", "message": "True"}), 200
     else:

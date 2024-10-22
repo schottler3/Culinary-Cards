@@ -267,6 +267,7 @@
     width: 50%;
     border-radius: 15px;
     background-color: #d6ccc2;
+    font-size: 1.5vmin;
 }
 
 #submitInstructions {
@@ -314,7 +315,7 @@
     align-items: center;
     flex-direction: column;
     position: fixed;
-    bottom: 4vh; 
+    bottom: 5vh; 
     right: 4vh; 
     cursor: pointer;
 
@@ -325,6 +326,26 @@
     img {
         width: 2vmax;
         height: 2vmax;
+    }
+}
+
+#backStep {
+    display: none;
+    align-items: center;
+    flex-direction: column;
+    position: fixed;
+    bottom: 5vh;
+    left: 2vh;
+    cursor: pointer;
+
+    h4 {
+        margin: 0;
+    }
+
+    img {
+        width: 2vmax;
+        height: 2vmax;
+        rotate: 180deg;
     }
 }
 
@@ -372,4 +393,10 @@
 
 .photoText {
     font-size: 2vmax;
+}
+
+.comment-btn {
+    border: solid 1px hsl(39, 14%, 58%);
+    background-color: #d6ccc2;
+    border-radius: 5px;
 }
