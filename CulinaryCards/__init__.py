@@ -306,15 +306,15 @@ def getRecipe(recipeid):
     result = db.getRecipeByID(recipeid)
     return json.jsonify({"status": "success", "message": "Recipe retrieved", "recipe": result}), 200
 
+
+@app.route("/api/deleterecipe", methods=['DELETE'])
 @requires_auth
-@app.route("/api/deleterecipe",methods=['DELETE'])
 def deleteRecipeAPI():
-    request = request.get_json()
-    #TODO Need to verify that user owns the recipe before deleting
-    if db.deleteRecipe(request["recipeid"]):
+    data = request.get_json()
+    if db.deleteRecipeInDB(data["recipeid"]):
         return json.jsonify({"status": "success", "message": "Recipe Deleted"}), 200
     else:
-        return json.jsonify({"status": "failure", "message": "Recipe failed to DELETE"}), 400
+        return json.jsonify({"status": "failure", "message": "Recipe failed to DELETE"}),
     
 @requires_auth
 @app.route("/api/addrecipe",methods=['POST']) 
@@ -525,6 +525,10 @@ def getRecipeImage(recipeid):
     else:
         print(4)
         return send_file("static/test.png", mimetype='image/png'), 200
+    
+@app.route("/api/updaterecipe",methods=['PUT'])
+def updateRecipe():
+    print("AHHHH")
 
 @app.route("/api/deleteaccount",methods=['DELETE'])
 def deleteAccount():

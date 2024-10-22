@@ -10,11 +10,48 @@
 }
 
 #backProfile {
-    margin-top: 2vh; 
-    margin-left: 2vw;
+    position: fixed;
+    display: flex;
+    width: 8vmax;
+    top: 10vh;
+    left: 4vh;
+    cursor: pointer;
+    font-size: 1vmax;
+
+}
+
+#deleteIcon {
+    position: fixed;
+    width: 2vmax;
+    top: 10vh;
+    right: 4vh;
+    cursor: pointer;
+}
+
+#deletePrompt {
+    font-size: 1.5vmin;
+    display: none;
+    width: 20vmax;
+    padding: 2% 2% 2% 2%;
+    position: fixed;
+    top: 12vh;
+    margin-left: 20%;
+    margin-right: 20%;
+    z-index: 1001;
+    border-radius: 10px;
+    background-color: rgb(255, 255, 255);
+}
+
+#cancelDelete:hover{
+    background-color: rgb(0,255,0,.2);
+}
+
+#confirmDelete:hover{
+    background-color: rgb(255,0,0,.2);
 }
 
 .createRecipeContainer {
+    margin-top: 8vh;
     display: flex;
     flex-direction: column;
     align-items: center;

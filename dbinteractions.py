@@ -622,9 +622,11 @@ def deleteRecipeInDB(recipeid):
         connection.commit()
     except:
         print("Failed to delete recipe")
+        return False
     finally:
         cursor.close()
         connection.close()
+        return True
 
 def getAllRecipes():
     connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
