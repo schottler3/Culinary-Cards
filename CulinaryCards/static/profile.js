@@ -128,12 +128,13 @@ function sortRecipes() {
 
 let changeToMy = function() {
     console.log('Changing to my recipes');
-    window.location.href = "/profile"
+    console.log(userId)
+    window.location.href = `/profile?profile=${userId}`
 }
 
 let changeToLiked = function() {
     console.log('Changing to liked recipes');
-    window.location.href = "/profile/likes"
+    window.location.href = `/profile/likes?profile=${userId}`
 }
 
 let changeToSaved = function() {
