@@ -240,26 +240,6 @@ def profileGetSaved():
 
 @app.route("/recipe/<int:recipeid>", methods=["GET", "POST", "DELETE"])
 def viewRecipePage(recipeid):
-    if request.method == 'POST':
-        data = request.get_json()
-
-        if 'user' in session:
-            userid = session.get('user')
-        else:
-            return json.jsonify({"status": "failure", "message": "User not logged in"}), 400
-        
-        comment = data.get('comment')
-        comment_time = data.get('comment_time')
-
-        commentDict = {
-            "comment": comment,
-            "userid": userid,
-            "recipeid": recipeid,
-            "comment_time": comment_time
-        }
-        # print(f"Received data - User ID: {userid}, Recipe ID: {recipeid}, Comment: {comment}, Comment Time: {comment_time}")
-        db.addCommentToDB(commentDict)
-
     if request.method == 'DELETE':
         data = request.get_json()
 
@@ -486,6 +466,31 @@ def getUserPostsSortByLikes():
         return json.jsonify({"status": "success", "message": "Succeeded to sort user profile by likes", "results" : lst}), 200
     else:
         return json.jsonify({"status": "failure", "message": "Failed to sort user profile by likes"}), 400
+    
+@app.route("/api/addcomment/<int:recipeid>",methods=['POST'])
+def addComment(recipeid):
+    data = request.get_json()
+
+    if 'user' in session:
+        userid = session.get('user')
+    else:
+        return json.jsonify({"status": "failure", "message": "User not logged in"}), 400
+    
+    comment = data.get('comment')
+    comment_time = data.get('comment_time')
+
+    commentDict = {
+        "comment": comment,
+        "userid": userid,
+        "recipeid": recipeid,
+        "comment_time": comment_time
+    }
+
+    userinfo = db.getUserInfoByUserID(userid)
+    username = userinfo['username']
+    # print(f"Received data - User ID: {userid}, Recipe ID: {recipeid}, Comment: {comment}, Comment Time: {comment_time}")
+    commentid = db.addCommentToDB(commentDict)
+    return json.jsonify({"commentid": commentid, "userid": userid, "username": username}), 200
 
 if __name__ == "__main__":
     if os.getenv("FLASK_ENV") == "development":

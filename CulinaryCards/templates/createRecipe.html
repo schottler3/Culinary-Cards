@@ -6,11 +6,12 @@
 {% endblock %}
 
 {% block middle %}
+    
 
     <div class="grayBackground" id="grayBackground"></div>
 
     <div class="createRecipeContainer">
-        <a class="pure-button" id="backProfile" href="/profile">Back to Profile</a>
+      <a class="pure-button comment-btn" id="backProfile" href="/profile">Back to Profile</a>
         
         {% if recipeid %}
             <img src="https://cdn-icons-png.flaticon.com/512/484/484662.png" onclick="toggleDelete()" id="deleteIcon">
@@ -33,7 +34,7 @@
             </div>
 
             <div id="dropdown-container">
-                <button type="button" class="pure-button" id="selectCategories" onclick="toggleDropdown()">Select Categories</button>
+                <button type="button" class="pure-button comment-btn" id="selectCategories" onclick="toggleDropdown()">Select Categories</button>
                 <div id="dropdown" class="dropdown">
                     <input type="text" placeholder="Search" id="search" onkeyup="filterFunction()">
                 </div>
@@ -43,8 +44,8 @@
         <div class="pure-g popUp" id="showUnits">
             <h1 class="pure-u-1" id="unitsTitle">Select Your Units</h1>
             <div class="pure-u-1" id="unitOptions">
-                <button type="button" class="pure-button" onclick="setUnitsMetric()">Metric</button>
-                <button type="button" class="pure-button" onclick="setUnitsImperial()">Imperial</button>
+                <button type="button" class="pure-button comment-btn" onclick="setUnitsMetric()">Metric</button>
+                <button type="button" class="pure-button comment-btn" onclick="setUnitsImperial()">Imperial</button>
             </div>
         </div>
 
@@ -69,7 +70,7 @@
                         </div>
                     </div>
 
-                    <button type="button" class="pure-u-1-6 pure-button" onclick="addIngredient()"><div id="addText">Add</div></button>
+                    <button type="button" class="pure-u-1-6 pure-button comment-btn" onclick="addIngredient()"><div id="addText">Add</div></button>
                     
                     <h1 id="addedIngredientsTitle">Added Ingredients</h1>
                     <div class="pure-u-1 ingredient" id="ingredients">
@@ -111,8 +112,8 @@
                         <div class="pure-u-11-24" id="instructionEntryGrid">
                             <h2 id="editTitle">Editing Instruction</h2>
                             <textarea id="instruction" placeholder="Enter Instruction" required></textarea>
-                            <button type="button" class="pure-button" id="saveInstruction" onclick="saveEditInstruction()">Save Instruction</button>
-                            <button type="button" class="pure-button" id="submitInstruction" onclick="addInstruction()">Add Instruction</button>
+                            <button type="button" class="pure-button comment-btn" id="saveInstruction" onclick="saveEditInstruction()">Save Instruction</button>
+                            <button type="button" class="pure-button comment-btn" id="submitInstruction" onclick="addInstruction()">Add Instruction</button>
                         </div>
                     </div>
                 </div>

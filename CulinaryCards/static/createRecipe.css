@@ -431,3 +431,9 @@
 .photoText {
     font-size: 2vmax;
 }
+
+.comment-btn {
+    border: solid 1px hsl(39, 14%, 58%);
+    background-color: #d6ccc2;
+    border-radius: 5px;
+}

@@ -8,13 +8,13 @@
   <ul class="menu">
     {% if session.get("user") %}
       {% if request.path == '/' %}
-        <li><a href="#" onClick="document.querySelector('#categories').scrollIntoView({behavior: 'smooth'});">Categories</a></li>
+        <li><a href="#categories" id="category-btn">Categories</a></li>
       {% endif %}
       <li><a href="/profile">Profile</a></li>
       <li><a href="/logout">Log Out</a></li>
     {% else %}
       {% if request.path == '/' %}
-        <li><a href="#" onClick="document.querySelector('#categories').scrollIntoView({behavior: 'smooth'});">Categories</a></li>
+        <li><a href="#categories" id="category-btn">Categories</a></li>
       {% endif %}
       <li><a href="/login">Login</a></li>
     {% endif %}
