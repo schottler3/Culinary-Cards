@@ -5,6 +5,7 @@ var description;
 var ingredients = [];
 var instructions = [];
 var photo;
+var url;
 
 var lastEdit = '';
 
@@ -20,24 +21,69 @@ var ingredientID = 0;
 function nextStep() {
     switch(currentStep) {
         case 1:
-            if (submitTitle()){
+            if(submitTitle()){
+                if(!recipeid)
+                    showUnits();
+                else{
+                    showStepTwo();
+                }
                 currentStep++;
             }
             break;
         case 2:
-            if (submitIngredients()){
+            if(submitIngredients()){
+                showStepThree();
                 currentStep++;
             }
             break;
         case 3:
-            if (submitInstructions()){
+            if(submitInstructions()){
+                showStepFour();
                 currentStep++;
             }
             break;
         case 4:
-            submitRecipe();
-            currentStep++;
+            if(submitRecipe()){
+                currentStep++;
+            }
             break;
+    }
+}
+
+let previousStep = function() {
+    switch(currentStep) {
+        case 2:
+            let form = document.getElementById('createRecipeOne');
+            form.style.display = 'flex';
+            let Two = document.getElementById('createRecipeTwo');
+            Two.style.display = 'none';
+            currentStep--;
+            toggleBack();
+            break;
+        case 3:
+            let formTwo = document.getElementById('createRecipeTwo');
+            formTwo.style.display = 'block';
+            let Three = document.getElementById('createRecipeThree');
+            Three.style.display = 'none';
+            currentStep--;
+            break;
+        case 4:
+            let formThree = document.getElementById('createRecipeThree');
+            formThree.style.display = 'block';
+            let formFour = document.getElementById('createRecipeFour');
+            formFour.style.display = 'none';
+            currentStep--;
+            break;
+    }
+}
+
+let toggleBack = function() {
+    let back = document.getElementById('backStep');
+    if(back.style.display === 'none' || back.style.display === '') {
+        back.style.display = 'flex';
+    }
+    else {
+        back.style.display = 'none';
     }
 }
 
@@ -153,12 +199,12 @@ function submitTitle() {
 
     form.style.display = 'none';
 
-    showUnits();
     return true
 }
 
 //Function to show the units form
 function showUnits() {
+    toggleBack();
     let submitStep = document.getElementById('submitStep');
     submitStep.style.display = 'none';
     let showUnits = document.getElementById('showUnits');
@@ -179,7 +225,8 @@ function setUnitsImperial() {
         unitsDropdown.appendChild(option);
     });
     
-    showStepTwo();
+    if(!recipeid)
+        showStepTwo();
 }
 
 //Function to set the units to metric from the UnitsForm
@@ -196,7 +243,8 @@ function setUnitsMetric() {
         unitsDropdown.appendChild(option);
     });
 
-    showStepTwo();
+    if(!recipeid)
+        showStepTwo();
 }
 
 //====================================================================================================
@@ -205,6 +253,7 @@ function setUnitsMetric() {
 
 //Function to show the ingredients form
 function showStepTwo() {
+    toggleBack();
     let submitStep = document.getElementById('submitStep');
     submitStep.style.display = 'flex';
     let showUnits = document.getElementById('showUnits');
@@ -231,16 +280,24 @@ function addIngredient() {
         alert('Ingredient name is required, silly!');
         return false;
     }
-    else if(ingredientAmountValue === '' || !/^\d+$/.test(ingredientAmountValue)) {
+    else if(ingredientNameValue.includes(',')){
+        alert('Ingredient name cannot contain a comma');
+        return false;
+    }
+    else if(ingredientAmountValue === '') {
         alert('Ingredient amount is required, silly!');
         return false;
     }
-    else if(ingredientUnitValue === '') {
-        alert('Ingredient unit is required, silly!');
+    else if(!/^\d+$/.test(ingredientAmountValue) || ingredientAmountValue === '0'){
+        alert('Invalid Ingredient Amount');
         return false;
     }
     if (ingredientFractionValue !== '' && !/^\d+\/\d+$/.test(ingredientFractionValue)) {
         alert('Invalid Fractional Amount');
+        return false;
+    }
+    else if(ingredientUnitValue === '') {
+        alert('Ingredient unit is required, silly!');
         return false;
     }
 
@@ -392,7 +449,6 @@ function submitIngredients() {
     let formTwo = document.getElementById('createRecipeTwo');
     formTwo.style.display = 'none';
 
-    showStepThree();
     return true;
 }
 
@@ -677,7 +733,6 @@ function submitInstructions() {
     let formThree = document.getElementById('createRecipeThree');
     formThree.style.display = 'none';
 
-    showStepFour();
     return true
 }
 
@@ -689,7 +744,8 @@ function showStepFour() {
     let formFour = document.getElementById('createRecipeFour');
     formFour.style.display = 'flex';
 
-    showPreviewPhoto();
+    if(!url && !recipeid)
+        showPreviewPhoto();
 }
 
 function showPreviewPhoto(){
@@ -700,9 +756,11 @@ function showPreviewPhoto(){
                 let photoPreview = document.getElementById('photoPreview');
                 if(data.imgurl === ""){
                     photoPreview.src = '/static/resources/Logo.png';
+                    url = '/static/resources/Logo.png';
                 }
                 else{   
                     photoPreview.src = data.imgurl;
+                    url = data.imgurl;
                 }
             } 
             else {
@@ -821,14 +879,12 @@ submitRecipe = async () => {
 //Edit Recipe Start
 //====================================================================================================
 
-let fillStepOne = function(title, description, categories) {
-    let titleField = document.getElementById('recipeTitle');
-    titleField.value = title;
-    let descriptionField = document.getElementById('recipeDescription');
-    descriptionField.value = description;
+let fillStepOne = function() {
+    document.getElementById('recipeTitle').value = title;
+    document.getElementById('recipeDescription').value = description;
+
     let selectedCategoriesList = document.querySelector('#selectedCategories .pure-menu-list');
-    for(let category of categories) {
-        selectedCategories.push(category);
+    for(let category of selectedCategories) {
         let selectedCategory = document.createElement('li');
         selectedCategory.setAttribute('class', 'pure-menu-item');
         let categoryElement = document.createElement('a');
@@ -836,19 +892,157 @@ let fillStepOne = function(title, description, categories) {
         categoryElement.textContent = category;
         selectedCategory.appendChild(categoryElement);
         selectedCategoriesList.appendChild(selectedCategory);
+        selectedCategory.addEventListener('click', function() {
+            let index = selectedCategories.indexOf(category);
+            if (index > -1) {
+                selectedCategories.splice(index, 1);
+            }
+            selectedCategoriesList.removeChild(selectedCategory);
+        });
+    }
+
+    if(units.imperial.includes(ingredients[0].unit))
+        setUnitsImperial();
+    else
+        setUnitsMetric();
+}
+
+let fillStepTwo = function() {
+    for(let ingredient of ingredients) {
+
+        let baseIngredient = document.getElementById('baseIngredient');
+        if (!baseIngredient) {
+            console.log('baseIngredient not found');
+        }
+
+        id = ingredient.ID;
+
+        let newIngredient = baseIngredient.cloneNode(true);
+        newIngredient.id = `ingredient${id}`;
+
+        newIngredient.querySelector('#ingredientName').id=`ingredientName${id}`;
+        newIngredient.querySelector('#ingredientAmount').id=`ingredientAmount${id}`;
+        newIngredient.querySelector('#ingredientFraction').id=`ingredientFraction${id}`;
+        newIngredient.querySelector('#ingredientUnit').id=`ingredientUnit${id}`;
+
+        newIngredient.querySelector(`#ingredientName${id}`).value = ingredient.name;
+        newIngredient.querySelector(`#ingredientAmount${id}`).value = ingredient.amount;
+        newIngredient.querySelector(`#ingredientFraction${id}`).value = ingredient.fraction;
+        newIngredient.querySelector(`#ingredientUnit${id}`).value = ingredient.unit;
+        newIngredient.querySelector(`#ingredientUnit${id}`).selected = ingredient.unit;
+
+        //Add an event listener for changing the already created ingredient
+        newIngredient.addEventListener('change', function(event) {
+            adjustIngredient(event.target);
+        });
+
+        let ingredientsDiv = document.getElementById('ingredients');
+
+        //Add a remove button to the ingredient
+        let removeButton = document.createElement('img');
+        removeButton.src = '/static/resources/remove.png';
+        removeButton.setAttribute('class', 'pure-u-1-3 pure-u-md-1-4 removeButton');
+        removeButton.setAttribute('id', `removeButton${ingredient.ID}`);
+        removeButton.addEventListener('click', function(event) {
+            removeIngredient(event.target);
+        });
+        newIngredient.appendChild(removeButton);
+
+        ingredientsDiv.appendChild(newIngredient);
+    }
+
+    //Show the added ingredients title now that there is an ingredient
+    let addedIngredientsTitle = document.getElementById('addedIngredientsTitle');
+    addedIngredientsTitle.style.display = 'block';
+}
+
+let fillStepThree = function() {
+    for(let instruction of instructions) {
+        let instructionsDiv = document.getElementById('instructions');
+
+        let newInstruction = document.createElement('li');
+        newInstruction.setAttribute('class', 'pure-menu-item instruction');
+        newInstruction.setAttribute('id', `instruction${instruction.ID}`);
+        newInstruction.textContent = `${instruction.ID+1}. ${instruction.instruction}`;
+
+        newInstruction.addEventListener('click', function(event) {
+            spawnEditDeletePopup(event);
+        });
+
+        instructionsDiv.appendChild(newInstruction);
+
+        instructionsDiv.scrollTop = instructionsDiv.scrollHeight;
     }
 }
 
-let fillStepTwo = function(data) {
-
+async function getRecipe(recipeid) {
+    try {
+        const response = await fetch(`/api/getrecipe/${recipeid}`);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        if (data.status === "success") {
+            return data.recipe;
+        } 
+        else {
+            console.error('Failed to retrieve recipe:', data.message);
+            return null;
+        }
+    } 
+    catch (error) {
+        console.error('Fetch error:', error);
+        return null;
+    }
 }
 
-let fillStepThree = function(data) {
+let setRecipe = function(recipe) {
+    console.log(recipe);
+    title = recipe[1];
+    description = recipe[2];
+    selectedCategories = recipe[8];
 
-}
+    for (let t of recipe[3]) {
+        console.log(t);
+        let parts = t.split(','); 
+        let quantityFractionUnit = parts[0].split(' '); 
+        let ingredient;
+        if(quantityFractionUnit.length == 3){
+            ingredient = {
+                ID: ingredientID++,
+                name: parts[1], 
+                amount: quantityFractionUnit[0], 
+                fraction: quantityFractionUnit[1],
+                unit: quantityFractionUnit[2] 
+            };
+        }
+        else{
+            ingredient = {
+                ID: ingredientID++,
+                name: parts[1], 
+                amount: quantityFractionUnit[0], 
+                fraction: '',
+                unit: quantityFractionUnit[1] 
+            };
+        }
+        ingredients.push(ingredient);
+    }
 
-let fillStepFour = function(data) {
+    let instructionID = 0;
+    for(let x of recipe[4]){
+        let instruction = {
+            ID: instructionID++,
+            instruction: x
+        };
+        instructions.push(instruction);
+    }
 
+    console.log(ingredients);
+
+    console.log(selectedCategories)
+    fillStepOne();
+    fillStepTwo();
+    fillStepThree();
 }
 
 //====================================================================================================
@@ -856,51 +1050,49 @@ let fillStepFour = function(data) {
 //====================================================================================================
 
 //Loads categories and popup exit functions
-window.onload = function() {
+window.onload = async function() {
     populateCategories();
-    if(editData){
-        fillStepOne(editData[1], editData[2], editData[8]);
-        //fillStepTwo();
-        //fillStepThree();
-        //fillStepFour();
+    if(recipeid){
+        let recipe = await getRecipe(recipeid);
+        setRecipe(recipe[0])
     }
 
-window.addEventListener('click', function(event) {
-    if(categoryFlag){
-        let x = event.clientX;
-        let y = event.clientY;
+    window.addEventListener('click', function(event) {
+        if(categoryFlag){
+            let x = event.clientX;
+            let y = event.clientY;
 
-        let dropdown = document.getElementById('dropdown');
-        let selectCategories = document.getElementById('selectCategories');
-        let rect = dropdown.getBoundingClientRect();
-        let rect2 = selectCategories.getBoundingClientRect();
-        let dropdownX = rect.left;
-        let dropdownY = rect2.top;
-        let dropdownWidth = rect.width;
-        let dropdownHeight = rect.height + rect2.height;
+            let dropdown = document.getElementById('dropdown');
+            let selectCategories = document.getElementById('selectCategories');
+            let rect = dropdown.getBoundingClientRect();
+            let rect2 = selectCategories.getBoundingClientRect();
+            let dropdownX = rect.left;
+            let dropdownY = rect2.top;
+            let dropdownWidth = rect.width;
+            let dropdownHeight = rect.height + rect2.height;
 
-        if(x < dropdownX || x > dropdownX + dropdownWidth || y < dropdownY || y > dropdownY + dropdownHeight) {
-            dropdown.style.display = 'none';
-            categoryFlag = false;
+            if(x < dropdownX || x > dropdownX + dropdownWidth || y < dropdownY || y > dropdownY + dropdownHeight) {
+                dropdown.style.display = 'none';
+                categoryFlag = false;
+            }
         }
-    }
-    if(popupFlag){
-        let x = event.clientX;
-        let y = event.clientY;
+        if(popupFlag){
+            let x = event.clientX;
+            let y = event.clientY;
 
-        let popup = document.getElementById('editDeletePopup');
-        let rect = popup.getBoundingClientRect();
-        let popupX = rect.left;
-        let popupY = rect.top;
-        let popupWidth = rect.width;
-        let popupHeight = rect.height;
+            let popup = document.getElementById('editDeletePopup');
+            let rect = popup.getBoundingClientRect();
+            let popupX = rect.left;
+            let popupY = rect.top;
+            let popupWidth = rect.width;
+            let popupHeight = rect.height;
 
-        if(x < popupX || x > popupX + popupWidth || y < popupY || y > popupY + popupHeight) {
-            closeEditDeletePopup();
+            if(x < popupX || x > popupX + popupWidth || y < popupY || y > popupY + popupHeight) {
+                closeEditDeletePopup();
+            }
         }
-    }
-    
-});
+        
+    });
 }
 
 

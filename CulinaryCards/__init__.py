@@ -19,8 +19,6 @@ import recipeOfTheDay as rotd
 import unsplash
 import pandas as pd
 
-
-
 ENV_FILE = find_dotenv()
 if ENV_FILE:
     load_dotenv(ENV_FILE)
@@ -66,10 +64,9 @@ def index():
 @app.route("/createRecipe/<int:recipeid>", methods=['GET'])
 def createRecipe(recipeid):
     if recipeid:
-        recipe = db.getRecipeByID(recipeid)
-        return render_template("createRecipe.html", edit=recipe)
+        return render_template("createRecipe.html", recipeid=recipeid)
     else:
-        return render_template("createRecipe.html", edit=None)
+        return render_template("createRecipe.html")
 
 @app.route("/search",methods=['POST'])
 def redirectToSearch():
@@ -240,7 +237,7 @@ def profileGetSaved():
     else:
         print(4)
         return redirect('/login')
-    
+
 @app.route("/recipe/<int:recipeid>", methods=["GET", "POST", "DELETE"])
 def viewRecipePage(recipeid):
     if request.method == 'POST':
@@ -323,6 +320,11 @@ def logout():
             quote_via=quote_plus,
         )
     )
+
+@app.route("/api/getrecipe/<int:recipeid>",methods=['GET'])
+def getRecipe(recipeid):
+    result = db.getRecipeByID(recipeid)
+    return json.jsonify({"status": "success", "message": "Recipe retrieved", "recipe": result}), 200
 
 @requires_auth
 @app.route("/api/deleterecipe",methods=['DELETE'])

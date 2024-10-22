@@ -13,7 +13,7 @@
     <div class="createRecipeContainer">
         
         <form class="pure-form pure-form-stacked" id="createRecipeOne">
-            <h1 class="step">Enter The Recipe's Title</h1>
+            <h1 class="step">Enter Recipe Title</h1>
             <input type="text" id="recipeTitle" placeholder="Enter a Title" required>
 
             <textarea id="recipeDescription" placeholder="Enter a Description" required></textarea>
@@ -39,15 +39,15 @@
         </div>
 
         <form class="pure-form pure-form-stacked" id="createRecipeTwo">
-            <h1 class="step">Enter The Recipe's Ingredients</h1>
+            <h1 class="step">Enter Recipe Ingredients</h1>
             <div id="pure-g ingredientContainer">
                 <div class="pure-g addIngredient">
                     <div class="pure-u-1 ingredient" id="baseIngredient">
                         <div class="pure-u-1-2">
-                            <input type="text" id="ingredientName" class="pure-u-23-24" placeholder="Ingredient Name" required>
+                            <input type="text" id="ingredientName" class="pure-u-23-24" pattern="^[^,]*$" placeholder="Ingredient Name" required>
                         </div>
                         <div class="pure-u-1-8">
-                            <input type="text" id="ingredientAmount" class="pure-u-23-24" pattern="^\d+$" placeholder="Amount" required>
+                            <input type="text" id="ingredientAmount" class="pure-u-23-24" pattern="^[1-9][0-9]*$" placeholder="Amount" required>
                         </div>
                         <div class="pure-u-1-8">
                             <input type="text" id="ingredientFraction" class="pure-u-23-24" pattern="^\d+/\d+$" placeholder="Fraction">
@@ -110,20 +110,33 @@
         </form>
 
         <div id="createRecipeFour">
-            <h1 class="step">Enter The Recipe's Photo!</h1>
+            <h1 class="step">Enter Recipe Photo</h1>
             <div class="pure-g" id="photoOptionsContainer">
                 <input type="file" id="photoInput" accept="image/*" onchange="setPhoto()" style="display: none;">
                 <label class="pure-u-1-2 photoPreview" for="photoInput" id="upload" onclick="setSelected(this)">
+                    {% if recipeid %}
+                    <img id="imgSelect" src="/api/getrecipeimage/{{recipeid}}" alt="Select Image">
+                    {% else %}
                     <img id="imgSelect" src="https://cdn-icons-png.flaticon.com/512/44/44289.png" alt="Select Image">
+                    {% endif %}
                     <h2 class="photoText">Select Image</h2>
                 </label>
                 <div class="pure-u-1-2 photoPreview" onclick="setSelected(this)" id="generated">
+                    {% if recipeid %}
+                    <img id="imgGenerated" src="/api/getrecipeimage/{{recipeid}}" alt="Generated Image">
+                    {% else %}
                     <img src="https://cdn-icons-png.flaticon.com/512/44/44289.png" id="photoPreview">
+                    {% endif %}
                     <h2 class="photoText">Use Generated</h2>
                 </div>
             </div>
         </div>
             
+    </div>
+
+    <div id="backStep" onclick="previousStep()">
+        <h4>Previous Step</h4>
+        <img src="https://cdn-icons-png.flaticon.com/512/271/271226.png" id="previousInstructionsArrow">
     </div>
     
     <div id="submitStep" onclick="nextStep()">
@@ -132,7 +145,7 @@
     </div>
 
     <script>
-        var editData = "{{ edit }}";
+        const recipeid = "{{ recipeid }}";
     </script>
 
 {% endblock %}
