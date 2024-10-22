@@ -54,7 +54,7 @@ function addComment() {
             newCommentDiv.setAttribute('commentid', data.commentid);
 
             const profileLink = document.createElement("a")
-            profileLink.href = `/profile/${data.userid}`
+            profileLink.href = `/profile?profile=${data.userid}`
             profileLink.textContent = data.username
             profileLink.classList.add('username-link')
             profileLink.classList.add("profileTag")
