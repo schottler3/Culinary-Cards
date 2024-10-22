@@ -6,12 +6,22 @@
 {% endblock %}
 
 {% block middle %}
-    <a class="pure-button" id="backProfile" href="/profile">Back to Profile</a>
 
     <div class="grayBackground" id="grayBackground"></div>
 
     <div class="createRecipeContainer">
+        <a class="pure-button" id="backProfile" href="/profile">Back to Profile</a>
         
+        {% if recipeid %}
+            <img src="https://cdn-icons-png.flaticon.com/512/484/484662.png" onclick="toggleDelete()" id="deleteIcon">
+        {% endif %}
+
+        <div id="deletePrompt">
+            <h1>Are you sure you want to delete this recipe?</h1>
+            <button type="button" class="pure-button" id="cancelDelete" onclick="toggleDelete()">No</button>
+            <button type="button" class="pure-button" id="confirmDelete" onclick="deleteRecipe()">Yes</button>
+        </div>
+
         <form class="pure-form pure-form-stacked" id="createRecipeOne">
             <h1 class="step">Enter Recipe Title</h1>
             <input type="text" id="recipeTitle" placeholder="Enter a Title" required>

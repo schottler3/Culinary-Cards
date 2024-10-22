@@ -44,9 +44,7 @@ function nextStep() {
             }
             break;
         case 4:
-            if(submitRecipe()){
-                currentStep++;
-            }
+            submitRecipe();
             break;
     }
 }
@@ -802,7 +800,7 @@ submitRecipe = async () => {
     if(input.files.length === 0 || selected === 'generated') {
         alert('using generated image');
     }
-    else{
+    else if(selected === 'upload'){
         photo = input.files[0];
     }
 
@@ -817,7 +815,7 @@ submitRecipe = async () => {
     });
 
     let url = 'None';
-    if(selected === 'generated'){
+    if(selected === 'generated' || (selected === '' && recipeid)){
         url = document.getElementById('photoPreview').src;
     }
 
@@ -829,6 +827,39 @@ submitRecipe = async () => {
         instructions: finalInstructions,
         photoUrl: url
     };
+
+    if(recipeid){
+        try {
+            let response = await fetch ('/api/editrecipe', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({recipeid: recipeid, recipeData: recipeData})
+            });
+
+            if (!response.ok) {
+                let errorText = await response.text();
+                console.error('Error response:', errorText);
+                alert('Failed to edit recipe: ' + errorText);
+                return;
+            }
+
+            let data = await response.json();
+
+            if (data.status === 'success') {
+                window.location.href = `/recipe/${recipeid}`;
+            }
+            else {
+                alert('Failed to edit recipe: ' + data.message);
+            }
+        } 
+        catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred while editing the recipe');
+        }
+    }
 
     try {
         let response = await fetch('/api/addrecipe', {
@@ -868,15 +899,16 @@ submitRecipe = async () => {
             }
             console.log(data.recipeID);
             window.location.href = `/recipe/${data.recipeID}`;
-        } else {
+        } 
+        else {
             alert('Failed to create recipe: ' + data.message);
         }
-    } catch (error) {
+    } 
+    catch (error) {
         console.error('Error:', error);
         alert('An error occurred while creating the recipe');
     }
 }
-
 //====================================================================================================
 //Edit Recipe Start
 //====================================================================================================
@@ -1045,6 +1077,50 @@ let setRecipe = function(recipe) {
     fillStepOne();
     fillStepTwo();
     fillStepThree();
+}
+
+let toggleDelete = function() {
+    let deletePrompt = document.getElementById('deletePrompt');
+    let grayBackground = document.getElementById('grayBackground');
+    if(deletePrompt.style.display === 'none' || deletePrompt.style.display === '') {
+        deletePrompt.style.display = 'block';
+        grayBackground.style.display = 'block';
+    }
+    else {
+        deletePrompt.style.display = 'none';
+        grayBackground.style.display = 'none';
+    }
+}
+
+let deleteRecipe = async function() {
+    try {
+        let response = await fetch('/api/deleterecipe', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ recipeid: recipeid })
+        });
+
+        if (!response.ok) {
+            let errorText = await response.text();
+            console.error('Error response:', errorText);
+            alert('Failed to delete recipe: ' + errorText);
+            return;
+        }
+
+        let data = await response.json();
+
+        if (data.status === 'success') {
+            window.location.href = '/profile';
+        } else {
+            alert('Failed to delete recipe: ' + data.message);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred while deleting the recipe');
+    }
 }
 
 //====================================================================================================
