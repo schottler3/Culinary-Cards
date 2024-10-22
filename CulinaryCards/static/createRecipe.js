@@ -6,6 +6,7 @@ var ingredients = [];
 var instructions = [];
 var photo;
 var url;
+var unitSystem = '';
 
 var lastEdit = '';
 
@@ -22,7 +23,7 @@ function nextStep() {
     switch(currentStep) {
         case 1:
             if(submitTitle()){
-                if(!recipeid)
+                if(!recipeid && unitSystem == '')
                     showUnits();
                 else{
                     showStepTwo();
@@ -204,7 +205,6 @@ function submitTitle() {
 
 //Function to show the units form
 function showUnits() {
-    toggleBack();
     let submitStep = document.getElementById('submitStep');
     submitStep.style.display = 'none';
     let showUnits = document.getElementById('showUnits');
@@ -214,6 +214,7 @@ function showUnits() {
 //Function to set the units to imperial from the UnitsForm
 //Also hides the units form and shows the ingredients form
 function setUnitsImperial() {
+    unitSystem = 'imperial';
     const unitsDropdown = document.getElementById('ingredientUnit');
 
     unitsDropdown.innerHTML = '<option value="">Select Unit</option>';
@@ -232,6 +233,7 @@ function setUnitsImperial() {
 //Function to set the units to metric from the UnitsForm
 //Also hides the units form and shows the ingredients form
 function setUnitsMetric() {
+    unitSystem = 'metric';
     const unitsDropdown = document.getElementById('ingredientUnit');
 
     unitsDropdown.innerHTML = '<option value="">Select Unit</option>';
