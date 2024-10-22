@@ -77,7 +77,6 @@
               <div class="pure-u-22-24">{{ comment[3] }}: {{ comment[2] }}</div>
               <button class="pure-u-1-24 delete-btn" id="delete-button" type="button" commentid="{{ comment[0] }}" commentuserid="{{ comment[4] }}" onClick="deleteComment()" value="Delete">x</button>
             </div>
-
           {% else %}
             <div class="pure-u-1 comment" id="" commentid="{{ comment[0] }}">{{ comment[3] }}: {{ comment[2] }}</div>
           {% endif %}

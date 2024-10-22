@@ -482,7 +482,8 @@ def addCommentToDB(dict):
     """
     try:
         cursor.execute(query, (dict["comment_time"], dict["comment"], dict["recipeid"], dict["userid"]))
-
+        comment_id = cursor.fetchone()[0]
+        print(f"comment id:{comment_id}")
         connection.commit()
     except Exception as e:
         print(f"Failed to add new recipe {e}")
@@ -490,7 +491,7 @@ def addCommentToDB(dict):
     finally:
         cursor.close()
         connection.close()
-        return 1
+        return comment_id
 
 # Unsplash API Function - Adds recipe but uses unsplash to find a photo for it when User doesn't upload one
 def addRecipeToDBWithImageURL(dict, img_url):
