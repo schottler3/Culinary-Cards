@@ -35,6 +35,7 @@ function addComment() {
     .then(response => {
         if (response.ok) {
             console.log(response)
+            comment.value =""
             return response.json();
         } else {
             console.error("Failed to submit comment");
