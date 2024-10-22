@@ -19,6 +19,28 @@ html, body {
     scroll-behavior: smooth;
 }
 
+#scroll-to-top {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    z-index: 1000;
+    width: 0px;
+    height: 0px;
+    bottom: -100px;
+    right: -100px;
+    border-radius: 100%;
+    background-color: #d6ccc2;
+    box-shadow: 1px 1px 4px 0 rgba(0,0,0,.5);
+    transition: all 1s;
+}
+
+#scroll-up-icon {
+    z-index: 2000;
+    width: 30px;
+    height: 30px;
+}
+
 .paper {
     background-color: #fff;
     background-image:
@@ -242,6 +264,22 @@ form{
         rgba(0, 0, 0, 0.2)
     ), url("resources/dessert.jpg");
 }
+
+#drinks {
+    background-image: linear-gradient(
+        rgba(0, 0, 0, 0.2),
+        rgba(0, 0, 0, 0.2)
+    ), url("resources/drinks.jpg");
+}
+
+#snacks {
+    background-image: linear-gradient(
+        rgba(0, 0, 0, 0.2),
+        rgba(0, 0, 0, 0.2)
+    ), url("resources/snacks.jpg");
+}
+
+
 
 #above-cards {
     height: 40vh;
@@ -562,6 +600,7 @@ form{
     object-fit: cover;
     border-radius: 15px;
     min-width: 347.81px;
+    border: 1px solid #393535;
 }
 
 #recipe-view-date {
