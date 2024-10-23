@@ -93,6 +93,10 @@ def redirectToSearchCategory(category):
     sendData = []
     results = db.getAllRecipesCategory(category)
     for i in range(len(results)):
+        for j in range(len(results[i]["ingredients"])):
+            results[i]["ingredients"][j] = results[i]["ingredients"][j].split(",")[-1]
+    print(results)
+    for i in range(len(results)):
         results[i]["imagelink"] = "/api/getrecipeimage/" + str(results[i]["recipeid"])
     return render_template("searchResults.html",results=results)
 
