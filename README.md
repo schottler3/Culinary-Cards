@@ -21,7 +21,10 @@ CSCI 5117, Fall 2024, [assignment description](https://canvas.umn.edu/courses/46
 **Describe the most challenging features you implemented
 (one sentence per bullet, maximum 4 bullets):**
 
-* ...
+* Recipe Create and Edit Page, due to complexity and multiple "pages" and function on one template.
+* Finding adequate documentation online for Postgres full-text search, it was not well documented and required digging in materialized views.
+* Finding a good api that works, we had to pivot to Unsplash, as the original recipe apis were either expensive, nonfunctional, limited.
+* Figuring an alternative way to setup recipe of the day, without using a cron job, persistent storage, etc.
 
 ## Testing Notes
 
