@@ -196,7 +196,7 @@ def profileGetLiked():
         userlikes = db.getLikeCountForUser(userid)
         print("likes",userlikes)
         recipes = db.getAllLikedRecipesForUser(userid)
-        recipecount = len(recipes)
+        recipecount = db.getCountUserRecipes(userid)
         isUser=False
         if "user" in session and "token" in session and int(session["user"]) == userid:
             isUser = True
