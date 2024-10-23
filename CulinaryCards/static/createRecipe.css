@@ -13,17 +13,16 @@
     position: fixed;
     display: flex;
     width: 8vmax;
-    top: 10vh;
+    top: 12vh;
     left: 4vh;
     cursor: pointer;
     font-size: 1vmax;
-
 }
 
 #deleteIcon {
     position: fixed;
     width: 2vmax;
-    top: 10vh;
+    top: 12vh;
     right: 4vh;
     cursor: pointer;
 }
@@ -51,12 +50,12 @@
 }
 
 .createRecipeContainer {
-    margin-top: 8vh;
+    padding-top: 12vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     background-color: #f5f5f5;
-    height: 90vh;
+    height: 100vh;
     width: 100%;
 }
 
@@ -175,6 +174,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    text-align: center;
     flex-direction: column;
     gap: 2vh;
 }
@@ -436,4 +436,15 @@
     border: solid 1px hsl(39, 14%, 58%);
     background-color: #d6ccc2;
     border-radius: 5px;
+}
+
+#completion {
+    margin-top: 4vh;
+    button {
+        width: 20vmax;
+        height: 4vmax;
+        font-size: 2vmax;
+        border-radius: 15px;
+        background-color: #d6ccc2;
+    }
 }

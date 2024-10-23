@@ -39,12 +39,10 @@ function nextStep() {
             break;
         case 3:
             if(submitInstructions()){
+                toggleNext();
                 showStepFour();
                 currentStep++;
             }
-            break;
-        case 4:
-            submitRecipe();
             break;
     }
 }
@@ -71,6 +69,7 @@ let previousStep = function() {
             formThree.style.display = 'block';
             let formFour = document.getElementById('createRecipeFour');
             formFour.style.display = 'none';
+            toggleNext();
             currentStep--;
             break;
     }
@@ -83,6 +82,16 @@ let toggleBack = function() {
     }
     else {
         back.style.display = 'none';
+    }
+}
+
+let toggleNext = function() {
+    let next = document.getElementById('submitStep');
+    if(next.style.display === 'none' || next.style.display === '') {
+        next.style.display = 'flex';
+    }
+    else {
+        next.style.display = 'none';
     }
 }
 
@@ -277,7 +286,7 @@ function addIngredient() {
 
     //Check if all fields are filled out correctly
     if(ingredientNameValue === '') {
-        alert('Ingredient name is required, silly!');
+        alert('Ingredient name is required!');
         return false;
     }
     else if(ingredientNameValue.includes(',')){
@@ -285,7 +294,7 @@ function addIngredient() {
         return false;
     }
     else if(ingredientAmountValue === '') {
-        alert('Ingredient amount is required, silly!');
+        alert('Ingredient amount is required!');
         return false;
     }
     else if(!/^\d+$/.test(ingredientAmountValue) || ingredientAmountValue === '0'){
@@ -297,7 +306,7 @@ function addIngredient() {
         return false;
     }
     else if(ingredientUnitValue === '') {
-        alert('Ingredient unit is required, silly!');
+        alert('Ingredient unit is required!');
         return false;
     }
 
@@ -744,11 +753,11 @@ function showStepFour() {
     let formFour = document.getElementById('createRecipeFour');
     formFour.style.display = 'flex';
 
-    if(!url && !recipeid)
-        showPreviewPhoto();
+    showPreviewPhoto();
 }
 
 function showPreviewPhoto(){
+    
     fetch(`/api/getrecipepreviewimage?title=${encodeURIComponent(title)}`)
         .then(response => response.json())
         .then(data => {
@@ -767,6 +776,9 @@ function showPreviewPhoto(){
                 alert('Fetch for image URL failed');
             }
         });
+        
+    let photoPreview = document.getElementById('photoPreview');
+    photoPreview.src = '/static/resources/Logo.png';
 }
 
 function setPhoto(){
@@ -797,10 +809,7 @@ function setSelected(div) {
 
 submitRecipe = async () => {
     let input = document.getElementById('photoInput');
-    if(input.files.length === 0 || selected === 'generated') {
-        alert('using generated image');
-    }
-    else if(selected === 'upload'){
+    if(selected === 'upload' && input.files.length > 0){
         photo = input.files[0];
     }
 
@@ -827,39 +836,6 @@ submitRecipe = async () => {
         instructions: finalInstructions,
         photoUrl: url
     };
-
-    if(recipeid){
-        try {
-            let response = await fetch ('/api/editrecipe', {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify({recipeid: recipeid, recipeData: recipeData})
-            });
-
-            if (!response.ok) {
-                let errorText = await response.text();
-                console.error('Error response:', errorText);
-                alert('Failed to edit recipe: ' + errorText);
-                return;
-            }
-
-            let data = await response.json();
-
-            if (data.status === 'success') {
-                window.location.href = `/recipe/${recipeid}`;
-            }
-            else {
-                alert('Failed to edit recipe: ' + data.message);
-            }
-        } 
-        catch (error) {
-            console.error('Error:', error);
-            alert('An error occurred while editing the recipe');
-        }
-    }
 
     try {
         let response = await fetch('/api/addrecipe', {
@@ -1120,6 +1096,85 @@ let deleteRecipe = async function() {
     } catch (error) {
         console.error('Error:', error);
         alert('An error occurred while deleting the recipe');
+    }
+}
+
+let updateRecipe = async function() {
+    let input = document.getElementById('photoInput');
+    if(selected === 'upload'){
+        photo = input.files[0];
+    }
+    let url = 'None';
+    if(selected === 'generated'){
+        url = document.getElementById('photoPreview').src;
+    }
+
+    let finalIngredients = [];
+    ingredients.forEach(ingredient => {
+        finalIngredients.push((`${ingredient.amount} ${ingredient.fraction} ${ingredient.unit},${ingredient.name}`).replace(/\s\s+/g, ' '));
+    });
+
+    let finalInstructions = [];
+    instructions.forEach(instruction => {
+        finalInstructions.push(instruction.instruction);
+    });
+
+    let recipeData = {
+        title: title,
+        description: description,
+        categories: selectedCategories,
+        ingredients: finalIngredients,
+        instructions: finalInstructions,
+        photoUrl: url
+    };
+
+    try {
+        let response = await fetch ('/api/updaterecipe', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({recipeid: recipeid, recipeData: recipeData})
+        });
+
+        if (!response.ok) {
+            let errorText = await response.text();
+            console.error('Error response:', errorText);
+            alert('Failed to edit recipe: ' + errorText);
+            return;
+        }
+
+        let data = await response.json();
+
+        console.log(data);
+
+        if (data.status === 'success') {
+            if(selected === 'upload' && input.files.length > 0){
+                photo = input.files[0];
+                let imageForm = new FormData();
+                imageForm.append('image', photo);
+                imageForm.append('recipeid', recipeid);
+                let imageResponse = await fetch('/api/updaterecipeimage', {
+                    method: 'POST',
+                    body: imageForm,
+                });
+                if (!imageResponse.ok) {
+                    let errorText = await imageResponse.text();
+                    console.error('Error response:', errorText);
+                    alert('Failed to upload recipe image: ' + errorText);
+                    return;
+                }
+            }
+            window.location.href = `/recipe/${recipeid}`;
+        } 
+        else {
+            alert('Failed to edit recipe: ' + data.message);
+        }
+    } 
+    catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred while editing the recipe');
     }
 }
 
