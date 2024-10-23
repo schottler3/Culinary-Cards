@@ -293,15 +293,15 @@ function addIngredient() {
         alert('Ingredient name cannot contain a comma');
         return false;
     }
-    else if(ingredientAmountValue === '') {
-        alert('Ingredient amount is required!');
+    else if(ingredientAmountValue === '' && ingredientFractionValue === '') {
+        alert('Ingredient amount or fraction is required!');
         return false;
     }
-    else if(!/^\d+$/.test(ingredientAmountValue)){
+    else if(!/^\d+$/.test(ingredientAmountValue) && ingredientFractionValue === ''){
         alert('Invalid Ingredient Amount');
         return false;
     }
-    if (ingredientFractionValue !== '' && !/^\d+\/\d+$/.test(ingredientFractionValue)) {
+    if (ingredientFractionValue !== '' && !/^([1-9][0-9]*)\/([1-9][0-9]*)$/.test(ingredientFractionValue)) {
         alert('Invalid Fractional Amount');
         return false;
     }
@@ -889,6 +889,45 @@ let fillStepThree = function() {
     }
 }
 
+let normalizeIngredients = function(ing) {
+    for (let t of ing) {
+        console.log(t);
+        let parts = t.split(','); 
+        let quantityFractionUnit = parts[0].split(' '); 
+        let ingredient;
+        if(quantityFractionUnit.length == 3){
+            ingredient = {
+                ID: ingredientID++,
+                name: parts[1], 
+                amount: quantityFractionUnit[0], 
+                fraction: quantityFractionUnit[1],
+                unit: quantityFractionUnit[2] 
+            };
+        }
+        else{
+            ingredient = {
+                ID: ingredientID++,
+                name: parts[1], 
+                amount: quantityFractionUnit[0], 
+                fraction: '',
+                unit: quantityFractionUnit[1] 
+            };
+        }
+        ingredients.push(ingredient);
+    }
+}
+
+let normalizeInstructions = function(ins) {
+    let instructionID = 0;
+    for(let x of ins){
+        let instruction = {
+            ID: instructionID++,
+            instruction: x
+        };
+        instructions.push(instruction);
+    }
+}
+
 async function getRecipe(recipeid) {
     try {
         const response = await fetch(`/api/getrecipe/${recipeid}`);
@@ -916,40 +955,9 @@ let setRecipe = function(recipe) {
     description = recipe[2];
     selectedCategories = recipe[8];
 
-    for (let t of recipe[3]) {
-        console.log(t);
-        let parts = t.split(','); 
-        let quantityFractionUnit = parts[0].split(' '); 
-        let ingredient;
-        if(quantityFractionUnit.length == 3){
-            ingredient = {
-                ID: ingredientID++,
-                name: parts[1], 
-                amount: quantityFractionUnit[0], 
-                fraction: quantityFractionUnit[1],
-                unit: quantityFractionUnit[2] 
-            };
-        }
-        else{
-            ingredient = {
-                ID: ingredientID++,
-                name: parts[1], 
-                amount: quantityFractionUnit[0], 
-                fraction: '',
-                unit: quantityFractionUnit[1] 
-            };
-        }
-        ingredients.push(ingredient);
-    }
+    normalizeIngredients(recipe[3]);
 
-    let instructionID = 0;
-    for(let x of recipe[4]){
-        let instruction = {
-            ID: instructionID++,
-            instruction: x
-        };
-        instructions.push(instruction);
-    }
+    normalizeInstructions(recipe[4]);
 
     console.log(ingredients);
 
