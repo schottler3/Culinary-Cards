@@ -32,6 +32,7 @@ CSCI 5117, Fall 2024, [assignment description](https://canvas.umn.edu/courses/46
 
 * Unsplash has a limit of 50 images per hour.
 * Recipes can be searched by name, words from description, category, ingredients, username, and are sorted by likes descending.
+* Firefox might be glitchy when clicking the Categories button. However, this should be fixed!
 
 
 ## Screenshots of Site
@@ -66,11 +67,13 @@ In this space please either provide images (around 4) showing your prototypes, O
 **Document integrations with 3rd Party code or services here.
 Please do not document required libraries. or libraries that are mentioned in the product requirements**
 
-* Library or service name: description of use
-* ...
+* Pandas - Date conversion
+* Unsplash API - Generated images for recipes: NOTE if we were on the paid plan for this API, we would have significantly more accurate images for our recipes.
+* uuid - nonce generation
+* cdn-icons-png.flaticon.com - for some website icons
 
 **If there's anything else you would like to disclose about how your project
 relied on external code, expertise, or anything else, please disclose that
-here:**
-
+here: Sometimes images can take a second to load. Recipes can be edited on the recipe card page.
+In the recipe edit view, you can delete your recipe.
 ...

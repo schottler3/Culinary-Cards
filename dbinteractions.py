@@ -1,6 +1,5 @@
 import psycopg2
 import os
-from werkzeug.utils import secure_filename
 from flask import request
 from psycopg2 import Binary
 from unsplash import getImgUrl
