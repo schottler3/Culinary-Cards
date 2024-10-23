@@ -286,7 +286,7 @@ function addIngredient() {
 
     //Check if all fields are filled out correctly
     if(ingredientNameValue === '') {
-        alert('Ingredient name is required, silly!');
+        alert('Ingredient name is required!');
         return false;
     }
     else if(ingredientNameValue.includes(',')){
@@ -294,7 +294,7 @@ function addIngredient() {
         return false;
     }
     else if(ingredientAmountValue === '') {
-        alert('Ingredient amount is required, silly!');
+        alert('Ingredient amount is required!');
         return false;
     }
     else if(!/^\d+$/.test(ingredientAmountValue) || ingredientAmountValue === '0'){
@@ -306,7 +306,7 @@ function addIngredient() {
         return false;
     }
     else if(ingredientUnitValue === '') {
-        alert('Ingredient unit is required, silly!');
+        alert('Ingredient unit is required!');
         return false;
     }
 
@@ -757,7 +757,7 @@ function showStepFour() {
 }
 
 function showPreviewPhoto(){
-    /*
+    
     fetch(`/api/getrecipepreviewimage?title=${encodeURIComponent(title)}`)
         .then(response => response.json())
         .then(data => {
@@ -776,7 +776,7 @@ function showPreviewPhoto(){
                 alert('Fetch for image URL failed');
             }
         });
-        */
+        
     let photoPreview = document.getElementById('photoPreview');
     photoPreview.src = '/static/resources/Logo.png';
 }
@@ -809,10 +809,7 @@ function setSelected(div) {
 
 submitRecipe = async () => {
     let input = document.getElementById('photoInput');
-    if(input.files.length === 0 || selected === 'generated') {
-        alert('using generated image');
-    }
-    else if(selected === 'upload' && input.files.length > 0){
+    if(selected === 'upload' && input.files.length > 0){
         photo = input.files[0];
     }
 

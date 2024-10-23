@@ -183,6 +183,7 @@ async function deleteAccount(){
 
 window.onload = function() {
     var accountGear = document.getElementById('accountGear');
+    if (accountGear != null){
     accountGear.addEventListener('click', function() {
         if(accountGear.classList.contains('spin')) {
             accountGear.classList.remove('spin');
@@ -195,5 +196,5 @@ window.onload = function() {
             accountGear.classList.add('spin');
         }
         toggleSettings();
-    });
+    });}
 }

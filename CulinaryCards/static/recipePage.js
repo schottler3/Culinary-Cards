@@ -19,15 +19,13 @@ function addComment() {
     const recipeid = document.getElementById('hidden-recipe-id').textContent;
     const currentTime = new Date().toISOString();
 
-    console.log(recipeid)
-
     const data = {
         recipeid: recipeid,
         comment: comment,
         comment_time: currentTime
     };
 
-    fetch(`/recipe/${recipeid}`, {
+    fetch(`/api/addcomment/${recipeid}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -36,10 +34,51 @@ function addComment() {
     })
     .then(response => {
         if (response.ok) {
-            window.location.reload();
+            console.log(response)
+            comment.value =""
+            return response.json();
         } else {
             console.error("Failed to submit comment");
             console.log(response);
+        }
+    })
+    .then(data => {
+        if (data) {
+            console.log(data)
+            console.log("Comment ID:", data.commentid);
+            const commentContainer = document.getElementById('comment-container');
+
+            const newCommentDiv = document.createElement('div');
+            newCommentDiv.classList.add('pure-g', 'pure-u-1', 'comment');
+            newCommentDiv.id = 'comment-with-button';
+            newCommentDiv.setAttribute('commentid', data.commentid);
+
+            const profileLink = document.createElement("a")
+            profileLink.href = `/profile?profile=${data.userid}`
+            profileLink.textContent = data.username
+            profileLink.classList.add('username-link')
+            profileLink.classList.add("profileTag")
+            profileLink.setAttribute('userid', data.userid)
+
+            const commentTextDiv = document.createElement('div');
+            commentTextDiv.classList.add('pure-u-22-24');
+            commentTextDiv.appendChild(profileLink)
+            let profileLinkText = document.createTextNode(`: ${comment}`)
+            commentTextDiv.appendChild(profileLinkText)
+
+            const deleteButton = document.createElement('button');
+            deleteButton.classList.add('pure-u-1-24', 'delete-btn');
+            deleteButton.id = 'delete-button';
+            deleteButton.type = 'button';
+            deleteButton.setAttribute('commentid', data.commentid);
+            deleteButton.setAttribute('commentuserid', data.userid);
+            deleteButton.setAttribute('onClick', 'deleteComment()');
+            deleteButton.textContent = 'x';
+
+            newCommentDiv.appendChild(commentTextDiv);
+            newCommentDiv.appendChild(deleteButton);
+
+            commentContainer.insertBefore(newCommentDiv, commentContainer.firstChild);
         }
     })
     .catch(error => {
@@ -66,7 +105,10 @@ function deleteComment(commentId, commentUserId) {
     })
     .then(response => {
         if (response.ok) {
-            window.location.reload();
+            const commentDiv = document.querySelector(`div[commentid="${commentId}"]`);
+            if (commentDiv) {
+                commentDiv.remove();
+            }
         } else {
             console.error("Failed to submit comment");
         }

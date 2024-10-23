@@ -62,8 +62,12 @@ def index():
 
 @app.route("/createRecipe", defaults={'recipeid': None}, methods=['GET'])
 @app.route("/createRecipe/<int:recipeid>", methods=['GET'])
+@requires_auth
 def createRecipe(recipeid):
     if recipeid:
+        recipe = db.getRecipeByID(recipeid)
+        if(recipe[0][7] != session["user"]):
+            return redirect("/recipe/" + str(recipeid))
         return render_template("createRecipe.html", recipeid=recipeid)
     else:
         return render_template("createRecipe.html")
@@ -148,16 +152,17 @@ def profile():
     userid = 0
     if request.args.get("profile") is not None:
         userid = int(request.args.get("profile"))
-    print("printing userid",type(userid))
-    print(type(session["user"]))
-    if userid > 0 and "user" in session and session["user"] != userid:
+    print("printing userid",userid)
+    if userid > 0:
         user = db.getUserInfoByUserID(userid)
         userlikes = db.getLikeCountForUser(userid)
         print("likes",userlikes)
         recipes = db.getAllRecipesUserLikesDesc(userid)
         recipecount = len(recipes)
-        # UPDATE the isUser
-        return render_template('profile.html', isUser=False, profile=userid, user=user,userlikes = userlikes,recipes = recipes,recipecount = recipecount)
+        isUser=False
+        if "user" in session and "token" in session and int(session["user"]) == userid:
+            isUser = True
+        return render_template('profile.html', isUser=isUser, profile=userid, user=user,userlikes = userlikes,recipes = recipes,recipecount = recipecount)
     elif 'user' in session:
         user = session['user']
         if('token' in session):
@@ -186,14 +191,16 @@ def profileGetLiked():
     if request.args.get("profile") is not None:
         userid = int(request.args.get("profile"))
     print("printing userid",userid)
-    if userid > 0 and "user" in session and session["user"] != userid:
+    if userid > 0:
         user = db.getUserInfoByUserID(userid)
         userlikes = db.getLikeCountForUser(userid)
         print("likes",userlikes)
-        recipes = db.getAllRecipesUserLikesDesc(userid)
+        recipes = db.getAllLikedRecipesForUser(userid)
         recipecount = len(recipes)
-        # UPDATE the isUser
-        return render_template('profile.html', isUser=False, profile=userid, user=user,userlikes = userlikes,recipes = recipes,recipecount = recipecount)
+        isUser=False
+        if "user" in session and "token" in session and int(session["user"]) == userid:
+            isUser = True
+        return render_template('profile.html', isUser=isUser, profile=userid, user=user,userlikes = userlikes,recipes = recipes,recipecount = recipecount)
     if 'user' in session:
         user = session['user']
         if('token' in session):
@@ -240,30 +247,10 @@ def profileGetSaved():
 
 @app.route("/recipe/<int:recipeid>", methods=["GET", "POST", "DELETE"])
 def viewRecipePage(recipeid):
-    if request.method == 'POST':
-        data = request.get_json()
-
-        if 'user' in session:
-            userid = session.get('user')
-        else:
-            return json.jsonify({"status": "failure", "message": "User not logged in"}), 400
-        
-        comment = data.get('comment')
-        comment_time = data.get('comment_time')
-
-        commentDict = {
-            "comment": comment,
-            "userid": userid,
-            "recipeid": recipeid,
-            "comment_time": comment_time
-        }
-        # print(f"Received data - User ID: {userid}, Recipe ID: {recipeid}, Comment: {comment}, Comment Time: {comment_time}")
-        db.addCommentToDB(commentDict)
-
     if request.method == 'DELETE':
         data = request.get_json()
 
-        if 'user' in session:
+        if 'user' in session and "token" in session:
             userid = session.get('user')
         else:
             return json.jsonify({"status": "failure", "message": "User not logged in"}), 400
@@ -281,7 +268,7 @@ def viewRecipePage(recipeid):
     savedstatus = False
     likedstatus = False
 
-    if('user' in session):
+    if('user' in session and "token" in session):
         savedstatus = db.checkSaved(session["user"],recipeid)
         likedstatus = db.checkLiked(session["user"],recipeid)
 
@@ -303,6 +290,7 @@ def viewRecipePage(recipeid):
     t['words'] = t['timestamp'].dt.strftime('%A, %B %d, %Y')
 
     comments = db.getAllCommentsForRecipe(recipeid)
+    print(comments)
 
     return render_template("recipePage.html", likedstatus = likedstatus,savedstatus = savedstatus, recipe=result[0], time=t.words[0], comments=comments,likes=likecount)
 
@@ -336,8 +324,9 @@ def deleteRecipeAPI():
     else:
         return json.jsonify({"status": "failure", "message": "Recipe failed to DELETE"}),
     
+
+@app.route("/api/addrecipe",methods=['POST'])
 @requires_auth
-@app.route("/api/addrecipe",methods=['POST']) 
 def addRecipeAPI():
     data = request.get_json()
     title = data.get('title')
@@ -347,7 +336,7 @@ def addRecipeAPI():
     instructions = data.get('instructions')
     photoUrl = data.get('photoUrl')
 
-    if 'user' in session:
+    if 'user' in session and "token" in session:
         userid = session.get('user')
     else:
         return json.jsonify({"status": "failure", "message": "User not logged in"}), 400
@@ -373,8 +362,9 @@ def addRecipeAPI():
     else:
         return json.jsonify({"status": "failure", "message": "Recipe failed to ADD"}), 400
     
-@requires_auth
+
 @app.route("/api/setRecipeImage",methods=['POST'])
+@requires_auth
 def setRecipeImageAPI():
     photo = request.files['image']
     recipeid = request.form['recipeid']
@@ -384,8 +374,9 @@ def setRecipeImageAPI():
     else:
         return json.jsonify({"status": "failure", "message": "Image failed to ADD"}), 400
 
-@requires_auth
+
 @app.route("/api/editprofile",methods=['PUT'])
+@requires_auth
 def submitEditProfile():
     edits = request.get_json()
     if db.updateUser(edits["username"],None,"","",edits["bio"],session["user"]):
@@ -486,6 +477,31 @@ def getUserPostsSortByLikes():
         return json.jsonify({"status": "success", "message": "Succeeded to sort user profile by likes", "results" : lst}), 200
     else:
         return json.jsonify({"status": "failure", "message": "Failed to sort user profile by likes"}), 400
+    
+@app.route("/api/addcomment/<int:recipeid>",methods=['POST'])
+def addComment(recipeid):
+    data = request.get_json()
+
+    if 'user' in session and "token" in session:
+        userid = session.get('user')
+    else:
+        return json.jsonify({"status": "failure", "message": "User not logged in"}), 400
+    
+    comment = data.get('comment')
+    comment_time = data.get('comment_time')
+
+    commentDict = {
+        "comment": comment,
+        "userid": userid,
+        "recipeid": recipeid,
+        "comment_time": comment_time
+    }
+
+    userinfo = db.getUserInfoByUserID(userid)
+    username = userinfo['username']
+    # print(f"Received data - User ID: {userid}, Recipe ID: {recipeid}, Comment: {comment}, Comment Time: {comment_time}")
+    commentid = db.addCommentToDB(commentDict)
+    return json.jsonify({"commentid": commentid, "userid": userid, "username": username}), 200
 
 if __name__ == "__main__":
     if os.getenv("FLASK_ENV") == "development":
@@ -563,7 +579,7 @@ def setRecipeImage():
 
 @app.route("/api/deleteaccount",methods=['DELETE'])
 def deleteAccount():
-    if 'user' in session:
+    if 'user' in session and "token" in session:
         if db.deleteUserByUserID(session['user']):
             session.clear()
             return json.jsonify({"status": "success", "message": "Account Deleted"}), 200
