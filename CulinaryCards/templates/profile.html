@@ -83,14 +83,14 @@
     <div class="profileRecipeMenu">
         <div id="profileMenu" class="pure-menu pure-menu-horizontal profileMenu">
             <ul class="pure-menu-list" id="recipePagesContainer">
-                <li class="pure-menu-item">
+                <li class="pure-menu-item recipePage" id="my">
                     <a onclick="changeToMy()" class="pure-menu-link">{%if isUser%}My{%endif%} Recipes</a>
                 </li>
-                <li class="pure-menu-item">
+                <li class="pure-menu-item recipePage" id="liked">
                     <a onclick="changeToLiked()" class="pure-menu-link">Liked Recipes</a>
                 </li>
                 {% if session["user"] == profile %}
-                    <li class="pure-menu-item">
+                    <li class="pure-menu-item recipePage" id="saved">
                         <a onclick="changeToSaved()" class="pure-menu-link">Saved Recipes</a>
                     </li>
                 {% endif %}

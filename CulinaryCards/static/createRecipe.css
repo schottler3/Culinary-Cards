@@ -12,11 +12,15 @@
 #backProfile {
     position: fixed;
     display: flex;
-    width: 8vmax;
+    justify-content: center;
+    align-items: center;
+    width: 8vw;
+    min-width: 8vh;
+    min-height: 3vh;
     top: 12vh;
     left: 4vh;
     cursor: pointer;
-    font-size: 1vmax;
+    font-size: clamp(.25em, 1.5vmin, 1em);
 }
 
 #deleteIcon {

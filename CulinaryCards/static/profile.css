@@ -204,6 +204,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    width: 5vmax;
     grid-area: pfpPreview;
 }
 
@@ -222,11 +223,17 @@ body {
 }
 
 .username {
-    font-size: 24px;
+    font-size: clamp(1.5em, 3vmin, 3em);
     font-weight: bold;
     margin-top: 10px;
     margin-bottom: 5px;
     padding: 0;
+}
+
+.bio {
+    font-size: clamp( .8em, 2vmin, 1.5em);
+    margin-top: 1vh;
+    margin-bottom: 2vh;
 }
 
 .numberOfCluster {
@@ -255,12 +262,40 @@ body {
 }
 
 .profileRecipeMenu {
-    margin-top: 10vh;
     margin-left: var(--margins_sides);
     margin-right: var(--margins_sides);
+    margin-top: 10vh;
     display: flex;
     background-color: antiquewhite;
     cursor: pointer
+}
+
+#profileMenu {
+    margin: 0;
+    text-align: center;
+}
+
+@media only screen and (max-width: 766px) {
+    #profileMenu {
+        font-size: 1em;
+    }
+}
+
+@media only screen and (max-width: 516px) {
+    #profileMenu {
+        font-size: .75em;
+        width: 100%;
+    }
+
+    .profileRecipeMenu {
+        width: 100%;
+        margin: 0;
+    }
+
+}
+
+.recipePage.selected {
+    font-weight: bold;
 }
 
 #sortContainer {
@@ -304,7 +339,7 @@ body {
 }
 
 .profileRecipe:hover {
-    box-shadow: 2px -2px 4px rgb(179, 255, 240);
+    box-shadow: 2px -2px 4px #e37851;
 }
 
 .createRecipeTile {
@@ -317,5 +352,5 @@ body {
 }
 
 .createRecipeTile:hover {
-    background-color: rgb(179, 255, 240);
+    background-color: #e37851;
 }

@@ -58,7 +58,7 @@ async function submitEdit(event) {
         alert('Bio must be less than 200 characters long');
         return;
     }
-    else if(newUsername === username.innerHTML && newBio === bio.innerHTML) {
+    else if(newUsername === username && newBio === bio) {
         toggleEdit(event.target);
         return;
     }
@@ -197,4 +197,15 @@ window.onload = function() {
         }
         toggleSettings();
     });}
+
+    let href = window.location.href;
+    if(href.includes('profile/likes')) {
+        document.getElementById('liked').style.fontWeight = 'bold';
+    }
+    else if(href.includes('profile/saved')) {
+        document.getElementById('saved').style.fontWeight = 'bold';
+    }
+    else {
+        document.getElementById('my').style.fontWeight = 'bold';
+    }
 }
