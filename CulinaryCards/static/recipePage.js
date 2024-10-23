@@ -79,6 +79,7 @@ function addComment() {
             newCommentDiv.appendChild(deleteButton);
 
             commentContainer.insertBefore(newCommentDiv, commentContainer.firstChild);
+            document.getElementById('comment-box').value = "";
         }
     })
     .catch(error => {
@@ -89,6 +90,11 @@ function addComment() {
 function deleteComment(commentId, commentUserId) {
     console.log(commentId)
     const recipeid = document.getElementById('hidden-recipe-id').innerText;
+
+    const commentDiv = document.querySelector(`div[commentid="${commentId}"]`);
+    if (commentDiv) {
+        commentDiv.remove();
+    }
 
     const data = {
         commentid: commentId,
@@ -104,12 +110,7 @@ function deleteComment(commentId, commentUserId) {
         body: JSON.stringify(data)
     })
     .then(response => {
-        if (response.ok) {
-            const commentDiv = document.querySelector(`div[commentid="${commentId}"]`);
-            if (commentDiv) {
-                commentDiv.remove();
-            }
-        } else {
+        if (!response.ok) {
             console.error("Failed to submit comment");
         }
     })
