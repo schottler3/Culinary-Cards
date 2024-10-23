@@ -11,8 +11,8 @@
     <div class="grayBackground" id="grayBackground"></div>
 
     <div class="createRecipeContainer">
-      <a class="pure-button comment-btn" id="backProfile" href="/profile">Back to Profile</a>
-        
+        <a class="pure-button comment-btn" id="backProfile" href="/profile">Back to Profile</a>
+
         {% if recipeid %}
             <img src="https://cdn-icons-png.flaticon.com/512/484/484662.png" onclick="toggleDelete()" id="deleteIcon">
         {% endif %}
@@ -58,10 +58,10 @@
                             <input type="text" id="ingredientName" class="pure-u-23-24" pattern="^[^,]*$" placeholder="Ingredient Name" required>
                         </div>
                         <div class="pure-u-1-8">
-                            <input type="text" id="ingredientAmount" class="pure-u-23-24" pattern="^(0|[1-9][0-9]*)$" placeholder="Amount" required>
+                            <input type="text" id="ingredientAmount" class="pure-u-23-24" pattern="^([1-9][0-9]*)$" placeholder="Amount">
                         </div>
                         <div class="pure-u-1-8">
-                            <input type="text" id="ingredientFraction" class="pure-u-23-24" pattern="^\d+/\d+$" placeholder="Fraction">
+                            <input type="text" id="ingredientFraction" class="pure-u-23-24" pattern="^([1-9][0-9]*)/([1-9][0-9]*)$" placeholder="Fraction">
                         </div>
                         <div class="pure-u-1-8">
                             <select class="pure-u-23-24" id="ingredientUnit">
