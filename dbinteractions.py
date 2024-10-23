@@ -366,7 +366,7 @@ def searchRecipeByKeywords(keywords):
                 where recipe_search.recipe_vector @@ to_tsquery(%s)
                 group by recipe_search.recipeid,recipe_search.title,recipe_search.description,recipe_search.ingredients,recipe_search.instructions,
                 users.username,recipe_search.categories,recipe_img.image_data,recipe_img.image_link,users.userid
-                order by like_count
+                order by like_count desc
             """
         cursor.execute(str, (keywords,))
         result = cursor.fetchall()
