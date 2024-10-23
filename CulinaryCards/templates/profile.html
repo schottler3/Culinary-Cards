@@ -59,7 +59,8 @@
                 <h2 id="numberOfRecipes" class="numberOf">{{recipecount}}</h2>
             </div>
             <div class="numberOfCluster">
-                <img src="https://cdn-icons-png.flaticon.com/512/833/833472.png" class="icon" alt="Heart Icon">
+                <img src="{{ url_for('static', filename='resources/likeheart.svg') }}" class="icon" alt="Heart Icon"
+                style="filter: brightness(0) saturate(100%) invert(43%) sepia(100%) saturate(746%) hue-rotate(356deg) brightness(100%) contrast(111%)">
                 <h2 id="numberOfLikes" class="numberOf">{{userlikes}}</h2>
             </div>
         </div>
