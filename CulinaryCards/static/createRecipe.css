@@ -110,6 +110,7 @@ html, body {
 .dropdown {
     display: none;
     flex-direction: column;
+    margin-bottom: 10vh;
 }
 
 .option {
