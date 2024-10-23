@@ -42,6 +42,25 @@ along with a very brief caption:**
 
 ![](https://media.giphy.com/media/o0vwzuFwCGAFO/giphy.gif)
 
+![](https://github.com/csci5117f24/project-1-peanut-butter-pickles/blob/main/images/home.png)
+Culinary Cards Home Page, with Search bar
+
+![](https://github.com/csci5117f24/project-1-peanut-butter-pickles/blob/main/images/recipeoftheday.png)
+Culinary Cards Recipe of the day
+
+![](https://github.com/csci5117f24/project-1-peanut-butter-pickles/blob/main/images/results.png)
+Culinary Cards search results for Chicken Alfredo
+
+![](https://github.com/csci5117f24/project-1-peanut-butter-pickles/blob/main/images/recipecard.png)
+Culinary Card for Chicken Alfredo Recipe
+
+![](https://github.com/csci5117f24/project-1-peanut-butter-pickles/blob/main/images/profile.png)
+Culinary Cards Profile Page
+
+![](https://github.com/csci5117f24/project-1-peanut-butter-pickles/blob/main/images/recipeedit-create.png)
+Culinary Cards Recipe create/edit view
+
+
 
 ## Mock-up 
 
@@ -75,5 +94,5 @@ Please do not document required libraries. or libraries that are mentioned in th
 **If there's anything else you would like to disclose about how your project
 relied on external code, expertise, or anything else, please disclose that
 here: Sometimes images can take a second to load. Recipes can be edited on the recipe card page.
-In the recipe edit view, you can delete your recipe.
+In the recipe edit view, you can choose to delete your recipe.
 ...
