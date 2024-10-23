@@ -281,8 +281,9 @@ def viewRecipePage(recipeid):
     user = db.getProfilePicture(result[0][7])
 
     for ingredient in range(len(result[0][3])):
-        print(result[0][3])
         result[0][3][ingredient] = result[0][3][ingredient].replace(","," of ")
+        if result[0][3][ingredient][0] == "0" and result[0][3][ingredient][1] == " ":
+            result[0][3][ingredient] = result[0][3][ingredient][2::]
 
     result[0].append("/api/getrecipeimage/" + str(result[0][0]))
     result[0] = tuple(result[0])

@@ -12,7 +12,7 @@ def setRecipeOfTheDay():
         recipeOfTheDay = all_recipes[randindex]
         ingredientstr = ""
         for ingredient in recipeOfTheDay[3]:
-            ingredientstr += ingredient.split(",")[0] + ", "
+            ingredientstr += ingredient.split(",")[1] + ", "
         ingredientstr = ingredientstr[:-2:]
         recipeOfTheDay = list(recipeOfTheDay)
         recipeOfTheDay[3] = ingredientstr

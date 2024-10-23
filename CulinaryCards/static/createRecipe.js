@@ -297,7 +297,7 @@ function addIngredient() {
         alert('Ingredient amount is required!');
         return false;
     }
-    else if(!/^\d+$/.test(ingredientAmountValue) || ingredientAmountValue === '0'){
+    else if(!/^\d+$/.test(ingredientAmountValue)){
         alert('Invalid Ingredient Amount');
         return false;
     }

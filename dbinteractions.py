@@ -509,8 +509,8 @@ def addRecipeToDBWithImageURL(dict, img_url):
     ingredients_nomeasure = ""
     for ingredient in dict["ingredients"]:
         ingredients = ingredient.split(",")
-        recipe_vector += " " + ingredients[0]
-        ingredients_nomeasure += ingredients[0] + " "
+        recipe_vector += " " + ingredients[1]
+        ingredients_nomeasure += ingredients[1] + " "
     for category in dict["categories"]:
         recipe_vector += " " + category
     try:
@@ -606,8 +606,8 @@ def updateRecipeInDB(dict):
     ingredients_nomeasure = ""
     for ingredient in dict["ingredients"]:
         ingredients = ingredient.split(",")
-        recipe_vector += " " + ingredients[0]
-        ingredients_nomeasure += ingredients[0] + " "
+        recipe_vector += " " + ingredients[1]
+        ingredients_nomeasure += ingredients[1] + " "
     for category in dict["categories"]:
         recipe_vector += " " + category
     # str was messing with str method :(
