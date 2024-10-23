@@ -523,7 +523,43 @@ def getRecipeImage(recipeid):
     
 @app.route("/api/updaterecipe",methods=['PUT'])
 def updateRecipe():
-    print("AHHHH")
+    data = request.get_json()
+    recipeData = data.get('recipeData')
+    title = recipeData.get('title')
+    description = recipeData.get('description')
+    ingredients = recipeData.get('ingredients')
+    instructions = recipeData.get('instructions')
+    categories = recipeData.get('categories')
+    recipeid = data.get('recipeid')
+    photoUrl = recipeData.get('photoUrl')
+
+    recipeDict = {
+        'title': title,
+        'description': description,
+        'ingredients': ingredients,
+        'instructions': instructions,
+        'recipeid': recipeid,
+        'categories': categories
+    }
+
+    if db.updateRecipeInDB(recipeDict):
+        if photoUrl != 'None':
+            if db.updateRecipeURL(recipeid, photoUrl):
+                return json.jsonify({"status": "success", "message": "Recipe updated with url"}), 200
+        else:
+            return json.jsonify({"status": "success", "message": "Recipe updated without url"}), 200
+    else:
+        return json.jsonify({"status": "failure", "message": "Recipe failed to UPDATE"}), 400
+
+@app.route("/api/updaterecipeimage",methods=['POST'])
+def setRecipeImage():
+    photo = request.files['image']
+    recipeid = request.form['recipeid']
+
+    if db.updateRecipeImage(recipeid, photo):
+        return json.jsonify({"status": "success", "message": "Image added"}), 200
+    else:
+        return json.jsonify({"status": "failure", "message": "Image failed to ADD"}), 400
 
 @app.route("/api/deleteaccount",methods=['DELETE'])
 def deleteAccount():

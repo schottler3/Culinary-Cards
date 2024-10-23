@@ -17,7 +17,6 @@
     left: 4vh;
     cursor: pointer;
     font-size: 1vmax;
-
 }
 
 #deleteIcon {
@@ -430,4 +429,15 @@
 
 .photoText {
     font-size: 2vmax;
+}
+
+#completion {
+    margin-top: 4vh;
+    button {
+        width: 20vmax;
+        height: 4vmax;
+        font-size: 2vmax;
+        border-radius: 15px;
+        background-color: #d6ccc2;
+    }
 }

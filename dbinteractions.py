@@ -556,6 +556,26 @@ def setRecipeImage(recipeid, imgfile):
         connection.close()
         return True
     
+def updateRecipeImage(recipeid, imgfile):
+    if recipeid is None or imgfile is None:
+        print("Recipe ID or image file is missing")
+        return False
+
+    connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
+    cursor = connection.cursor()
+    imgfileRAW = imgfile.read()
+    try:
+        qstr = "update recipe_img set image_data = %s where recipeid = %s"
+        cursor.execute(qstr, (Binary(imgfileRAW), recipeid))
+        connection.commit()
+    except Exception as e:
+        print(f"Failed to update image to recipe {e}")
+        return False
+    finally:
+        cursor.close()
+        connection.close()
+        return True
+    
 def getRecipePhoto(recipeid):
     connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
     cursor = connection.cursor()
@@ -602,11 +622,33 @@ def updateRecipeInDB(dict):
         connection.commit()
         cursor.execute("refresh materialized view concurrently recipe_search")
         connection.commit()
-    except:
-        print("Failed to update recipe")
+    except Exception as e:
+        print("Failed to update recipe %s", e)
+        return False
     finally:
         cursor.close()
         connection.close()
+        return True;
+    
+def updateRecipeURL(recipeid, img_url):
+    if recipeid is None or img_url is None:
+        print("Recipe ID or image URL is missing")
+        return False
+
+    connection = psycopg2.connect(os.environ.get("DATABASE_URL"))
+    cursor = connection.cursor()
+    try:
+        qstr = "update recipe_img set image_link = %s where recipeid = %s"
+        cursor.execute(qstr, (img_url, recipeid))
+        qstr = "update recipe_img set image_data = null where recipeid = %s"
+        connection.commit()
+    except Exception as e:
+        print(f"Failed to update image to recipe {e}")
+        return False
+    finally:
+        cursor.close()
+        connection.close()
+        return True
 
 def deleteRecipeInDB(recipeid):
     connection = psycopg2.connect(os.environ.get("DATABASE_URL"))

@@ -124,21 +124,21 @@
             <div class="pure-g" id="photoOptionsContainer">
                 <input type="file" id="photoInput" accept="image/*" onchange="setPhoto()" style="display: none;">
                 <label class="pure-u-1-2 photoPreview" for="photoInput" id="upload" onclick="setSelected(this)">
-                    {% if recipeid %}
-                    <img id="imgSelect" src="/api/getrecipeimage/{{recipeid}}" alt="Select Image">
-                    {% else %}
                     <img id="imgSelect" src="https://cdn-icons-png.flaticon.com/512/44/44289.png" alt="Select Image">
-                    {% endif %}
                     <h2 class="photoText">Select Image</h2>
                 </label>
                 <div class="pure-u-1-2 photoPreview" onclick="setSelected(this)" id="generated">
-                    {% if recipeid %}
-                    <img id="imgGenerated" src="/api/getrecipeimage/{{recipeid}}" alt="Generated Image">
-                    {% else %}
                     <img src="https://cdn-icons-png.flaticon.com/512/44/44289.png" id="photoPreview">
-                    {% endif %}
                     <h2 class="photoText">Use Generated</h2>
                 </div>
+            </div>
+
+            <div id="completion">
+                {% if recipeid %}
+                    <button type="button" class="pure-button" id="submitRecipe" onclick="updateRecipe()">Update Recipe</button>
+                {% else %}
+                    <button type="button" class="pure-button" id="submitRecipe" onclick="submitRecipe()">Submit Recipe</button>
+                {% endif %}
             </div>
         </div>
             
