@@ -72,10 +72,12 @@ def createRecipe(recipeid):
     else:
         return render_template("createRecipe.html")
 
-@app.route("/search",methods=['POST'])
+@app.route("/search",methods=['GET'])
 def redirectToSearch():
     sendData = []
-    user_query = request.form["queryhome"]
+    user_query = ""
+    if request.args.get("queryhome") is not None:
+        user_query = request.args.get("queryhome")
     results = db.searchRecipeByKeywords(user_query)
     for i in range(len(results)):
         for j in range(len(results[i]["ingredients"])):
