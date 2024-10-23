@@ -539,6 +539,7 @@ def getRecipeImage(recipeid):
         return send_file("static/test.png", mimetype='image/png'), 200
     
 @app.route("/api/updaterecipe",methods=['PUT'])
+@requires_auth
 def updateRecipe():
     data = request.get_json()
     recipeData = data.get('recipeData')
@@ -569,6 +570,7 @@ def updateRecipe():
         return json.jsonify({"status": "failure", "message": "Recipe failed to UPDATE"}), 400
 
 @app.route("/api/updaterecipeimage",methods=['POST'])
+@requires_auth
 def setRecipeImage():
     photo = request.files['image']
     recipeid = request.form['recipeid']
@@ -588,70 +590,3 @@ def deleteAccount():
             return json.jsonify({"status": "failure", "message": "Account failed to DELETE"}), 400
     else:
         return json.jsonify({"status": "failure", "message": "User not logged in"}), 400
-    
-@app.route("/api/testimgadd",methods=['GET']) #use this to test out adding recipes and imgs
-def testimgadd():
-    testdictrecipe = {
-        "title" : "Tuna Melt",
-        "description" : "The superior pasta",
-        "ingredients" : ["Chicken","Alfredo"],
-        "instructions" : ["Add love"],
-        "userid" : "2"
-    }
-
-    db.addRecipeToDBWithImageURL(testdictrecipe)
-    return "Noice"
-
-#######################################################
-#Adam's test stuff
-# testdictuser = {
-    #     "username" : "Adam",
-    #     "email" : "adamkvant@gmail.com",
-    #     "authid" : "ijfoqwdjiojwoidjq",
-    #     "fname" : "Adam",
-    #     "lname" : "Kvant",
-    #     "bio" : "Hello World"
-    # }
-
-    # testdictrecipe = {
-    #     "title" : "Chicken Alfredo",
-    #     "description" : "The superior pasta",
-    #     "ingredients" : ["Chicken","Alfredo"],
-    #     "instructions" : ["Add love"],
-    #     "userid" : "1"
-    # }
-
-    # testdictrecipeupdate = {
-    #     "title" : "Chicken Alfredo2",
-    #     "description" : "The bestest pasta",
-    #     "ingredients" : ["Chicken","Alfredo Sauce","Pesto"],
-    #     "instructions" : ["Add pasta","Add chicken"],
-    #     "recipeid" : "1"
-    # }
-
-    #db.addUserToDB(testdictuser)
-    # db.updateUser("Adam2","kvant003@umn.edu","Kvant","Adam","World Hello","2")
-    # db.addRecipeToDB(testdictrecipe)
-    # db.addRecipeToDBWithImageURL(testdictrecipe)
-    # print('wow')
-    # db.deleteRecipeInDB("1")
-    # db.updateRecipeInDB(testdictrecipeupdate)
-    # db.addRecipeLike("2","2")
-    # print(db.getAllLikedRecipesForUser("2"))
-    # print(db.searchRecipeByKeywords("Chicken"))
-
-    # api_url = f"https://api.edamam.com/search?q={user_query}&app_id={os.environ.get('EDAMAM_APP_ID')}&app_key={os.environ.get('EDAMAM_APP_KEY')}"
-    
-    # api_response = requests.get(api_url)
-
-    # api_json = api_response.json()
-    # print(api_json)
-
-    # api_url = f"https://api.edamam.com/search?q={user_query}&app_id={os.environ.get('EDAMAM_APP_ID')}&app_key={os.environ.get('EDAMAM_APP_KEY')}"
-
-    # api_response = requests.get(api_url)
-
-    # api_json = api_response.json()
-    # print(api_json)
-
-    # return render_template("test.html")
