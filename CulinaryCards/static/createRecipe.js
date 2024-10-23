@@ -12,8 +12,8 @@ var lastEdit = '';
 
 //Units for ingredients to have in dropdown
 const units = {
-    imperial: ['tsp', 'tbsp', 'floz', 'cup', 'pint', 'quart', 'gallon', 'oz', 'lb', ''],
-    metric: ['ml', 'l', 'g', 'kg', 'mg', '']
+    imperial: ['count','tsp', 'tbsp', 'floz', 'cup', 'pint', 'quart', 'gallon', 'oz', 'lb','pinch'],
+    metric: ['count','ml', 'l', 'g', 'kg', 'mg','pinch']
 };
 
 //Starting ID for ingredients
@@ -472,102 +472,6 @@ function showStepThree() {
 
     populateIngredients();
 }
-
-/*
-let tempIngredients = [
-    {
-        ID: 0,
-        name: 'Eggs',
-        amount: 2,
-        fraction: '',
-        unit: ''
-    },
-    {
-        ID: 1,
-        name: 'Flour',
-        amount: 1,
-        fraction: '2/3',
-        unit: 'C'
-    },
-    {
-        ID: 2,
-        name: 'Milk',
-        amount: 1,
-        fraction: '1/2',
-        unit: 'C'
-    },
-    {
-        ID: 3,
-        name: 'Salt',
-        amount: 1,
-        fraction: '1/4',
-        unit: 'tsp'
-    },
-    {
-        ID: 4,
-        name: 'Butter',
-        amount: 1,
-        fraction: '1/4',
-        unit: 'C'
-    },
-    {
-        ID: 5,
-        name: 'Sugar',
-        amount: 1,
-        fraction: '1/4',
-        unit: 'C'
-    },
-    {
-        ID: 6,
-        name: 'Cinnamon',
-        amount: 1,
-        fraction: '1/2',
-        unit: 'tsp'
-    },
-    {
-        ID: 7,
-        name: 'Vanilla Extract',
-        amount: 1,
-        fraction: '1/2',
-        unit: 'tsp'
-    },
-    {
-        ID: 8,
-        name: 'Maple Syrup',
-        amount: 1,
-        fraction: '1/4',
-        unit: 'C'
-    },
-    {
-        ID: 9,
-        name: 'Blueberries',
-        amount: 1,
-        fraction: '1/2',
-        unit: 'C'
-    },
-    {
-        ID: 10,
-        name: 'Powdered Sugar',
-        amount: 1,
-        fraction: '1/4',
-        unit: 'C'
-    },
-    {
-        ID: 11,
-        name: 'Lemon Juice',
-        amount: 1,
-        fraction: '1/2',
-        unit: 'tsp'
-    },
-    {
-        ID: 12,
-        name: 'Baking Powder',
-        amount: 1,
-        fraction: '1/2',
-        unit: 'tsp'
-    }
-];
-*/
 
 //Show the previously given ingredients in the left menu
 function populateIngredients() {
