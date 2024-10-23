@@ -30,6 +30,7 @@ CSCI 5117, Fall 2024, [assignment description](https://canvas.umn.edu/courses/46
 
 **Is there anything special we need to know in order to effectively test your app? (optional):**
 
+* THE SERVER FILE IS IN `__init__.py`, I did it this way as it's the way the server was setup in the Flask tutorial.
 * Unsplash has a limit of 50 images per hour.
 * Recipes can be searched by name, words from description, category, ingredients, username, and are sorted by likes descending.
 * Firefox might be glitchy when clicking the Categories button. However, this should be fixed!
