@@ -100,6 +100,11 @@ def redirectToSearchCategory(category):
         results[i]["imagelink"] = "/api/getrecipeimage/" + str(results[i]["recipeid"])
     return render_template("searchResults.html",results=results)
 
+@app.route("/api/getrecipeimage/", methods=['GET'])
+def getDefaultRecipeImage():
+    # Return a default image when no recipe ID is provided
+    return send_file("static/test.png", mimetype='image/png'), 200
+
 @app.route("/api/getrecipeimage/<int:recipeid>",methods=['GET'])
 def getRecipePic(recipeid):
     img = db.getRecipePicture(recipeid)

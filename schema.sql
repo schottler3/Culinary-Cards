@@ -119,5 +119,5 @@ create table recipe_comment (
 
 
 create index recipe_vector_index on recipe using gin(recipe_vector);
-create index recipe_search_vector_index on recipe_search using gin(recipe_vector)
-create unique index idx_recipe_search on recipe_search (recipeid)
+create index recipe_search_vector_index on recipe_search using gin(recipe_vector);
+create unique index idx_recipe_search on recipe_search (recipeid);

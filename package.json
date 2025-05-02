@@ -1,0 +1,13 @@
+{
+    "name": "culinary-cards",
+    "version": "1.0.0",
+    "description": "Culinary Cards Application",
+    "main": "index.js",
+    "scripts": {
+      "start": "serve -s public",
+      "build": "echo 'No build step required'"
+    },
+    "dependencies": {
+      "serve": "^14.2.1"
+    }
+  }
